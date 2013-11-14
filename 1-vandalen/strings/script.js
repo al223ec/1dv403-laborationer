@@ -7,13 +7,34 @@ window.onload = function(){
 		// Plats för förändring.		
 		// Returnera den konverterade strängen.
 		// Vid fel, kasta ett undantag med ett meddelande till användaren. 
-	
+		
+		if(!(typeof str == 'string')|| str === null || str === "")
+		{
+			throw new Error("Var god kontrollera input");
+		}
 
+		str = str.replace(/A/gi, "#");
+		
+		var upperCases = str.match(/([A-Z]+)/g);
 
-
-
-
-
+		if(!(upperCases === null || upperCases === ""))//Kontrollerar ifall det alls finns n�gon upperCase bokstav
+		{
+			for (var i = 0; i < upperCases.length; i++) {
+				for (var j = 0; j < upperCases[i].length; j++) {
+					str = str.replace(upperCases[i][j], "*");
+				}
+			}
+			str = str.toUpperCase();
+			for (var i = 0; i < upperCases.length; i++) {
+				for (var j = 0; j < upperCases[i].length; j++) {
+					str = str.replace("*", upperCases[i][j].toLowerCase());
+				}
+			}
+			return str;
+		}		
+		else {
+			return str.toUpperCase();
+		}
 	};
 	// ------------------------------------------------------------------------------
 
