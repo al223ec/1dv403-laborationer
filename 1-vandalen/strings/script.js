@@ -8,7 +8,7 @@ window.onload = function(){
 		// Returnera den konverterade strängen.
 		// Vid fel, kasta ett undantag med ett meddelande till användaren. 
 		
-		if(!(typeof str == 'string')|| str === null || str === "")
+		if(!str)
 		{
 			throw new Error("Var god kontrollera input");
 		}

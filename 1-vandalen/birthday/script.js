@@ -5,9 +5,15 @@ window.onload = function(){
 	
 	var birthday = function(date){
 		
+			console.log(date);
+			var todaysDate = new Date().getTime();
+			var birthday = new Date(date);
+			birthday.setFullYear(2013);
+			birthday.setHours(todaysDate/1000/60/60);
+			console.log(birthday.getHours());
+			var numOfDaysToBirthday = ((birthday.getTime() - todaysDate)/1000/60/60/24);
+			//console.log(numOfDaysToBirthday);
 
-
-			// Din kod här.
 
 
 
