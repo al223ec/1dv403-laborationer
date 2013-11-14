@@ -2,40 +2,56 @@
 
 window.onload = function(){
 	
-	var secret = 50; // Detta tal behÃ¶ver bytas ut mot ett slumpat tal.
+	var secretNumber = Math.floor(Math.random()*100+ 1);
+	var numberOfGuesses = 0;
 	
-	// I denna funktion ska du skriva koden fÃ¶r att hantera "spelet"
+	// I denna funktion ska du skriva koden för att hantera "spelet"
 	var guess = function(number){
-		console.log("Det hemliga talet: " + secret); // Du nÃ¥r den yttre variabeln secret innifrÃ¥n funktionen.
-		console.log("Du gissade: " + number); // Detta nummer Ã¤r det som anvÃ¤ndaren gissade pÃ¥.
-			
-		// Plats fÃ¶r fÃ¶rÃ¤ndring.
-
-
-		// Returnera exempelvis: 
-		// [true, "Grattis du vann! Det hemliga talet var X och du behÃ¶vde Y gissningar fÃ¶r att hitta det."]
-		// [false, "Det hemliga talet Ã¤r hÃ¶gre!"]
-		// [false, "Det hemliga talet Ã¤r lÃ¤gre!"]
-		// [false, "Talet Ã¤r utanfÃ¶r intervallet 0 - 100"]		
+		number = +number; //Omvandling
+		if(isNaN(number) || number === "") //&& (number < 101 && number > 0))	
+		{
+			console.log(number + " Är inte ett nummer");
+			return;
+		}
+		numberOfGuesses +=1; //Det genomförs en gissning
+		console.log("Det hemliga talet: " + secretNumber);	
+		
+		if(number < 0 || number > 100)
+		{
+			return [false, "Det gissade talet är inte mellan 0 och 100"];
+		}
+		
+		if(secretNumber === number)
+		{
+			return [true, "Du gissade rätt på " + numberOfGuesses + " försöket"];
+		}
+		
+		if(secretNumber > number)
+		{
+			return [false, "Det hemliga talet är högre"];
+		}
+		
+		if(secretNumber < number)
+		{
+			return [false, "Det hemliga talet är lägre"];
+		}
 	};
 	
 	// ------------------------------------------------------------------------------
-
-
-
 	// Kod fÃ¶r att hantera utskrift och inmatning. Denna ska du inte behÃ¶va fÃ¶rÃ¤ndra
 	var p = document.querySelector("#value"); // Referens till DOM-noden med id="#value"
 	var input = document.querySelector("#number");
 	var submit = document.querySelector("#send");
 
-	// Vi kopplar en eventhanterare till formulÃ¤rets skickaknapp som kÃ¶r en anonym funktion.
+	// Vi kopplar en eventhanterare till formulärets skickaknapp som kör en anonym funktion.
 	submit.addEventListener("click", function(e){
-		e.preventDefault(); // Hindra formulÃ¤ret frÃ¥n att skickas till servern. Vi hanterar allt pÃ¥ klienten.
+		e.preventDefault(); // Hindra formuläret från att skickas till servern. Vi hanterar allt på klienten.
 
-		var answer = guess(input.value) // LÃ¤ser in talet frÃ¥n textrutan och skickar till funktionen "guess"
-		p.innerHTML = answer[1];		// Skriver ut texten frÃ¥n arrayen som skapats i funktionen.	
+		var answer = guess(input.value) // LÃ¤ser in talet från textrutan och skickar till funktionen "guess"
+		
+		p.innerHTML = answer[1];		// Skriver ut texten från arrayen som skapats i funktionen.	
 
-		if(answer[0] === true){				// Om spelet Ã¤r slut, avaktivera knappen.
+		if(answer[0] === true){				// Om spelet är slut, avaktivera knappen.
 			submit.disabled = true;
 		}
 	
