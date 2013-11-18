@@ -14,13 +14,13 @@ window.onload = function(){
 			birthday.setHours(todaysDate.getHours());
 			todaysDate = todaysDate.getTime();
 			
-			var numOfDaysToBirthday = (((((birthday.getTime() - todaysDate)/1000)/60)/60)/24);
-			
-			if(numOfDaysToBirthday < -1){
-				return Math.round(365 + numOfDaysToBirthday);
+			var numOfDaysToBirthday = Math.round((((((birthday.getTime() - todaysDate)/1000)/60)/60)/24));
+
+			if(numOfDaysToBirthday < 0){
+				return 365 + numOfDaysToBirthday;
 			}
 			
-			return Math.round(numOfDaysToBirthday); 
+			return numOfDaysToBirthday; 
 	};
 	// ------------------------------------------------------------------------------
 
