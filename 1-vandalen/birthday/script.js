@@ -1,23 +1,26 @@
 "use strict";
 
 window.onload = function(){
-
-	
 	var birthday = function(date){
-		
-			console.log(date);
-			var todaysDate = new Date().getTime();
 			var birthday = new Date(date);
+			if(isNaN(birthday))
+			{
+				throw new Error("Vg kontrollera input, datumet är inte i korekt format");
+			}
+					
 			birthday.setFullYear(2013);
-			birthday.setHours(todaysDate/1000/60/60);
-			console.log(birthday.getHours());
-			var numOfDaysToBirthday = ((birthday.getTime() - todaysDate)/1000/60/60/24);
-			//console.log(numOfDaysToBirthday);
-
-
-
-
-
+			var todaysDate = new Date();
+			
+			birthday.setHours(todaysDate.getHours());
+			todaysDate = todaysDate.getTime();
+			
+			var numOfDaysToBirthday = (((((birthday.getTime() - todaysDate)/1000)/60)/60)/24);
+			
+			if(numOfDaysToBirthday < -1){
+				return Math.round(365 + numOfDaysToBirthday);
+			}
+			
+			return Math.round(numOfDaysToBirthday); 
 	};
 	// ------------------------------------------------------------------------------
 
