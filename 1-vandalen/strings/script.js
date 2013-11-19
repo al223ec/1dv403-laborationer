@@ -14,27 +14,21 @@ window.onload = function(){
 		}
 
 		str = str.replace(/A/gi, "#");
-		
-		var upperCases = str.match(/([A-Z]+)/g);
 
-		if(!(upperCases === null || upperCases === ""))//Kontrollerar ifall det alls finns någon upperCase bokstav
-		{
-			for (var i = 0; i < upperCases.length; i++) {
-				for (var j = 0; j < upperCases[i].length; j++) {
-					str = str.replace(upperCases[i][j], "*");
-				}
-			}
-			str = str.toUpperCase();
-			for (var i = 0; i < upperCases.length; i++) {
-				for (var j = 0; j < upperCases[i].length; j++) {
-					str = str.replace("*", upperCases[i][j].toLowerCase());
-				}
-			}
-			return str;
-		}		
-		else {
-			return str.toUpperCase();
+	    //str[i].match(/([A-Z])|[^\x00-\x80]/)){
+	    //It matches any character which is not contained in the ASCII character set (0-128, i.e. 0x0 to 0x80). You can do the same thing with Unicode:
+	    //[^\u0000-\u0080]+
+
+		for (var i = 0; i < str.length; i++) {
+            if (str[i].match(/([A-Z])|[^\x00-\x80]/)) {
+		        str = str.replace(str[i], str[i].toLowerCase());
+		    } else {
+		        str = str.replace(str[i], str[i].toUpperCase());
+		    }
 		}
+
+		return str;
+
 	};
 	// ------------------------------------------------------------------------------
 
