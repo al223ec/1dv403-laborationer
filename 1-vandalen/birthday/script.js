@@ -7,19 +7,18 @@ window.onload = function(){
 			{
 				throw new Error("Vg kontrollera input, datumet är inte i korekt format");
 			}
-					
 			birthday.setFullYear(2013);
 			var todaysDate = new Date();
-			
+
 			birthday.setHours(todaysDate.getHours());
 			todaysDate = todaysDate.getTime();
-			
-			var numOfDaysToBirthday = Math.round((((((birthday.getTime() - todaysDate)/1000)/60)/60)/24));
+
+			var numOfDaysToBirthday = Math.round((birthday.getTime() - todaysDate)/1000/60/60/24);
 
 			if(numOfDaysToBirthday < 0){
 				return 365 + numOfDaysToBirthday;
 			}
-			
+
 			return numOfDaysToBirthday; 
 	};
 	// ------------------------------------------------------------------------------
