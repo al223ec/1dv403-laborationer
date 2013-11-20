@@ -1,7 +1,6 @@
 "use strict";
 
 var makePerson = function (persArr) {
-
     if (persArr === null || persArr === 'undefiened') {
         throw new Error("Felaktigt argument");
     }
@@ -12,55 +11,33 @@ var makePerson = function (persArr) {
         return (prop in obj) && (!(prop in proto) || proto[prop] !== obj[prop]); //The in operator returns true if the specified property is in the specified object.
         //return prop in obj; 
     }
-
     for(var i = 0; i < persArr.length; i++){
         if (!hasProperty(persArr[i], "name")) { throw new Error("Inte ett korekt objekt, saknas name property"); }
+        if (!(typeof persArr[i].name === "string")) { throw new Error("Name innehåller inte en string"); }
         if (!hasProperty(persArr[i], "age")) { throw new Error("Inte ett korekt objekt, saknas age property"); }
+        if (isNaN(persArr[i].age)) { throw new Error("Age innehåller inte ett number"); }
     }
+    /*
+    Returns a number indicating whether a reference string comes before or after or is the same as the given string in sort order. 
+    The new locales and options arguments let applications specify the language whose sort order should be used and customize the 
+    behavior of the function. In older implementations, which ignore the locales and options arguments, the locale and sort order 
+    used are entirely implementation dependent.
+    */
 
- 	var minAge = persArr[0].age;
-	var maxAge = persArr[0].age;
-	var averageAge = 0;
-	var namesArr = []; 
-	var names;
-
-	for (var i = 0; i < persArr.length; i ++){
-		minAge = (persArr[i].age < minAge)? persArr[i].age : minAge;
-		maxAge = (persArr[i].age > minAge)? persArr[i].age : maxAge;
-		averageAge += persArr[i].age; 
-		namesArr[i] = persArr[i].name;
+    var names = persArr.map(function (arg) { return arg.name; }).sort(function (a, b) { return a.localeCompare(b); }).join(', ');; //locale är inclusive åäö mao lokala språkinställingar
+    var ageArr = persArr.map(function (arg) { return +arg.age; });
+    var maxAge = Math.max.apply(Math, ageArr);
+    var minAge = Math.min.apply(Math, ageArr);
+    var averageAge = 0; 
+    
+	for (var i = 0; i < persArr.length; i++) {
+		averageAge += +persArr[i].age; //Omvandlas kan vara strängar som endast är nummer
 	}
 
 	averageAge = Math.round(averageAge / persArr.length);
-    //array.splice(1, 1);
-    //var arr = [65,45,43,42];
-	//var sum = 0; 
-	
-	//arr.forEach(function(i){
-	//	console.log(i); 
-	//});
-	
-	//sum = arr.sort(function(a,b){
-	//	return a > b; 
-	//});
-	//console.log(namesArr);
-	namesArr.sort();
 
-	for (var j = 0; j < namesArr.length; j++) {
-	    if (j === 0 && namesArr.length > 1) {
-	        names = namesArr[j] + ", ";
-	    } else if ((namesArr.length - 1) > j) {
-	        names += namesArr[j] + ", ";
-	    } else {
-	        names += namesArr[j];
-	    }
-	}
-
-   
 	return { "averageAge": averageAge, "maxAge": maxAge, "minAge": minAge, "names": names };
 };
 
 var data = [{ name: "John Häggerud", age: 37 }, { name: "Johan Leitet", age: 36 }, { name: "Mats Loock", age: 46 }];
-makePerson(data);
-data = [{ name: "John Häggerud", age: 37 }, { name: "Johan Leitet", age: 36 }, { name: "Mats Loock", age: 46 }];
 makePerson(data);
