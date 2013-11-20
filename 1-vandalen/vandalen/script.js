@@ -28,13 +28,9 @@ var makePerson = function (persArr) {
     var ageArr = persArr.map(function (arg) { return +arg.age; });
     var maxAge = Math.max.apply(Math, ageArr);
     var minAge = Math.min.apply(Math, ageArr);
-    var averageAge = 0; 
-    
-	for (var i = 0; i < persArr.length; i++) {
-		averageAge += +persArr[i].age; //Omvandlas kan vara strängar som endast är nummer
-	}
 
-	averageAge = Math.round(averageAge / persArr.length);
+    var averageAge = Math.round(ageArr.reduce(function (a, b) { return a += +b; }) / persArr.length);
+    console.log(averageAge);
 
 	return { "averageAge": averageAge, "maxAge": maxAge, "minAge": minAge, "names": names };
 };

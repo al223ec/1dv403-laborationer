@@ -6,13 +6,14 @@ window.onload = function(){
 	var numberOfGuesses = 0;
 	
 	// I denna funktion ska du skriva koden för att hantera "spelet"
-	var guess = function(number){
-		number = +number; //Omvandling
-		if(isNaN(number) || number === "") //&& (number < 101 && number > 0))	
+	var guess = function (number) {
+
+		if(isNaN(number)|| number == "") //&& (number < 101 && number > 0))	
 		{
-			console.log(number + " Är inte ett nummer");
-			return;
+		    throw new Error("Det är inte ett nummer");
 		}
+		number = +number; //Omvandling
+
 		numberOfGuesses +=1; //Det genomförs en gissning
 		console.log("Det hemliga talet: " + secretNumber);	
 		
