@@ -1,31 +1,37 @@
 <!DOCTYPE html>
-<html>
+<html lang="sv">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="ISO-8859-1" />
     <title>JavaScript - Vandalen - Arrayer och Objekt</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/foundation.css">
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-
-    <main>
-<!--<form>
-	<input type="text" id="string" /> 
-	<input id="send" type="submit" value="omvandla..." />
-</form>-->
-
+<main class="large-5 columns">
+    <header>
     <h1>Messageboard</h1>
-    <div id="menu">  
-        <p class="welcome">Welcome, <b></b></p>  
-        <p class="logout"><a id="exit" href="#">Exit Chat</a></p>  
-        <div style="clear:both"></div>  
-    </div>  
-      
-    <div id="chatbox"></div>  
-    <form>  
-        <textarea rows="4" cols="50" id="msgText"> </textarea>
-        <input type="submit"  id="sendMsg" value="Skicka meddelande" />  
-    </form>  
-     <p id="value"></p>
+    <p>Välkommen till denna awesome chat</p>
+    </header>
+    <input type="submit"  id="start" value="Start chat" />
+<!--    <div class="row messages">
+    </div>
+    <form>
+        <textarea class="msgText"> </textarea>
+        <!--<input type="submit"  id="sendMsg" value="Skicka meddelande" />-->
+    <!--</form>-->
+     <!-- Meddelande -->
+  <!--    <div class="row">
+        <div class="large-2 columns small-3"><img src="http://placehold.it/80x80&text=[img]" /></div>
+        <div class="large-10 columns">
+          <p><strong>Some Person said:</strong> Bacon ipsum dolor sit amet nulla ham qui sint exercitation eiusmod commodo, chuck duis velit. Aute in reprehenderit, dolore aliqua non est magna in labore pig pork biltong.</p>
+          <ul class="inline-list">
+            <li><a href="#">Detaljer</a></li>
+            <li><a href="#">Ta bort</a></li>
+          </ul>
+        </div>
+      </div>
+      <hr />-->
 </main>
     <script src="Message.js"></script>
     <script src="MessageBoard.js"></script>

@@ -1,48 +1,73 @@
 ﻿var MessageBoard = {
     messages : [],
-    messageCounter: 0,
+    messageCounter : 0,
     
     init : function(e)
-    {},
+    {
+        var main = document.querySelector("main");
+        var messagesDiv = document.createElement("div");
+        messagesDiv.className = "row messages";
+        var form = document.createElement("form");
 
-    addMessage: function (text) {
+        var textarea = document.createElement("textarea");
+        textarea.className = "msgText";
+
+        var div = document.querySelector("main form");
+
+        var that = this;
+        var inputButton = document.createElement("input");
+        inputButton.type = "button";
+        inputButton.value = "skriv";
+        inputButton.onclick = function (e) { that.addMessage(document.querySelector(".msgText").value) };
+
+        form.appendChild(textarea);
+        form.appendChild(inputButton);
+        main.appendChild(messagesDiv);
+        main.appendChild(form);
+    },
+    
+    addMessage : function (text) {
+        text = text.trim();
+        if ((!text) || (0 === text.length)) {
+            return;
+        }
         this.messages.push(new Message(text, new Date()));
+        this.addToSite(text);
         this.messageCounter++;
     },
 
-    getMessages : function () {
+    getMessages  : function () {
         return this.messages
     },
 
-    addToSite: function (mess) {
+    addToSite : function (mess) {
+        var div = document.querySelector(".messages"); //Hämta existerande element
+        var newMess = document.createElement("div");
+        var p = document.createElement("p");
+        newMess.setAttribute("class", "large-12 columns mess"); //newMess.className  = "large-12 columns";
+        var text = document.createTextNode(mess);
 
+        var del = document.createElement("a");
+        del.appendChild(document.createTextNode("Ta bort "));
+        var details = document.createElement("a");
+        details.appendChild(document.createTextNode(" Detaljer"));
+
+        p.appendChild(text);
+        newMess.appendChild(p);
+        newMess.appendChild(del);
+        newMess.appendChild(details);
+        div.appendChild(newMess);
     }
-};
-
+}
 
 window.onload = function () {
-    MessageBoard.init();
 
-    // Kod för att hantera utskrift och inmatning. Denna ska du inte behöva förändra
-    var p = document.querySelector("#value"); // Referens till DOM-noden med id="#value"
-    var input = document.querySelector("#msgText");
-    var submit = document.querySelector("#sendMsg");
-
+    var start = document.querySelector("#start");
     // Vi kopplar en eventhanterare till formulärets skickaknapp som kör en anonym funktion.
-    submit.addEventListener("click", function(e){
+    start.addEventListener("click", function(e){
         e.preventDefault(); // Hindra formuläret från att skickas till servern. Vi hanterar allt på klienten.
-
-        p.classList.remove( "error");
-
-        try {
-            MessageBoard.addMessage(input.value); // Läser in texten från textrutan och skickar till funktionen "convertString"
-            //p.innerHTML;		// Skriver ut texten från arrayen som skapats i funktionen.	
-        } catch (error){
-            p.classList.add( "error"); // Växla CSS-klass, IE10+
-            p.innerHTML = error.message;
-        }
-        var allMessages = MessageBoard.getMessages();
-        console.log(allMessages);
-        allMessages.map(function (mess) { p.innerHTML += mess.text; });
+        MessageBoard.init();
+        var messBoard2 = MessageBoard.constructor();
+    
     });
 };
