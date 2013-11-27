@@ -1,15 +1,23 @@
 ﻿function Message(text, date, div) {
+    var _text;
+    var _date;
+    var _div = div;
+
     Object.defineProperties(this, {
-        text: {
-            get: function () { return text; },
-            set: function (value) { text = value; }
+        Text: {
+            get: function () { return _text; },
+            set: function (text) { _text = text.replace(/[\n\r]/g, "<br />"); }
         },
-        date: {
-            get: function () { return date; },
-            set: function (value) { date = value; }
+        Date: {
+            get: function () { return _date; },
+            set: function (value) { _date = value; }
         },
-        div: {
-            get: function () { return div; },
+        Div: {
+            get: function () { return _div; },
         }
     });
+
+
+    this.Text = text;
+    this.Date = date;
 }

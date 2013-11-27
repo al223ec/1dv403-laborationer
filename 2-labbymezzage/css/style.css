@@ -1,0 +1,57 @@
+@import url(http://fonts.googleapis.com/css?family=Oleo+Script);
+@import url(http://fonts.googleapis.com/css?family=Oswald:300);
+
+h1 {
+    font-family: 'Oleo Script', cursive;
+    font-size: 2em;
+}
+p {
+    font-family: 'Oswald', sans-serif;
+}
+.messageContainer {}
+
+.mess {
+  border: solid #daeeff;
+  border-width: 1px;
+  padding-bottom: 5px;
+  margin-bottom: 10px;
+  background:#ffffff;
+}
+    .mess footer {
+        float:right;
+    }
+.textRight {
+    text-align:right; 
+}
+.submit {
+    margin-top:10px;
+    border:1px solid #daeeff;
+}
+textarea {
+    resize: none;
+    height: 120px;
+    border: solid #daeeff;
+    background:none;
+}
+
+.board {
+    margin:20px;
+    padding-bottom:10px;
+    border:0px solid #daeeff;
+    border-radius:10px;
+    background-image:url('img/bg.png');
+    max-height:400px;
+    overflow:scroll;
+    overflow-x: hidden;
+    box-shadow: 2px 6px 5px #ececec;
+}
+
+.close {
+    float:right;
+    background:red;
+    color:white;
+    
+}
+.topBar {
+    background-color:#dddddd;
+}

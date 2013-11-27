@@ -1,24 +1,41 @@
-﻿function MessageBoard(container){
+﻿"use strict";
+
+function MessageBoard(container) {
     var messages = []; 
 
     this.textarea = document.createElement("textarea"),
     this.messageDiv = document.createElement("div"),
+    this.numberDiv = document.createElement("div");
 
-    this.init = function (e)
-    {
+    this.init = function (e){
         var messageForm = document.createElement("form"); 
-        var inputButton = document.createElement("input"); 
+        var inputButton = document.createElement("input");
+
         
-        this.messageDiv.className = "row messages";
-       
+        this.messageDiv.className = "row messageContainer";
+        this.numberDiv.className = "row 12-large columns textRight";
+
         inputButton.type = "button";
         inputButton.value = "skriv";
+        inputButton.className = "submit right"; 
         
         var that = this; 
-        inputButton.onclick = function (e) { that.addMessage(that.textarea.value)};
+        inputButton.onclick = function (e) { that.addMessage(that.textarea.value) };
 
+        this.textarea.addEventListener("keypress", function (e) {
+                if (!e) { var e = window.event; }
+                
+                if (e.keyCode === 13 && !e.shiftKey) { //keycode 13 = enter
+                    e.preventDefault(); //behövs ingen radbrytning
+                    that.addMessage(that.textarea.value);
+                }
+            }, false);
+        
         messageForm.appendChild(this.textarea);
         messageForm.appendChild(inputButton);
+
+        this.upDateNumber();
+        container.appendChild(this.numberDiv);
         container.appendChild(this.messageDiv);
         container.appendChild(messageForm);
     };
@@ -43,57 +60,41 @@ MessageBoard.prototype.addMessage = function (text) {
 
 MessageBoard.prototype.addToSite = function (mess) {
     var p = document.createElement("p");
-    var text = document.createTextNode(mess.text + mess.date);
-    p.appendChild(text);
+    p.appendChild(document.createTextNode(mess.Text));
 
-    mess.div.setAttribute("class", "large-12 columns mess"); //newMess.className  = "large-12 columns";
-    mess.div.appendChild(p);
+    mess.Div.setAttribute("class", "large-12 columns mess"); //newMess.className  = "large-12 columns";
+    mess.Div.appendChild(p);
 
+    var footer = document.createElement("footer");
+    footer.appendChild(document.createTextNode(mess.Date.toDateString()));
     var del = document.createElement("a");
-    del.appendChild(document.createTextNode("Ta bort "));
+    del.appendChild(document.createTextNode(" Ta bort "));
 
     var that = this;
     del.onclick = function (e) { that.removeMessage(mess) };
     //var details = document.createElement("a");
     //details.appendChild(document.createTextNode(" Detaljer"));
-    mess.div.appendChild(del);
+    footer.appendChild(del);
+    mess.Div.appendChild(footer);
 
-    this.messageDiv.appendChild(mess.div);
+    this.messageDiv.appendChild(mess.Div);
+    this.upDateNumber();
 };
 MessageBoard.prototype.removeMessage = function (messToRemove) {
     var messIndex;
-    this.messageDiv.removeChild(messToRemove.div);
+    this.messageDiv.removeChild(messToRemove.Div);
     this.messages.map(function (mess, index){ 
-        if (mess.div === messToRemove.div) {
+        if (mess.Div === messToRemove.Div) {
             messIndex = index; 
         }
     });
     this.messages.splice(messIndex, 1);
     this.messageNum -= 1;
+    this.upDateNumber();
 };
-
-window.onload = function () {
-
-    var start = document.querySelector("#start");
-    //var clone = document.getElementById("messageBoard");
-    //console.log(clone); 
-    //var theClone = clone.cloneNode(true);
-    //var main = document.querySelector("main");
-    //main.appendChild(theClone);
-    var arrMessageBoards = [];
-    var numOfBoards = 0; 
-    var main = document.querySelector("main"); 
-
-    // Vi kopplar en eventhanterare till formulärets skickaknapp som kör en anonym funktion.
-    start.addEventListener("click", function(e){
-        e.preventDefault(); // Hindra formuläret från att skickas till servern. Vi hanterar allt på klienten.
-
-        arrMessageBoards.push(new MessageBoard(main));
-        arrMessageBoards[numOfBoards].init();
-        numOfBoards++;
-        console.log(numOfBoards);
-        //for (var i = 0; i < arrMessageBoards.length; i++) {
-        //    console.log(arrMessageBoards[i].getMessages().length);
-        //}
-    });
+MessageBoard.prototype.upDateNumber = function () {
+    if (this.numberDiv.hasChildNodes()) {
+        this.numberDiv.removeChild(this.numberDiv.lastChild);
+    }
+    this.numberDiv.appendChild(document.createTextNode("Antal mess: " + this.messages.length));
 };
