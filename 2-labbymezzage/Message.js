@@ -1,4 +1,4 @@
-﻿function Message(text, date, num) {
+﻿function Message(text, date, div) {
     Object.defineProperties(this, {
         text: {
             get: function () { return text; },
@@ -8,9 +8,8 @@
             get: function () { return date; },
             set: function (value) { date = value; }
         },
-        num: {
-            get: function () { return num; },
-            set: function (value) { num = value; }
+        div: {
+            get: function () { return div; },
         }
     });
 }

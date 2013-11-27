@@ -1,6 +1,5 @@
 ﻿function MessageBoard(container){
     var messages = []; 
-    var messageNum = 0;
 
     this.textarea = document.createElement("textarea"),
     this.messageDiv = document.createElement("div"),
@@ -27,10 +26,7 @@
     Object.defineProperties(this, {
         messages: {
             get: function () { return messages; },
-        },
-        messageNum: {
-            get: function () { return messageNum; },
-            set: function (value) { messageNum = value; },
+            set: function (vaue) { messages = value; },
         }
     });
 }
@@ -40,28 +36,40 @@ MessageBoard.prototype.addMessage = function (text) {
     if ((!text) || (0 === text.length)) {
         return;
     }
-    this.messages.push(new Message(text, new Date(), this.messageNum));
+    this.messages.push(new Message(text, new Date(), document.createElement("div")));
     this.addToSite(this.messages[this.messages.length - 1]);
-    this.messageNum += 1; 
-    console.log(this.messages.length);
+    this.messageNum += 1;
 };
 
 MessageBoard.prototype.addToSite = function (mess) {
-    var newMess = document.createElement("div");
     var p = document.createElement("p");
-    newMess.setAttribute("class", "large-12 columns mess"); //newMess.className  = "large-12 columns";
-    var text = document.createTextNode(mess.text + mess.num + mess.date);
+    var text = document.createTextNode(mess.text + mess.date);
     p.appendChild(text);
-    newMess.appendChild(p);
 
-    //var del = document.createElement("a");
-    //del.appendChild(document.createTextNode("Ta bort "));
+    mess.div.setAttribute("class", "large-12 columns mess"); //newMess.className  = "large-12 columns";
+    mess.div.appendChild(p);
+
+    var del = document.createElement("a");
+    del.appendChild(document.createTextNode("Ta bort "));
+
+    var that = this;
+    del.onclick = function (e) { that.removeMessage(mess) };
     //var details = document.createElement("a");
     //details.appendChild(document.createTextNode(" Detaljer"));
-    //newMess.appendChild(del);
-    //newMess.appendChild(details);
+    mess.div.appendChild(del);
 
-    this.messageDiv.appendChild(newMess);
+    this.messageDiv.appendChild(mess.div);
+};
+MessageBoard.prototype.removeMessage = function (messToRemove) {
+    var messIndex;
+    this.messageDiv.removeChild(messToRemove.div);
+    this.messages.map(function (mess, index){ 
+        if (mess.div === messToRemove.div) {
+            messIndex = index; 
+        }
+    });
+    this.messages.splice(messIndex, 1);
+    this.messageNum -= 1;
 };
 
 window.onload = function () {
