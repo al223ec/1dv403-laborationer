@@ -1,73 +1,92 @@
-﻿var MessageBoard = {
-    messages : [],
-    messageCounter : 0,
-    
-    init : function(e)
+﻿function MessageBoard(container){
+    messages = [],
+    messageCounter = 0,
+
+    //messageDiv = document.createElement("div"),
+    //messageForm = form = document.createElement("form"),
+    //textarea = document.createElement("textarea"),
+    //inputButton = document.createElement("input"),
+
+    this.textarea = document.createElement("textarea"),
+    this.messageDiv = document.createElement("div"),
+
+    this.init = function(e)
     {
-        var main = document.querySelector("main");
-        var messagesDiv = document.createElement("div");
-        messagesDiv.className = "row messages";
-        var form = document.createElement("form");
-
-        var textarea = document.createElement("textarea");
-        textarea.className = "msgText";
-
-        var div = document.querySelector("main form");
-
-        var that = this;
-        var inputButton = document.createElement("input");
+        var messageForm = document.createElement("form"); 
+        var inputButton = document.createElement("input"); 
+        
+        this.messageDiv.className = "row messages";
+       
         inputButton.type = "button";
         inputButton.value = "skriv";
-        inputButton.onclick = function (e) { that.addMessage(document.querySelector(".msgText").value) };
+        
+        var that = this; 
+        inputButton.onclick = function (e) { that.addMessage(that.textarea.value)};
 
-        form.appendChild(textarea);
-        form.appendChild(inputButton);
-        main.appendChild(messagesDiv);
-        main.appendChild(form);
-    },
+        messageForm.appendChild(this.textarea);
+        messageForm.appendChild(inputButton);
+        container.appendChild(this.messageDiv);
+        container.appendChild(messageForm);
+    };
     
-    addMessage : function (text) {
+    this.addMessage = function (text) {
         text = text.trim();
         if ((!text) || (0 === text.length)) {
             return;
         }
-        this.messages.push(new Message(text, new Date()));
-        this.addToSite(text);
-        this.messageCounter++;
-    },
+        messages.push(new Message(text, new Date(), messageCounter));
+        this.addToSite(messages[messageCounter]);
+        messageCounter++;
+        console.log(messageCounter);
+    };
 
-    getMessages  : function () {
+    getMessages = function () {
         return this.messages
-    },
+    };
 
-    addToSite : function (mess) {
-        var div = document.querySelector(".messages"); //Hämta existerande element
+    this.addToSite = function (mess) {
         var newMess = document.createElement("div");
         var p = document.createElement("p");
         newMess.setAttribute("class", "large-12 columns mess"); //newMess.className  = "large-12 columns";
-        var text = document.createTextNode(mess);
+        var text = document.createTextNode(mess.text + mess.num + mess.date);
 
-        var del = document.createElement("a");
-        del.appendChild(document.createTextNode("Ta bort "));
-        var details = document.createElement("a");
-        details.appendChild(document.createTextNode(" Detaljer"));
 
         p.appendChild(text);
         newMess.appendChild(p);
-        newMess.appendChild(del);
-        newMess.appendChild(details);
-        div.appendChild(newMess);
-    }
+
+        //var del = document.createElement("a");
+        //del.appendChild(document.createTextNode("Ta bort "));
+        //var details = document.createElement("a");
+        //details.appendChild(document.createTextNode(" Detaljer"));
+        //newMess.appendChild(del);
+        //newMess.appendChild(details);
+
+        this.messageDiv.appendChild(newMess);
+    };
 }
 
 window.onload = function () {
 
     var start = document.querySelector("#start");
+    //var clone = document.getElementById("messageBoard");
+    //console.log(clone); 
+    //var theClone = clone.cloneNode(true);
+    //var main = document.querySelector("main");
+    //main.appendChild(theClone);
+    var arrMessageBoards = [];
+    var numOfBoards = 0; 
+    var main = document.querySelector("main"); 
+
     // Vi kopplar en eventhanterare till formulärets skickaknapp som kör en anonym funktion.
     start.addEventListener("click", function(e){
         e.preventDefault(); // Hindra formuläret från att skickas till servern. Vi hanterar allt på klienten.
-        MessageBoard.init();
-        var messBoard2 = MessageBoard.constructor();
-    
+        //MessageBoard.init();
+        arrMessageBoards.push(new MessageBoard(main));
+        arrMessageBoards[numOfBoards].init();
+        numOfBoards++;
+
+        //for (var i = 0; i < arrMessageBoards.length; i++) {
+        //    console.log(arrMessageBoards[i]);
+        //}
     });
 };
