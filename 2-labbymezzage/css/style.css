@@ -18,10 +18,15 @@ p {
   background:#ffffff;
 }
     .mess footer {
+        text-align:right; 
         float:right;
     }
 .textRight {
     text-align:right; 
+}
+.textLeft {
+    text-align:left; 
+    float:left; 
 }
 .submit {
     margin-top:10px;

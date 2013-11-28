@@ -1,5 +1,4 @@
 ﻿"use strict";
-
 function MessageBoard(container) {
     var messages = []; 
 
@@ -11,7 +10,6 @@ function MessageBoard(container) {
         var messageForm = document.createElement("form"); 
         var inputButton = document.createElement("input");
 
-        
         this.messageDiv.className = "row messageContainer";
         this.numberDiv.className = "row 12-large columns textRight";
 
@@ -31,10 +29,10 @@ function MessageBoard(container) {
                 }
             }, false);
         
+        this.upDateNumber();
+
         messageForm.appendChild(this.textarea);
         messageForm.appendChild(inputButton);
-
-        this.upDateNumber();
         container.appendChild(this.numberDiv);
         container.appendChild(this.messageDiv);
         container.appendChild(messageForm);
@@ -54,30 +52,43 @@ MessageBoard.prototype.addMessage = function (text) {
         return;
     }
     this.messages.push(new Message(text, new Date(), document.createElement("div")));
-    this.addToSite(this.messages[this.messages.length - 1]);
+    this.addMessToSite(this.messages[this.messages.length - 1]);
     this.messageNum += 1;
 };
 
-MessageBoard.prototype.addToSite = function (mess) {
-    var p = document.createElement("p");
-    p.appendChild(document.createTextNode(mess.Text));
+MessageBoard.prototype.addMessToSite = function (mess) {
+    //var p = document.createElement("p");
+    //p.innerHTML = mess.Text; 
 
-    mess.Div.setAttribute("class", "large-12 columns mess"); //newMess.className  = "large-12 columns";
-    mess.Div.appendChild(p);
+    //mess.Div.setAttribute("class", "large-12 columns mess"); 
+    //mess.Div.appendChild(p);
 
-    var footer = document.createElement("footer");
-    footer.appendChild(document.createTextNode(mess.Date.toDateString()));
-    var del = document.createElement("a");
-    del.appendChild(document.createTextNode(" Ta bort "));
+    //var footer = document.createElement("footer");
+    //var date = document.createElement("a");
+    //var del = document.createElement("a");
+    //var edit = document.createElement("a"); 
 
-    var that = this;
-    del.onclick = function (e) { that.removeMessage(mess) };
-    //var details = document.createElement("a");
-    //details.appendChild(document.createTextNode(" Detaljer"));
-    footer.appendChild(del);
-    mess.Div.appendChild(footer);
+    //date.appendChild(document.createTextNode(mess.Date.toDateString()));
+    //del.appendChild(document.createTextNode(" Ta bort "));
+    //edit.appendChild(document.createTextNode("Redigera "));
 
-    this.messageDiv.appendChild(mess.Div);
+    //footer.className = "large-12";
+    //edit.className = "textLeft large-6";
+    //del.className = "textRight large-2";
+    //date.className = "large-4";
+
+    //var that = this;
+    //del.onclick = function (e) { that.removeMessage(mess) };
+    //edit.onclick = function (e) { that.editMessage(mess) };
+    //date.onclick = function (e) { alert("Detta meddelande blev skrivet: " + mess.Date); };
+
+    //footer.appendChild(edit);
+    //footer.appendChild(date);
+    //footer.appendChild(del);
+    //mess.Div.appendChild(footer);
+
+    //this.messageDiv.appendChild(mess.Div);
+    this.messageDiv.appendChild(mess.intiDiv(this));
     this.upDateNumber();
 };
 MessageBoard.prototype.removeMessage = function (messToRemove) {
@@ -98,3 +109,8 @@ MessageBoard.prototype.upDateNumber = function () {
     }
     this.numberDiv.appendChild(document.createTextNode("Antal mess: " + this.messages.length));
 };
+MessageBoard.prototype.editMessage = function (messToEdit) {
+    console.log(messToEdit.Text); 
+    this.textarea.value = messToEdit.Text;//.replaceAll(/<br />/g, "n");;
+
+}; 
