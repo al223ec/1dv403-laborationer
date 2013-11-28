@@ -1,6 +1,7 @@
 ﻿"use strict";
-function MessageBoard(container) {
-    var messages = []; 
+function MessageBoard(container) { //conatiner den div som håller hela messageBoarden
+    var messages = [];
+    var editMessage = false; 
 
     this.textarea = document.createElement("textarea"),
     this.messageDiv = document.createElement("div"),
@@ -18,7 +19,14 @@ function MessageBoard(container) {
         inputButton.className = "submit right"; 
         
         var that = this; 
-        inputButton.onclick = function (e) { that.addMessage(that.textarea.value) };
+        inputButton.onclick = function (e) {
+            if (!this.editmessage) {
+                that.addMessage(that.textarea.value);
+            }
+            else {
+                that.replaceMessage(that.textarea.value); 
+            }
+        };
 
         this.textarea.addEventListener("keypress", function (e) {
                 if (!e) { var e = window.event; }
@@ -57,41 +65,14 @@ MessageBoard.prototype.addMessage = function (text) {
 };
 
 MessageBoard.prototype.addMessToSite = function (mess) {
-    //var p = document.createElement("p");
-    //p.innerHTML = mess.Text; 
-
-    //mess.Div.setAttribute("class", "large-12 columns mess"); 
-    //mess.Div.appendChild(p);
-
-    //var footer = document.createElement("footer");
-    //var date = document.createElement("a");
-    //var del = document.createElement("a");
-    //var edit = document.createElement("a"); 
-
-    //date.appendChild(document.createTextNode(mess.Date.toDateString()));
-    //del.appendChild(document.createTextNode(" Ta bort "));
-    //edit.appendChild(document.createTextNode("Redigera "));
-
-    //footer.className = "large-12";
-    //edit.className = "textLeft large-6";
-    //del.className = "textRight large-2";
-    //date.className = "large-4";
-
-    //var that = this;
-    //del.onclick = function (e) { that.removeMessage(mess) };
-    //edit.onclick = function (e) { that.editMessage(mess) };
-    //date.onclick = function (e) { alert("Detta meddelande blev skrivet: " + mess.Date); };
-
-    //footer.appendChild(edit);
-    //footer.appendChild(date);
-    //footer.appendChild(del);
-    //mess.Div.appendChild(footer);
-
-    //this.messageDiv.appendChild(mess.Div);
-    this.messageDiv.appendChild(mess.intiDiv(this));
+    this.messageDiv.appendChild(mess.addDiv(this));
+    this.textarea.value = ""; 
     this.upDateNumber();
 };
 MessageBoard.prototype.removeMessage = function (messToRemove) {
+    if (!confirm("Är du säker att du vill ta bort detta meddelande?")) {
+        return;
+    }
     var messIndex;
     this.messageDiv.removeChild(messToRemove.Div);
     this.messages.map(function (mess, index){ 
@@ -112,5 +93,47 @@ MessageBoard.prototype.upDateNumber = function () {
 MessageBoard.prototype.editMessage = function (messToEdit) {
     console.log(messToEdit.Text); 
     this.textarea.value = messToEdit.Text;//.replaceAll(/<br />/g, "n");;
+    var messIndex; 
 
-}; 
+    this.messages.map(function (mess, index) {
+        if (mess === messToEdit) {
+            messIndex = index;
+        }
+    });
+    console.log(messIndex); 
+};
+//MessageBoard.prototype.addMessToSite = function (mess) {
+//    var p = document.createElement("p");
+//    p.innerHTML = mess.Text; 
+
+//    mess.Div.setAttribute("class", "large-12 columns mess"); 
+//    mess.Div.appendChild(p);
+
+//    var footer = document.createElement("footer");
+//    var date = document.createElement("a");
+//    var del = document.createElement("a");
+//    var edit = document.createElement("a"); 
+
+//    date.appendChild(document.createTextNode(mess.Date.toDateString()));
+//    del.appendChild(document.createTextNode(" Ta bort "));
+//    edit.appendChild(document.createTextNode("Redigera "));
+
+//    footer.className = "large-12";
+//    edit.className = "textLeft large-6";
+//    del.className = "textRight large-2";
+//    date.className = "large-4";
+
+//    var that = this;
+//    del.onclick = function (e) { that.removeMessage(mess) };
+//    edit.onclick = function (e) { that.editMessage(mess) };
+//    date.onclick = function (e) { alert("Detta meddelande blev skrivet: " + mess.Date); };
+
+//    footer.appendChild(edit);
+//    footer.appendChild(date);
+//    footer.appendChild(del);
+//    mess.Div.appendChild(footer);
+
+//    this.messageDiv.appendChild(mess.Div);
+//    this.messageDiv.appendChild(mess.intiDiv(this));
+//    this.upDateNumber();
+//};

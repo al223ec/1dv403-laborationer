@@ -1,8 +1,9 @@
 ﻿function Message(text, date, div) {
     var _text;
-    var _date;
+    var _date; 
     var _div = div;
 
+    //kan ta bort dessa
     Object.defineProperties(this, {
         Text: {
             get: function () { return _text; },
@@ -12,17 +13,16 @@
             get: function () { return _date; },
             set: function (value) { _date = value; }
         },
-        Div: {
+        Div: { //Privacy leak, kan påverka _divs egenskaper
             get: function () { return _div; },
         }
     });
 
-
     this.Text = text;
     this.Date = date;
 }
-Message.prototype.intiDiv = function (that) {
-
+Message.prototype.addDiv = function (that) {
+    //That är den aktuella messageboarden
     var p = document.createElement("p");
     p.innerHTML = this.Text;
 
@@ -43,10 +43,16 @@ Message.prototype.intiDiv = function (that) {
     del.className = "textRight large-2";
     date.className = "large-4";
 
-    var thisMessage = this; 
-    del.onclick = function (e) { that.removeMessage(thisMessage) };
-    edit.onclick = function (e) { that.editMessage(thisMessage) };
-    date.onclick = function (e) { alert("Detta meddelande blev skrivet: " + This.Date); };
+    var thisMessage = this; //behövs pga scopet
+    del.onclick = function (e) {
+        that.removeMessage(thisMessage);
+    };
+    edit.onclick = function (e) {
+        that.editMessage(thisMessage);
+    };
+    date.onclick = function (e) {
+        alert("Detta meddelande blev skrivet: " + thisMessage.Date);
+    };
 
     footer.appendChild(edit);
     footer.appendChild(date);
