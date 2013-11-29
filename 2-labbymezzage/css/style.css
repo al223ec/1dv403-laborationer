@@ -1,6 +1,8 @@
 @import url(http://fonts.googleapis.com/css?family=Oleo+Script);
 @import url(http://fonts.googleapis.com/css?family=Oswald:300);
-
+/*html {
+    background-color: #fff0f0;
+}*/
 h1 {
     font-family: 'Oleo Script', cursive;
     font-size: 2em;
@@ -29,7 +31,6 @@ p {
     float:left; 
 }
 .submit {
-    margin-top:10px;
     border:1px solid #daeeff;
 }
 textarea {
@@ -40,23 +41,30 @@ textarea {
 }
 
 .board {
-    margin:20px;
-    padding-bottom:10px;
-    border:0px solid #daeeff;
-    border-radius:10px;
-    background-image:url('img/bg.png');
-    max-height:400px;
+    /*margin-top:26px;*/
+    cursor:default;
+    height:400px; 
+    z-index:inherit;
     overflow:scroll;
     overflow-x: hidden;
-    box-shadow: 2px 6px 5px #ececec;
 }
 
 .close {
     float:right;
     background:red;
     color:white;
-    
 }
-.topBar {
-    background-color:#dddddd;
+
+.drag {
+
+    background-image:url('img/bg.png');
+    background-repeat:no-repeat;
+    border:1px solid #ececec;
+    /*border:0px solid #daeeff;
+    border-radius:10px;*/
+    position:absolute; 
+    cursor:move;
+    box-shadow: 2px 6px 5px #ececec;
+    height:426px;
+    width:100%;
 }

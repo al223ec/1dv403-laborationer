@@ -1,8 +1,8 @@
 ﻿"use strict";
-function MessageBoard(container) { //conatiner den div som håller hela messageBoarden
+function MessageBoard(container, topBar) { //conatiner den div som håller hela messageBoarden
     var messages = [];
     var editMessage = false; 
-
+    this.topBar = topBar; 
     this.textarea = document.createElement("textarea"),
     this.messageDiv = document.createElement("div"),
     this.numberDiv = document.createElement("div");
@@ -11,12 +11,13 @@ function MessageBoard(container) { //conatiner den div som håller hela messageB
         var messageForm = document.createElement("form"); 
         var inputButton = document.createElement("input");
 
-        this.messageDiv.className = "row messageContainer";
+        this.messageDiv.className = "row columns messageContainer";
         this.numberDiv.className = "row 12-large columns textRight";
 
         inputButton.type = "button";
         inputButton.value = "skriv";
-        inputButton.className = "submit right"; 
+        inputButton.className = "submit right";
+
         
         var that = this; 
         inputButton.onclick = function (e) {

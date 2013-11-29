@@ -18,20 +18,21 @@ function LabbyMezz () {
         closeButton.type = "button";
         closeButton.value = "X";
         closeButton.className = "close";
-        var that = this; 
-        closeButton.onclick = function (e) { console.log(newBoard); that.removeBoard(newBoard); };
 
-        topBar.className = "large-12 columns topBar";
+        topBar.className = "drag";
         topBar.appendChild(closeButton);
+        topBar.style.left = '100pt';
+        topBar.style.top = '100pt';
+        var that = this;
+        closeButton.onclick = function (e) { console.log(topBar); that.removeBoard(topBar); };
 
         header.appendChild(document.createTextNode("MessageBoard"));
         newBoard.className = "board";
-        newBoard.appendChild(topBar);
         newBoard.appendChild(header);
-        main.appendChild(newBoard);
+        topBar.appendChild(newBoard); 
+        main.appendChild(topBar );
 
-        console.log(numOfBoards);
-        arrMessageBoards.push(new MessageBoard(newBoard));
+        arrMessageBoards.push(new MessageBoard(newBoard, topBar));
         arrMessageBoards[numOfBoards].init();
         numOfBoards++;
     };
@@ -53,9 +54,12 @@ window.onload = function () {
     var start = document.querySelector("#start");
     var labby = new LabbyMezz();
     labby.init();
+    InitDragDrop();
+
     // Vi kopplar en eventhanterare till formulärets skickaknapp som kör en anonym funktion.
     start.addEventListener("click", function (e) {
         e.preventDefault(); // Hindra formuläret från att skickas till servern
         labby.createBoard();
+
     });
 };
