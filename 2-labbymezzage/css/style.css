@@ -41,7 +41,7 @@ textarea {
 }
 
 .board {
-    /*margin-top:26px;*/
+    margin-top:26px;
     cursor:default;
     height:400px; 
     z-index:inherit;
@@ -56,7 +56,6 @@ textarea {
 }
 
 .drag {
-
     background-image:url('img/bg.png');
     background-repeat:no-repeat;
     border:1px solid #ececec;
@@ -66,5 +65,5 @@ textarea {
     cursor:move;
     box-shadow: 2px 6px 5px #ececec;
     height:426px;
-    width:100%;
+    width:600px;
 }

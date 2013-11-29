@@ -21,8 +21,8 @@ function LabbyMezz () {
 
         topBar.className = "drag";
         topBar.appendChild(closeButton);
-        topBar.style.left = '100pt';
-        topBar.style.top = '100pt';
+        topBar.style.left = '0pt';
+        topBar.style.top = '0pt';
         var that = this;
         closeButton.onclick = function (e) { console.log(topBar); that.removeBoard(topBar); };
 
@@ -54,12 +54,12 @@ window.onload = function () {
     var start = document.querySelector("#start");
     var labby = new LabbyMezz();
     labby.init();
-    InitDragDrop();
+
 
     // Vi kopplar en eventhanterare till formulärets skickaknapp som kör en anonym funktion.
     start.addEventListener("click", function (e) {
         e.preventDefault(); // Hindra formuläret från att skickas till servern
         labby.createBoard();
-
+        InitDragDrop();
     });
 };

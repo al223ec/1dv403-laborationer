@@ -2,8 +2,8 @@
 
 var _startX = 0;            // mouse starting positions
 var _startY = 0;
-var _offsetX;           // current element offset
-var _offsetY;
+var _offsetX = 0;           // current element offset
+var _offsetY = 0;
 var dragElement;           // needs to be passed from OnMouseDown to OnMouseMove
 var allDragElements;
 
@@ -30,15 +30,26 @@ function OnMouseDown(e) {
     // for Firefox, left click == 0
 
     var className = target.className;
-    if ((e.button == 1 && window.event != null ||
-        e.button == 0) &&
-         className.indexOf("drag") !== -1) {
-        // grab the mouse position
+    if ((e.button == 1 && window.event != null || e.button == 0) && className.indexOf("drag") !== -1) {
+
+        //Fixa z index 
+        //allDragElements = document.querySelectorAll("div.drag");
+        //for (var i = 0; i < allDragElements.length; i += 1) {
+        //    if (allDragElements[i] !== dragElement) {
+        //        if (allDragElements[i].style.zIndex > 10) {
+        //            allDragElements[i].style.zIndex -= 10;
+        //        } else {
+        //            allDragElements[i].style.zIndex = 0;
+        //        }
+        //    }
+        //}
+        // Hämta pekar position
         _startX = e.clientX;
         _startY = e.clientY;
 
         // grab the clicked element's position
         _offsetX = ExtractNumber(target.style.left);
+        console.log(target);
         _offsetY = ExtractNumber(target.style.top);
 
         target.style.zIndex = 1000;
@@ -48,18 +59,6 @@ function OnMouseDown(e) {
 
         // tell our code to start moving the element with the mouse
         document.onmousemove = OnMouseMove;
-
-        allDragElements = document.querySelectorAll("div.drag");
-        console.log(allDragElements.length);
-        for (var i = 0; i < allDragElements.length; i += 1) {
-            if (allDragElements[i] !== dragElement) {
-                if (allDragElements[i].style.zIndex > 10) {
-                    allDragElements[i].style.zIndex -= 10;
-                } else {
-                    allDragElements[i].style.zIndex = 0;
-                }
-            }
-        }
 
         // cancel out any text selections
         document.body.focus();
@@ -78,6 +77,11 @@ function OnMouseMove(e) {
     // this is the actual "drag code"
     dragElement.style.left = (_offsetX + e.clientX - _startX) + 'px';
     dragElement.style.top = (_offsetY + e.clientY - _startY) + 'px';
+
+    //console.log(_offsetY);
+    //console.log(_offsetX);
+    //console.log(dragElement.style.left);
+    //console.log(dragElement.style.top);
 
     //console.log(dragElement.style.left + ', ' + dragElement.style.top);
 }

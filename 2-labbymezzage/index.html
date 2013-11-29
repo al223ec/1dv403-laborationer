@@ -8,44 +8,41 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<header>
+    <header>
     <p>Välkommen till denna awesome chat</p>
     <input type="submit"  id="start" value="Starta en chat" />
 </header>
-
-<main class="large-5 columns">
-
-<!--    <div class="row messages">
+<main>
+    <!-- Ett exempel på en message board -->
+    <div class="drag">
+        <input type="button" class="close" value="X"/>
+        <div class="board">
+            <h1>MessageBoard</h1>
+            <div class="textRight">
+                Antal mess: 0
+            </div>
+            <div class="messageContainer">
+                <div class="mess large-12 columns">
+                    <p>Meddelande</p>
+                    <footer class="large-12">
+                        <a href="#" class="textLeft">Redigera</a>
+                        <a href="#" class="">Fri Nov 29 2013</a>
+                        <a href="#" class="textRight ">Delete</a>
+                    </footer>
+                </div>
+            </div>
+            <form>
+                <textarea>
+                </textarea>
+                <input type="button" class="submit right" value="skriv"/>
+            </form>
+        </div>
     </div>
-    <form>
-        <textarea class="msgText"> </textarea>
-        <!--<input type="submit"  id="sendMsg" value="Skicka meddelande" />-->
-    <!--</form>-->
-     <!-- Meddelande -->
-  <!--    <div class="row">
-        <div class="large-2 columns small-3"><img src="http://placehold.it/80x80&text=[img]" /></div>
-        <div class="large-10 columns">
-          <p><strong>Some Person said:</strong> Bacon ipsum dolor sit amet nulla ham qui sint exercitation eiusmod commodo, chuck duis velit. Aute in reprehenderit, dolore aliqua non est magna in labore pig pork biltong.</p>
-          <ul class="inline-list">
-            <li><a href="#">Detaljer</a></li>
-            <li><a href="#">Ta bort</a></li>
-          </ul>
-        </div>
-      </div>
-      <hr />-->
-<!--    <div id="messageBoard">
-        <div class="row messages">
-        </div>
-        <form>
-            <textarea class="msgText"> </textarea>
-            <input type="submit"  id="sendMsg" value="Posta" />
-        </form>
-    </div>-->
+<!-- slut board -->
 </main>
     <script src="Drag.js"></script>
     <script src="Message.js"></script>
     <script src="MessageBoard.js"></script>
     <script src="LabbyMezz.js"></script>
-
 </body>
 </html>
