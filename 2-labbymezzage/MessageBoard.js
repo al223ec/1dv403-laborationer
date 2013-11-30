@@ -11,8 +11,8 @@ function MessageBoard(container, topBar) { //conatiner den div som håller hela 
         var messageForm = document.createElement("form"); 
         var inputButton = document.createElement("input");
 
-        this.messageDiv.className = "row columns messageContainer";
-        this.numberDiv.className = "row 12-large columns textRight";
+        this.messageDiv.className = "messageContainer";
+        this.numberDiv.className = "textRight";
 
         inputButton.type = "button";
         inputButton.value = "skriv";

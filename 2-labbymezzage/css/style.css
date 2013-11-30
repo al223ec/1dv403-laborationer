@@ -10,10 +10,28 @@ h1 {
 p {
     font-family: 'Oswald', sans-serif;
 }
+header {
+    position: relative; 
+    background-color:antiquewhite;
+}
+.drag {
+    background-image:url('img/bg.png');
+    background-repeat:no-repeat;
+    border:1px solid #ececec;
+    /*border:0px solid #daeeff;
+    border-radius:10px;*/
+    position:absolute; 
+    cursor:move;
+    box-shadow: 2px 6px 5px #ececec;
+    height:426px;
+    width:600px;
+}
+
 .messageContainer {}
 
 .mess {
-  border: solid #daeeff;
+  border-top: solid #daeeff;
+  border-bottom: solid #daeeff;
   border-width: 1px;
   padding-bottom: 5px;
   margin-bottom: 10px;
@@ -55,15 +73,3 @@ textarea {
     color:white;
 }
 
-.drag {
-    background-image:url('img/bg.png');
-    background-repeat:no-repeat;
-    border:1px solid #ececec;
-    /*border:0px solid #daeeff;
-    border-radius:10px;*/
-    position:absolute; 
-    cursor:move;
-    box-shadow: 2px 6px 5px #ececec;
-    height:426px;
-    width:600px;
-}

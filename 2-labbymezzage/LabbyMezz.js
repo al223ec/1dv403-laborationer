@@ -7,7 +7,7 @@ function LabbyMezz () {
     this.init = function () {
         arrMessageBoards =[];
         numOfBoards = 0; 
-        main = document.querySelector("main");
+        main = document.querySelector("body");
     };
     this.createBoard = function () {
         var newBoard = document.createElement("div");
@@ -21,8 +21,7 @@ function LabbyMezz () {
 
         topBar.className = "drag";
         topBar.appendChild(closeButton);
-        topBar.style.left = '0pt';
-        topBar.style.top = '0pt';
+
         var that = this;
         closeButton.onclick = function (e) { console.log(topBar); that.removeBoard(topBar); };
 
@@ -35,6 +34,9 @@ function LabbyMezz () {
         arrMessageBoards.push(new MessageBoard(newBoard, topBar));
         arrMessageBoards[numOfBoards].init();
         numOfBoards++;
+
+        topBar.style.left = 100 + (numOfBoards * 10) + 'px';
+        topBar.style.top = 100 + (numOfBoards * 10) + 'px';
     };
 
     this.removeBoard = function(boardToRemove){
@@ -54,12 +56,12 @@ window.onload = function () {
     var start = document.querySelector("#start");
     var labby = new LabbyMezz();
     labby.init();
-
+    var drag = new Drag();
 
     // Vi kopplar en eventhanterare till formulärets skickaknapp som kör en anonym funktion.
     start.addEventListener("click", function (e) {
         e.preventDefault(); // Hindra formuläret från att skickas till servern
         labby.createBoard();
-        InitDragDrop();
+        drag.InitDragDrop();
     });
 };

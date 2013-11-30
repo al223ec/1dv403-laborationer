@@ -39,9 +39,8 @@ Message.prototype.addDiv = function (that) {
     edit.appendChild(document.createTextNode("Redigera "));
 
     footer.className = "large-12";
-    edit.className = "textLeft large-6";
-    del.className = "textRight large-2";
-    date.className = "large-4";
+    edit.className = "textLeft";
+    del.className = "textRight";
 
     var thisMessage = this; //behövs pga scopet
     del.onclick = function (e) {
