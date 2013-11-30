@@ -2,14 +2,15 @@
 function Drag() {
     var mouseStartX = 0;            // mouse starting positions
     var mouseStartY = 0;
-    var _offsetX = 0; // Det aktuella objektets X kordinat 
-    var _offsetY = 0;
+    var objectX = 0; // Det aktuella objektets X kordinat 
+    var objectY = 0;
     var dragElement;           // needs to be passed from OnMouseDown to OnMouseMove
     var allDragElements;
 
     this.InitDragDrop = function () {
         document.onmousedown = OnMouseDown;
         document.onmouseup = OnMouseUp;
+        allDragElements = document.querySelectorAll("div.drag");
         //document.onmousemove = function (e) {
         //    console.log(e.pageX + "x " + e.pageY +"y"); 
         //};
@@ -22,7 +23,6 @@ function Drag() {
 
         if ((e.button == 1 && window.event != null || e.button == 0) && target.className.indexOf("drag") !== -1) {
             //Fixa z index 
-            allDragElements = document.querySelectorAll("div.drag");
             for (var i = 0; i < allDragElements.length; i += 1) {
                 if (allDragElements[i] !== dragElement) {
                     if (allDragElements[i].style.zIndex > 10) {
@@ -33,14 +33,17 @@ function Drag() {
                 }
             }
             //Hämta pekar position
-            //mouseStartX = e.clientX;
-            //mouseStartY = e.clientY;
+            // .clientX Returns the horizontal coordinate within the application's client area at which 
+            //the event occurred (as opposed to the coordinates within the page). For example, 
+            //clicking in the top-left corner of the client area will always result in a mouse event with 
+            //a clientX value of 0, regardless of whether the page is scrolled horizontally.
+            // .pageX Returns the horizontal coordinate of the event relative to whole document.
             mouseStartX = e.pageX;
-            mouseStartY = e.pageY;
-
+            mouseStartY = e.pageY; 
+            
             // grab the clicked element's position
-            _offsetX = ExtractNumber(target.style.left);
-            _offsetY = ExtractNumber(target.style.top);
+            objectX = ExtractNumber(target.style.left);
+            objectY = ExtractNumber(target.style.top);
 
             target.style.zIndex = 1000;
 
@@ -58,15 +61,17 @@ function Drag() {
             // prevent text selection (except IE)
             return false;
         }
-        else if (target.className.indexOf("board") !== -1) { //sätter focus
-
-            target.style.zIndex = 1010;
-            console.log(target + " ej dragable");
-            //do {
-            //    target = target.parentNode;
-            //    console.log(target);
-            //}
-            //while (target != document.getElementById("main"));
+        else if (target.className.indexOf("board") !== -1) { //sätter focus om man klickar på ett av fönstren
+            for (var i = 0; i < allDragElements.length; i += 1) {
+                if (allDragElements[i] !== target.parentElement) {
+                    if (allDragElements[i].style.zIndex > 10) {
+                        allDragElements[i].style.zIndex -= 10;
+                    } else {
+                        allDragElements[i].style.zIndex = 0;
+                    }
+                }
+            }
+            target.parentElement.style.zIndex = 1000;
         }
     };
 
@@ -74,8 +79,8 @@ function Drag() {
         if (e == null)
             var e = window.event;
         // this is the actual "drag code"
-       dragElement.style.left = (_offsetX + e.clientX - mouseStartX) + 'px'; //Förändrar objektets position med hjälp av förändringen på pekarens position
-       dragElement.style.top = (_offsetY + e.clientY - mouseStartY) + 'px';
+        dragElement.style.left = (objectX + e.pageX - mouseStartX) + 'px'; //Förändrar objektets position med hjälp av förändringen på pekarens position
+        dragElement.style.top = (objectY + e.pageY - mouseStartY) + 'px';
     };
 
     function OnMouseUp(e) {

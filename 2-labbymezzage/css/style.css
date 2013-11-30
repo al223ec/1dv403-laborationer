@@ -10,10 +10,7 @@ h1 {
 p {
     font-family: 'Oswald', sans-serif;
 }
-header {
-    position: relative; 
-    background-color:antiquewhite;
-}
+header {}
 .drag {
     background-image:url('img/bg.png');
     background-repeat:no-repeat;
@@ -26,8 +23,24 @@ header {
     height:426px;
     width:600px;
 }
-
+.close {
+    float:right;
+    background:red;
+    color:white;
+}
+.board {
+    margin-top:26px;
+    cursor:default;
+    height:400px; 
+    z-index:inherit;
+    overflow:scroll;
+    overflow-x: hidden;
+}
 .messageContainer {}
+
+.textRight {
+    text-align:right; 
+}
 
 .mess {
   border-top: solid #daeeff;
@@ -41,9 +54,16 @@ header {
         text-align:right; 
         float:right;
     }
-.textRight {
-    text-align:right; 
+
+textarea {
+    float:left; 
+    resize: none;
+    height: 120px;
+    border: solid #daeeff;
+    background:none;
 }
+
+
 .textLeft {
     text-align:left; 
     float:left; 
@@ -51,25 +71,6 @@ header {
 .submit {
     border:1px solid #daeeff;
 }
-textarea {
-    resize: none;
-    height: 120px;
-    border: solid #daeeff;
-    background:none;
-}
 
-.board {
-    margin-top:26px;
-    cursor:default;
-    height:400px; 
-    z-index:inherit;
-    overflow:scroll;
-    overflow-x: hidden;
-}
 
-.close {
-    float:right;
-    background:red;
-    color:white;
-}
 
