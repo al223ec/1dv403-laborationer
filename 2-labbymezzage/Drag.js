@@ -11,9 +11,6 @@ function Drag() {
         document.onmousedown = OnMouseDown;
         document.onmouseup = OnMouseUp;
         allDragElements = document.querySelectorAll("div.drag");
-        //document.onmousemove = function (e) {
-        //    console.log(e.pageX + "x " + e.pageY +"y"); 
-        //};
     };
 
     function OnMouseDown(e) {

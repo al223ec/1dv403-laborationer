@@ -6,7 +6,7 @@ function MessageBoard(container, topBar) { //conatiner den div som håller hela 
     this.messageContainerDiv = document.createElement("div"),
     this.numberDiv = document.createElement("div");
     this.inputButton = document.createElement("input");
-    var that = this;
+
 
     this.init = function (e){
         var messageForm = document.createElement("form"); 
@@ -19,6 +19,15 @@ function MessageBoard(container, topBar) { //conatiner den div som håller hela 
 
         var that = this;
         this.initInput();
+        this.textarea.addEventListener("keypress", function (e) {
+            if (!e) { var e = window.event; }
+
+            if (e.keyCode === 13 && !e.shiftKey) { //keycode 13 = enter
+                e.preventDefault(); //behövs ingen radbrytning
+                that.addMessage(that.textarea.value);
+            }
+        }, false
+        );
         this.upDateNumber();
 
         messageForm.appendChild(this.textarea);
@@ -35,23 +44,24 @@ function MessageBoard(container, topBar) { //conatiner den div som håller hela 
         }
     });
 
-    this.shiftEnterDefaultListener = function (e, messIndex) {
-        if (!e) { var e = window.event; }
+    //  var that = this;
+    //this.shiftEnterDefaultListener = function (e, messIndex) {
+    //    if (!e) { var e = window.event; }
 
-        if (e.keyCode === 13 && !e.shiftKey) { //keycode 13 = enter
-            e.preventDefault(); //behövs ingen radbrytning
-            that.addMessage(this.value, messIndex);
-        }
-    };
+    //    if (e.keyCode === 13 && !e.shiftKey) { //keycode 13 = enter
+    //        e.preventDefault(); //behövs ingen radbrytning
+    //        that.addMessage(this.value, messIndex);
+    //    }
+    //};
 
-    this.shiftEnterEditListener = function (e) {
-        if (!e) { var e = window.event; }
+    //this.shiftEnterEditListener = function (e) {
+    //    if (!e) { var e = window.event; }
 
-        if (e.keyCode === 13 && !e.shiftKey) { //keycode 13 = enter
-            e.preventDefault(); //behövs ingen radbrytning
-            that.upDateMessages(that);
-        }
-    };
+    //    if (e.keyCode === 13 && !e.shiftKey) { //keycode 13 = enter
+    //        e.preventDefault(); //behövs ingen radbrytning
+    //        that.upDateMessages(that);
+    //    }
+    //};
 }
 
 MessageBoard.prototype.addMessage = function (text) {
@@ -101,7 +111,8 @@ MessageBoard.prototype.editMessage = function (messToEdit) {
     });
     var that = this; 
     this.inputButton.onclick = function (e) {
-        that.upDateMessages(that, messIndex); 
+        that.upDateMessages(that, messIndex);
+        that.initInput();
     };
     this.textarea.removeEventListener("keypress", this.shiftEnterDefaultListener, false);
     this.textarea.addEventListener("keypress", this.shiftEnterEditListener, false);
@@ -123,8 +134,8 @@ MessageBoard.prototype.initInput = function (e) {
         that.addMessage(that.textarea.value);
     };
 
-    this.textarea.addEventListener("keypress", this.shiftEnterDefaultListener, false);
 };
+
 //MessageBoard.prototype.addMessToSite = function (mess) {
 //    var p = document.createElement("p");
 //    p.innerHTML = mess.Text; 
