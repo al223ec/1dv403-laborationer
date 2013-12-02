@@ -20,7 +20,6 @@ function Drag() {
         // IE is retarded and doesn't pass the event object
         if (e == null) { e = window.event; }
         var target = e.target != null ? e.target : e.srcElement; // IE uses srcElement, others use target
-
         if ((e.button == 1 && window.event != null || e.button == 0) && target.className.indexOf("drag") !== -1) {
             //Fixa z index 
             for (var i = 0; i < allDragElements.length; i += 1) {

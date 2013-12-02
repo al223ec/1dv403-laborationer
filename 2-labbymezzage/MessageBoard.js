@@ -1,49 +1,30 @@
 ﻿"use strict";
 function MessageBoard(container, topBar) { //conatiner den div som håller hela messageBoarden
     var messages = [];
-    var editMessage = false; 
     this.topBar = topBar; 
     this.textarea = document.createElement("textarea"),
-    this.messageDiv = document.createElement("div"),
+    this.messageContainerDiv = document.createElement("div"),
     this.numberDiv = document.createElement("div");
+    this.inputButton = document.createElement("input");
+    var that = this;
 
     this.init = function (e){
         var messageForm = document.createElement("form"); 
-        var inputButton = document.createElement("input");
-
-        this.messageDiv.className = "messageContainer";
+        this.messageContainerDiv.className = "messageContainer";
         this.numberDiv.className = "textRight";
 
-        inputButton.type = "button";
-        inputButton.value = "skriv";
-        inputButton.className = "submit right";
+        this.inputButton.type = "button";
+        this.inputButton.value = "skriv";
+        this.inputButton.className = "submit right";
 
-        
-        var that = this; 
-        inputButton.onclick = function (e) {
-            if (!this.editmessage) {
-                that.addMessage(that.textarea.value);
-            }
-            else {
-                that.replaceMessage(that.textarea.value); 
-            }
-        };
-
-        this.textarea.addEventListener("keypress", function (e) {
-                if (!e) { var e = window.event; }
-                
-                if (e.keyCode === 13 && !e.shiftKey) { //keycode 13 = enter
-                    e.preventDefault(); //behövs ingen radbrytning
-                    that.addMessage(that.textarea.value);
-                }
-            }, false);
-        
+        var that = this;
+        this.initInput();
         this.upDateNumber();
 
         messageForm.appendChild(this.textarea);
-        messageForm.appendChild(inputButton);
+        messageForm.appendChild(this.inputButton);
         container.appendChild(this.numberDiv);
-        container.appendChild(this.messageDiv);
+        container.appendChild(this.messageContainerDiv);
         container.appendChild(messageForm);
     };
 
@@ -53,6 +34,24 @@ function MessageBoard(container, topBar) { //conatiner den div som håller hela 
             set: function (vaue) { messages = value; },
         }
     });
+
+    this.shiftEnterDefaultListener = function (e, messIndex) {
+        if (!e) { var e = window.event; }
+
+        if (e.keyCode === 13 && !e.shiftKey) { //keycode 13 = enter
+            e.preventDefault(); //behövs ingen radbrytning
+            that.addMessage(this.value, messIndex);
+        }
+    };
+
+    this.shiftEnterEditListener = function (e) {
+        if (!e) { var e = window.event; }
+
+        if (e.keyCode === 13 && !e.shiftKey) { //keycode 13 = enter
+            e.preventDefault(); //behövs ingen radbrytning
+            that.upDateMessages(that);
+        }
+    };
 }
 
 MessageBoard.prototype.addMessage = function (text) {
@@ -66,7 +65,7 @@ MessageBoard.prototype.addMessage = function (text) {
 };
 
 MessageBoard.prototype.addMessToSite = function (mess) {
-    this.messageDiv.appendChild(mess.addDiv(this));
+    this.messageContainerDiv.appendChild(mess.addDiv(this));
     this.textarea.value = ""; 
     this.upDateNumber();
 };
@@ -75,7 +74,7 @@ MessageBoard.prototype.removeMessage = function (messToRemove) {
         return;
     }
     var messIndex;
-    this.messageDiv.removeChild(messToRemove.Div);
+    this.messageContainerDiv.removeChild(messToRemove.Div);
     this.messages.map(function (mess, index){ 
         if (mess.Div === messToRemove.Div) {
             messIndex = index; 
@@ -92,8 +91,7 @@ MessageBoard.prototype.upDateNumber = function () {
     this.numberDiv.appendChild(document.createTextNode("Antal mess: " + this.messages.length));
 };
 MessageBoard.prototype.editMessage = function (messToEdit) {
-    console.log(messToEdit.Text); 
-    this.textarea.value = messToEdit.Text;//.replaceAll(/<br />/g, "n");;
+    this.textarea.value = messToEdit.Text;
     var messIndex; 
 
     this.messages.map(function (mess, index) {
@@ -101,7 +99,31 @@ MessageBoard.prototype.editMessage = function (messToEdit) {
             messIndex = index;
         }
     });
-    console.log(messIndex); 
+    var that = this; 
+    this.inputButton.onclick = function (e) {
+        that.upDateMessages(that, messIndex); 
+    };
+    this.textarea.removeEventListener("keypress", this.shiftEnterDefaultListener, false);
+    this.textarea.addEventListener("keypress", this.shiftEnterEditListener, false);
+};
+
+MessageBoard.prototype.upDateMessages = function(that, messIndex){
+    if (confirm("Detta skriver över meddelandet")) {
+        var newMess = new Message(that.textarea.value, new Date(), document.createElement("div"))
+        that.messageContainerDiv.replaceChild(newMess.addDiv(that), that.messages[messIndex].Div);
+        that.messages[messIndex] = newMess;
+        that.textarea.value = "";
+    } else {
+        that.initInput();
+    }
+}
+MessageBoard.prototype.initInput = function (e) {
+    var that = this;
+    this.inputButton.onclick = function (e) {
+        that.addMessage(that.textarea.value);
+    };
+
+    this.textarea.addEventListener("keypress", this.shiftEnterDefaultListener, false);
 };
 //MessageBoard.prototype.addMessToSite = function (mess) {
 //    var p = document.createElement("p");
@@ -134,7 +156,7 @@ MessageBoard.prototype.editMessage = function (messToEdit) {
 //    footer.appendChild(del);
 //    mess.Div.appendChild(footer);
 
-//    this.messageDiv.appendChild(mess.Div);
-//    this.messageDiv.appendChild(mess.intiDiv(this));
+//    this.messageContainerDiv.appendChild(mess.Div);
+//    this.messageContainerDiv.appendChild(mess.intiDiv(this));
 //    this.upDateNumber();
 //};
