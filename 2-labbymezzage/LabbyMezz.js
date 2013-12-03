@@ -23,7 +23,12 @@ function LabbyMezz () {
         topBar.appendChild(closeButton);
 
         var that = this;
-        closeButton.onclick = function (e) { console.log(topBar); that.removeBoard(topBar); };
+        closeButton.onclick = function (e) {
+            if(!confirm("Vill du stänga detta fönster")){
+                return;
+            }
+            that.removeBoard(topBar);
+        };
 
         header.appendChild(document.createTextNode("MessageBoard"));
         newBoard.className = "board";

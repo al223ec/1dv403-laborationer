@@ -1,5 +1,5 @@
 "use strict";
-function Drag() {
+var Drag = function drag() {
     var mouseStartX = 0;            // mouse starting positions
     var mouseStartY = 0;
     var objectX = 0; // Det aktuella objektets X kordinat 
@@ -17,6 +17,7 @@ function Drag() {
         // IE is retarded and doesn't pass the event object
         if (e == null) { e = window.event; }
         var target = e.target != null ? e.target : e.srcElement; // IE uses srcElement, others use target
+
         if ((e.button == 1 && window.event != null || e.button == 0) && target.className.indexOf("drag") !== -1) {
             //Fixa z index 
             for (var i = 0; i < allDragElements.length; i += 1) {

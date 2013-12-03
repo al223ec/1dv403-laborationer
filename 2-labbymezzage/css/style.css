@@ -15,13 +15,14 @@ header {}
     background-image:url('img/bg.png');
     background-repeat:no-repeat;
     border:1px solid #ececec;
-    /*border:0px solid #daeeff;
-    border-radius:10px;*/
     position:absolute; 
     cursor:move;
     box-shadow: 2px 6px 5px #ececec;
-    height:426px;
-    width:600px;
+    height:450px;
+    width:auto; 
+    padding-bottom:26px;
+    overflow:scroll;
+    overflow-x: hidden;
 }
 .close {
     float:right;
@@ -29,12 +30,10 @@ header {}
     color:white;
 }
 .board {
-    margin-top:26px;
+    width:550px;
     cursor:default;
     height:400px; 
     z-index:inherit;
-    overflow:scroll;
-    overflow-x: hidden;
 }
 .messageContainer {}
 
