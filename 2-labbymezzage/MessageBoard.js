@@ -7,7 +7,6 @@ function MessageBoard(container, topBar) { //conatiner den div som håller hela 
     this.numberDiv = document.createElement("div");
     this.inputButton = document.createElement("input");
 
-
     this.init = function (e){
         var messageForm = document.createElement("form"); 
         this.messageContainerDiv.className = "messageContainer";
@@ -19,6 +18,7 @@ function MessageBoard(container, topBar) { //conatiner den div som håller hela 
 
         var that = this;
         this.initInput();
+
         this.textarea.addEventListener("keypress", function (e) {
             if (!e) { var e = window.event; }
 
@@ -38,7 +38,7 @@ function MessageBoard(container, topBar) { //conatiner den div som håller hela 
     };
 
     Object.defineProperties(this, {
-        messages: {
+        Messages: {
             get: function () { return messages; },
             set: function (vaue) { messages = value; },
         }
@@ -114,8 +114,6 @@ MessageBoard.prototype.editMessage = function (messToEdit) {
         that.upDateMessages(that, messIndex);
         that.initInput();
     };
-    this.textarea.removeEventListener("keypress", this.shiftEnterDefaultListener, false);
-    this.textarea.addEventListener("keypress", this.shiftEnterEditListener, false);
 };
 
 MessageBoard.prototype.upDateMessages = function(that, messIndex){
@@ -133,7 +131,6 @@ MessageBoard.prototype.initInput = function (e) {
     this.inputButton.onclick = function (e) {
         that.addMessage(that.textarea.value);
     };
-
 };
 
 //MessageBoard.prototype.addMessToSite = function (mess) {

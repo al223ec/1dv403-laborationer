@@ -44,7 +44,7 @@ function LabbyMezz () {
         topBar.style.top = 100 + (numOfBoards * 10) + 'px';
     };
 
-    this.removeBoard = function(boardToRemove){
+    removeBoard = function(boardToRemove){
         var boardIndex;
         main.removeChild(boardToRemove);
         arrMessageBoards.map(function (board, index) {
