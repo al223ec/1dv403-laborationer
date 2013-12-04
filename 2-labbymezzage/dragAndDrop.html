@@ -1,0 +1,1413 @@
+ <html>
+<head>
+   
+    <title>Nestable</title>
+   
+<script type="text/javascript">
+    var selectedGroupRowGuid;
+    var oDragTargets = []; //array of all available dragtarget
+    var oDragTarget = null; // selected dragtarget
+    var oDragItem = null; //selected DragItem
+    var iClickOffsetX = 0;
+    var iClickOffsetY = 0;
+
+
+    var newdiv = null;// new space created for draging object
+
+    var xforoDragTarget = 0; // width of upper div for newdiv
+    var xforoDragTarget2 = 0;//cursor position of newdiv
+    var widthforoDragTarget = 529;// default width for newdiv
+    var myids = new Array(); //array of ids of all available dragtarget
+
+    var itemsrelations = new Array(); //2D array of ids of all available dragtarget with parent_chield relation
+
+    var nextdivmargin = 0; //margin of div of next to dragtarget
+    var leval = 0; // leval,movenext and move are set to 1 when we move the item
+    var movenext = 0;
+    var move = 0;
+    var smallest = 0;// margin of smallest div while moving multiple items
+
+    var firstdiv = 0;// set to 1 while selecting first item to move
+    var movefirstdiv = 0; //set to 1 while moving first item 
+
+    var colapsed = 0; //set to 1 while items are colapsed
+    var iscolapsed = 0; //set to 1 while items are colapsed
+    var isTop = 0; //set to 1 while items move on top
+
+    var initialMove = 0;//set to 1 for just start to move and become 0 while next move
+    var initialMargin = 0; //to store margin of dragged item
+    var initialwidth = 529; //to store width of dragged item
+    var setstyle = -1; //to check whether styles are set or not for newdiv
+
+    var scrollamount = 0;
+
+    function scrollcall(arg) {
+
+        scrollamount = arg.scrollTop
+
+    }
+    // function Expand() is called after clicking on Expand All button
+
+    function Expand() {
+
+        for (var i = 0; i < myids.length; i++) {
+
+            var el = document.getElementById("expand" + myids[i]);
+            if (el != null) {
+
+                el.value = "-";
+
+            }
+            document.getElementById(myids[i]).style.display = "block";
+
+
+
+        }
+
+    }
+
+    // function Colaps() is called after clicking on Colaps All button
+
+    function Colaps() {
+
+        for (var i = 0; i < myids.length; i++) {
+
+            var el = document.getElementById("expand" + myids[i]);
+            if (el != null) {
+
+
+                el.value = "+";
+
+            }
+            if (document.getElementById(myids[i]).style.marginLeft != "0px") {
+                document.getElementById(myids[i]).style.display = "none";
+            }
+
+
+
+        }
+    }
+
+    // function CreateSerOutput() is to genrate serealized output and also responsible to create and change +,- on div
+    // and asign click event to those with event handeler
+    function CreateSerOutput() {
+
+        var childNodeArray = document.getElementById('groups').getElementsByTagName('div');
+
+        // this loop is used to remove all +,- sign on items
+        for (var i = 0; i < childNodeArray.length; i++) {
+
+
+            var reper = document.getElementById("expand" + childNodeArray[i].id);
+            if (reper != null)
+                reper.parentNode.removeChild(reper);
+
+        }
+
+        childNodeArray = document.getElementById('groups').getElementsByTagName('div');
+
+        var strSerialisedoutput = "<root>\n";
+
+        for (var i = 0; i < childNodeArray.length; i++) {
+
+
+            itemsrelations[childNodeArray[i].id] = new Array();
+            for (j = i + 1; j < childNodeArray.length; j++) {
+
+                var a = parseInt(childNodeArray[j].style.marginLeft.slice(0, -2)) - parseInt(childNodeArray[i].style.marginLeft.slice(0, -2))
+                if (a > 0) {
+
+                    // creating parent chield releations 
+                    itemsrelations[childNodeArray[i].id][j - i - 1] = childNodeArray[j].id;
+
+                    var new2 = document.getElementById("expand" + childNodeArray[i].id)
+                    if (new2 == null) {
+
+                        // creating expand colaps button for items
+                        var element2 = document.createElement("input");
+
+                        element2.type = "button";
+                        element2.style.background = "#fff";
+                        element2.style.border = "0px";
+                        if (document.getElementById(childNodeArray[j].id).style.display == "block") {
+                            element2.value = "-";
+                        } else {
+                            element2.value = "+";
+                        }
+                        element2.id = "expand" + childNodeArray[i].id;
+
+
+                        // onclick event for expand colaps button
+
+                        element2.onclick = function () {
+                            // checking whether chield items expanded or colapsed
+                            if (document.getElementById(itemsrelations[this.id.substring(6)][0]).style.display == 'block') {
+                                for (var i = 0; i < itemsrelations[this.id.substring(6)].length; i++) {
+
+                                    document.getElementById(itemsrelations[this.id.substring(6)][i]).style.display = "none";
+
+                                    this.value = "+";
+                                }
+                            } else {
+                                for (var i = 0; i < itemsrelations[this.id.substring(6)].length; i++) {
+
+                                    document.getElementById(itemsrelations[this.id.substring(6)][i]).style.display = "block";
+
+                                    this.value = "-";
+                                    var el = document.getElementById("expand" + itemsrelations[this.id.substring(6)][i]);
+                                    if (el != null) {
+
+                                        el.value = "-";
+
+                                    }
+                                }
+
+                            }
+                            if (movenext == 0) {
+                                // if parent items just clicked and not moved then items remain in original positions
+                                var reper3 = document.getElementById(this.id.substring(6));
+                                var reper = document.getElementById("pardiv" + this.id.substring(6));
+
+                                if (reper != null) {
+
+                                    for (j = itemsrelations[this.id.substring(6)].length - 1; j >= 0; j--) {
+                                        var reper1 = document.getElementById(itemsrelations[this.id.substring(6)][j]);
+                                        if (reper.nextSibling) {
+                                            reper.parentNode.insertBefore(reper1, reper.nextSibling);
+                                            if (j == 0) {
+                                                reper.parentNode.insertBefore(reper3, reper.nextSibling);
+                                            }
+                                        } else {
+                                            reper.parentNode.appendChild(reper1);
+                                            if (j == 0) {
+                                                reper.parentNode.insertBefore(reper3, reper.nextSibling);
+                                            }
+                                        }
+
+                                    }
+                                    reper.parentNode.removeChild(reper);
+
+                                }
+                            }
+                        }
+                        // applying styles to expand colaps button and adding it to items
+                        element2.style.background = document.getElementById(childNodeArray[i].id).style.background;
+                        var divtext = document.getElementById(childNodeArray[i].id).innerHTML;
+                        var content = document.createTextNode(divtext);
+                        document.getElementById(childNodeArray[i].id).innerHTML = "";
+                        document.getElementById(childNodeArray[i].id).appendChild(element2);
+                        document.getElementById(childNodeArray[i].id).appendChild(content);
+                    }
+                } else {
+                    break;
+                }
+
+
+            }
+            // inserting ids in myids array
+            myids[i] = childNodeArray[i].id;
+            if (i == 0) {
+                strSerialisedoutput = strSerialisedoutput + "  <item id=\"" + childNodeArray[i].id + "\" level=\"1";
+            } else {
+
+
+                // var a is margin difference between next item and current item .it may be 30,0,-30,-60,-90 accordingly serialized output created
+                var a = parseInt(childNodeArray[i].style.marginLeft.slice(0, -2)) - parseInt(childNodeArray[i - 1].style.marginLeft.slice(0, -2))
+                if (a == 0) {
+
+
+                    if (parseInt(childNodeArray[i].style.marginLeft.slice(0, -2)) == 0) {
+                        strSerialisedoutput = strSerialisedoutput + "\" />\n" + "  <item id=\"" + childNodeArray[i].id + "\" level=\"1";
+                    }
+                    if (parseInt(childNodeArray[i].style.marginLeft.slice(0, -2)) == 30) {
+                        strSerialisedoutput = strSerialisedoutput + "\" />\n" + "    <item id=\"" + childNodeArray[i].id + "\" level=\"2";
+                    }
+                    if (parseInt(childNodeArray[i].style.marginLeft.slice(0, -2)) == 60) {
+                        strSerialisedoutput = strSerialisedoutput + "\" />\n" + "       <item id=\"" + childNodeArray[i].id + "\" level=\"3";
+                    }
+                    if (parseInt(childNodeArray[i].style.marginLeft.slice(0, -2)) == 90) {
+                        strSerialisedoutput = strSerialisedoutput + "\" />\n" + "          <item id=\"" + childNodeArray[i].id + "\" level=\"4";
+                    }
+
+                }
+                if (a == 30) {
+                    if (parseInt(childNodeArray[i].style.marginLeft.slice(0, -2)) == 0) {
+                        strSerialisedoutput = strSerialisedoutput + "\">\n" + "  <item id=\"" + childNodeArray[i].id + "\" level=\"1";
+                    }
+                    if (parseInt(childNodeArray[i].style.marginLeft.slice(0, -2)) == 30) {
+                        strSerialisedoutput = strSerialisedoutput + "\">\n" + "    <item id=\"" + childNodeArray[i].id + "\" level=\"2";
+                    }
+                    if (parseInt(childNodeArray[i].style.marginLeft.slice(0, -2)) == 60) {
+                        strSerialisedoutput = strSerialisedoutput + "\">\n" + "       <item id=\"" + childNodeArray[i].id + "\" level=\"3";
+                    }
+                    if (parseInt(childNodeArray[i].style.marginLeft.slice(0, -2)) == 90) {
+                        strSerialisedoutput = strSerialisedoutput + "\">\n" + "          <item id=\"" + childNodeArray[i].id + "\" level=\"4";
+                    }
+
+                }
+                if (a == -30) {
+                    if (parseInt(childNodeArray[i].style.marginLeft.slice(0, -2)) == 0) {
+                        strSerialisedoutput = strSerialisedoutput + "\"/>\n  </item>\n" + "  <item id=\"" + childNodeArray[i].id + "\" level=\"1";
+                    }
+                    if (parseInt(childNodeArray[i].style.marginLeft.slice(0, -2)) == 30) {
+                        strSerialisedoutput = strSerialisedoutput + "\"/>\n    </item>\n" + "    <item id=\"" + childNodeArray[i].id + "\" level=\"2";
+                    }
+                    if (parseInt(childNodeArray[i].style.marginLeft.slice(0, -2)) == 60) {
+                        strSerialisedoutput = strSerialisedoutput + "\"/>\n      </item>\n" + "       <item id=\"" + childNodeArray[i].id + "\" level=\"3";
+                    }
+                    if (parseInt(childNodeArray[i].style.marginLeft.slice(0, -2)) == 90) {
+                        strSerialisedoutput = strSerialisedoutput + "\"/>\n        </item>\n" + "          <item id=\"" + childNodeArray[i].id + "\" level=\"4";
+                    }
+
+                }
+
+                if (a == -60) {
+                    if (parseInt(childNodeArray[i].style.marginLeft.slice(0, -2)) == 0) {
+                        strSerialisedoutput = strSerialisedoutput + "\"/>\n    </item>\n  </item>\n" + "  <item id=\"" + childNodeArray[i].id + "\" level=\"1";
+                    }
+                    if (parseInt(childNodeArray[i].style.marginLeft.slice(0, -2)) == 30) {
+                        strSerialisedoutput = strSerialisedoutput + "\"/>\n      </item>\n    </item>\n" + "    <item id=\"" + childNodeArray[i].id + "\" level=\"2";
+                    }
+                    if (parseInt(childNodeArray[i].style.marginLeft.slice(0, -2)) == 60) {
+                        strSerialisedoutput = strSerialisedoutput + "\"/>\n        </item>\n      </item>\n" + "       <item id=\"" + childNodeArray[i].id + "\" level=\"3";
+                    }
+                    if (parseInt(childNodeArray[i].style.marginLeft.slice(0, -2)) == 90) {
+                        strSerialisedoutput = strSerialisedoutput + "\"/>\n          </item>\n        </item>\n" + "          <item id=\"" + childNodeArray[i].id + "\" level=\"4";
+                    }
+
+                }
+                if (a == -90) {
+                    if (parseInt(childNodeArray[i].style.marginLeft.slice(0, -2)) == 0) {
+                        strSerialisedoutput = strSerialisedoutput + "\"/>\n      </item>\n    </item>\n  </item>\n" + "  <item id=\"" + childNodeArray[i].id + "\" level=\"1";
+                    }
+                    if (parseInt(childNodeArray[i].style.marginLeft.slice(0, -2)) == 30) {
+                        strSerialisedoutput = strSerialisedoutput + "\"/>\n      </item>\n    </item>\n  </item>\n" + "    <item id=\"" + childNodeArray[i].id + "\" level=\"2";
+                    }
+                    if (parseInt(childNodeArray[i].style.marginLeft.slice(0, -2)) == 60) {
+                        strSerialisedoutput = strSerialisedoutput + "\"/>\n      </item>\n    </item>\n  </item>\n" + "       <item id=\"" + childNodeArray[i].id + "\" level=\"3";
+                    }
+                    if (parseInt(childNodeArray[i].style.marginLeft.slice(0, -2)) == 90) {
+                        strSerialisedoutput = strSerialisedoutput + "\"/>\n      </item>\n    </item>\n  </item>\n" + "          <item id=\"" + childNodeArray[i].id + "\" level=\"4";
+                    }
+
+                }
+            }
+            // following block is excecuted for last items
+            if (i == childNodeArray.length - 1) {
+                var b = parseInt(childNodeArray[i].style.marginLeft.slice(0, -2));
+                if (b == 0) {
+
+                    strSerialisedoutput = strSerialisedoutput + "\"/>\n</root>";
+                }
+                if (b == 30) {
+
+                    strSerialisedoutput = strSerialisedoutput + "\"/>\n  </item>\n</root>";
+                }
+                if (b == 60) {
+
+                    strSerialisedoutput = strSerialisedoutput + "\"/>\n    </item>\n  </item>\n</root>";
+                }
+                if (b == 90) {
+
+                    strSerialisedoutput = strSerialisedoutput + "\"/>\n      </item>\n    </item>\n  </item>\n</root>";
+                }
+
+            }
+        }
+        // assign output to textbox
+        document.getElementById('nestable-output').value = strSerialisedoutput;
+
+    }
+
+    // function theFunc2(arg) is called when hover the div. this change the class of div from DropTarget to dd-handle to make it capable to be draged.
+    // if it is parent div then create the group of divs to make it capable to be draged together
+    function onmouseoveritem(arg) {
+
+
+
+        if (movenext == 0) {
+
+            // this is excecuted only when items is not moving
+            initialMargin = parseInt(arg.style.marginLeft.slice(0, -2));
+            initialwidth = parseInt(arg.style.width.slice(0, -2));
+
+            var yindex = -1;
+            for (var i = 0; i < myids.length; i++) {
+                var reperrr = document.getElementById("pardiv" + myids[i]);
+                if (reperrr != null) {
+                    yindex = i;
+                }
+            }
+            if (yindex >= 0) {
+                var reperrr = document.getElementById("pardiv" + myids[yindex]);
+                var reperrrr = document.getElementById(myids[yindex]);
+                if (reperrr != null) {
+                    if (arg.id != myids[yindex])
+                        onmouseoutitem(reperrrr)
+                }
+            }
+            arg.className = 'dd-handle';
+            leval = 0;
+            if (itemsrelations[arg.id].length > 0) {
+
+                var len = 0;
+                // this loop is calculating number of items in the group so pardiv get height accordingly
+                for (var i = 0; i < itemsrelations[arg.id].length; i++) {
+                    if (document.getElementById(itemsrelations[arg.id][i]).style.display == "block") {
+                        len++;
+
+                    }
+                }
+
+
+                var reper = document.getElementById("pardiv" + arg.id);
+                if ((reper == null) && (movenext == 0)) {
+                    // here pardiv is creating so all items come in that and can be dragged together
+                    var pardiv = document.createElement('div');
+                    if (document.getElementById(itemsrelations[arg.id][0]).style.display == "block")
+                        pardiv.style.height = len * 35 + 35 + "px";
+                    else
+                        pardiv.style.height = 35 + "px";
+
+                    pardiv.style.margin = "0px";
+
+                    pardiv.style.padding = "0px";
+
+                    pardiv.className = 'dd-handle';
+                    pardiv.id = "pardiv" + arg.id;
+                    pardiv.setAttribute("data-id", arg.attributes["data-id"].nodeValue);
+
+                    pardiv.style.background = "transparent";
+                    pardiv.style.border = "0px";
+
+                    arg.parentNode.insertBefore(pardiv, arg.nextSibling);
+                    var el2 = document.getElementById(arg.id);
+                    pardiv.appendChild(el2);
+                    for (i = 0; i < itemsrelations[arg.id].length; i++) {
+                        var el = document.getElementById(itemsrelations[arg.id][i]);
+                        pardiv.appendChild(el);
+                    }
+                }
+            }
+
+            SetupDragDrop();
+        }
+    }
+
+    // function theFunc3(arg) is called when hoverout the div. this change the class of div from  dd-handle to DropTarget.
+    // also responsible to replace newdiv with all divs in dragiten in case of draging multiple divs together
+    function onmouseoutitem(arg) {
+
+
+        if (movenext == 0) {
+            // this is excecuted only when items is not moving
+            var reper3 = document.getElementById(arg.id);
+            var reper = document.getElementById("pardiv" + arg.id);
+
+            if (reper != null) {
+                // all items are getting its original position and pardiv is getting deleted
+                for (j = itemsrelations[arg.id].length - 1; j >= 0; j--) {
+                    var reper1 = document.getElementById(itemsrelations[arg.id][j]);
+                    if (reper.nextSibling) {
+                        reper.parentNode.insertBefore(reper1, reper.nextSibling);
+                        if (j == 0) {
+                            reper.parentNode.insertBefore(reper3, reper.nextSibling);
+                        }
+                    } else {
+                        reper.parentNode.appendChild(reper1);
+                        if (j == 0) {
+                            reper.parentNode.insertBefore(reper3, reper.nextSibling);
+                        }
+                    }
+
+                }
+                reper.parentNode.removeChild(reper);
+
+            }
+
+            arg.className = 'DropTarget';
+
+            SetupDragDrop();
+
+        }
+
+
+
+    }
+
+    // function insertNewDiv() is called while dragitem comes over drag target. it inserts the newly created div with proper styles and position according to  drag target
+    function insertNewDiv() {
+
+
+
+        colapsed = 0;
+        iscolapsed = 0;
+        var parinte2 = oDragTarget.parentNode;
+        var newwidth = "529px";
+        var z = 0;
+
+
+
+        if (oDragTarget.style.background != "white") {
+            // block is excecuted while u move item on non white items
+            movefirstdiv = 1;
+            initialMove = 1;
+
+            if (oDragTarget.parentNode.id == 'groups') {
+
+                var y = 0;
+                for (var i = 0; i < myids.length; i++) {
+                    if (myids[i] == oDragTarget.id)
+                        y = i;
+                }
+
+                if (y <= myids.length - 2) {
+                    // block is excecuted while u move item on other than last item
+                    var nextdiv = document.getElementById(myids[y + 1]);
+                    nextdivmargin = parseInt(nextdiv.style.marginLeft.slice(0, -2));
+                    newwidth = parseInt(nextdiv.style.width.slice(0, -2));
+                    if (nextdiv.style.display == "none") {
+                        iscolapsed = 1;
+                        var lastdisplaydiv = document.getElementById(itemsrelations[oDragTarget.id][itemsrelations[oDragTarget.id].length - 1]);
+
+
+                        for (var i = 0; i < myids.length; i++) {
+
+                            // here we are getting width and margin of next item to droptarget
+
+                            if ((myids[i] == lastdisplaydiv.id) && (i <= myids.length - 2)) {
+
+                                var nextdivv = document.getElementById(myids[i + 1]);
+                                nextdivmargin = parseInt(nextdivv.style.marginLeft.slice(0, -2));
+                                newwidth = parseInt(nextdivv.style.width.slice(0, -2));
+
+                            } else {
+
+                                nextdivmargin = parseInt(oDragTarget.style.marginLeft.slice(0, -2));
+                                newwidth = parseInt(oDragTarget.style.width.slice(0, -2));
+                            }
+
+                        }
+                        if (isTop == 0) {
+                            oDragTarget = lastdisplaydiv;
+                        }
+
+                    }
+
+                    z = 1;
+                }
+            }
+
+
+            if (z == 1) {
+                // block is excecuted while u move item on other than last items
+
+                if ((nextdivmargin + smallest) <= 90) {
+
+
+                    oDragTarget.parentNode.insertBefore(newdiv, oDragTarget.nextSibling);
+                    movefirstdiv = 1;
+                    if (oDragTarget.style.background != "white") {
+                        // block is excecuted while u move item on already presented items
+                        var position2 = oDragTarget.getBoundingClientRect();
+
+                        xforoDragTarget2 = position2.left;
+
+                        var a = parseInt(oDragTarget.style.marginLeft.slice(0, -2));
+                        var b = parseInt(oDragTarget.style.width.slice(0, -2));
+                        if (setstyle != oDragTarget.id) {
+                            newdiv.style.marginLeft = nextdivmargin + "px";
+                            newdiv.style.width = newwidth + "px";
+                            setstyle = oDragTarget.id;
+                        }
+                        xforoDragTarget = a;
+                        widthforoDragTarget = b;
+                        if (iscolapsed == 1) {
+                            // block is excecuted while u move items in colapsed mode
+                            var lastdisplay = 0;
+                            for (var i = 0; i < myids.length; i++) {
+                                if (myids[i] == oDragTarget.id)
+                                    break;
+                                var lastdisplaydiv = document.getElementById(myids[i]);
+                                if (lastdisplaydiv.style.display == "block") {
+                                    lastdisplay = i;
+
+                                }
+
+
+                            }
+                            var lastdisplaydiv2 = document.getElementById(myids[lastdisplay]);
+                            var position22 = lastdisplaydiv2.getBoundingClientRect();
+
+                            xforoDragTarget2 = position22.left;
+                            var ab = parseInt(lastdisplaydiv2.style.marginLeft.slice(0, -2));
+                            var ba = parseInt(lastdisplaydiv2.style.width.slice(0, -2));
+                            xforoDragTarget = ab;
+                            widthforoDragTarget = ba;
+                            colapsed = 1;
+
+
+                        }
+
+                    }
+                }
+
+                if (isTop == 1) {
+                    // block is excecuted while u move item on top
+                    oDragTarget.parentNode.insertBefore(newdiv, oDragTarget);
+                    newdiv.style.marginLeft = "0px";
+                    newdiv.style.width = 529 + "px";
+                    colapsed = 1;
+
+                }
+
+
+            } else {
+
+                // this is called when droptarget is last item
+                nextdivmargin = 0;
+                if (setstyle != oDragTarget.id) {
+                    newdiv.style.marginLeft = "0px";
+                    newdiv.style.width = 529 + "px";
+                    setstyle = oDragTarget.id;
+                }
+                oDragTarget.parentNode.appendChild(newdiv);
+
+
+                movefirstdiv = 1;
+                if (oDragTarget.style.background != "white") {
+                    var position2 = oDragTarget.getBoundingClientRect();
+
+                    xforoDragTarget2 = position2.left;
+
+                    var a = parseInt(oDragTarget.style.marginLeft.slice(0, -2));
+                    var b = parseInt(oDragTarget.style.width.slice(0, -2));
+
+
+                    xforoDragTarget = a;
+                    widthforoDragTarget = b;
+                    if (isTop == 1) {
+
+                        oDragTarget.parentNode.insertBefore(newdiv, oDragTarget);
+                        newdiv.style.marginLeft = "0px";
+                        newdiv.style.width = 529 + "px";
+                        colapsed = 1;
+
+                    }
+
+
+
+
+                }
+            }
+
+        }
+
+        var position = newdiv.getBoundingClientRect();
+
+
+
+
+
+        SetupDragDrop();
+    }
+
+    function OnLoad() {
+
+        CreateSerOutput();
+        SetupDragDrop();
+    }
+    //function SetupDragDrop() add capability for being dragable or dropable according to class
+    function SetupDragDrop() {
+        oDragTargets = [];
+
+        var oList = document.getElementsByTagName("div");
+        for (var i = 0; i < oList.length; i++) {
+            var o = oList[i];
+            if (o.className == "DropTarget") {
+                oDragTargets[oDragTargets.length] = GetObjPos(o);
+            } else if (o.className == "dd-handle") {
+                MakeDragable(o);
+            }
+        }
+    }
+    //function MakeDragable() add capability for being dragable
+    function MakeDragable(oBox) {
+        if (navigator.platform == "iPad") {
+            oBox.ontouchstart = function (e) {
+                TouchStart(e)
+            };
+            oBox.ontouchmove = function (e) {
+                TouchMove(e)
+            };
+            oBox.ontouchend = function (e) {
+                TouchEnd(e)
+            };
+        } else {
+            oBox.onmousemove = function (e) {
+                DragMove(oBox, e)
+            };
+            oBox.onmouseup = function (e) {
+                DragStop(oBox, e)
+            };
+            oBox.onmousedown = function (e) {
+                DragStart(oBox, e);
+                return false
+            };
+        }
+    }
+
+    function TouchStart(e) {
+        var oPos = GetObjPos(e.target);
+        iClickOffsetX = e.targetTouches[0].pageX - oPos.x;
+        iClickOffsetY = e.targetTouches[0].pageY - oPos.y;
+
+    }
+    //function DragStart is called when we select item to drag.also reponsible for creating newdiv
+    function DragStart(o, e) {
+
+
+        // in this code we just create new div but it is not placed anywhere
+        newdiv = document.createElement('div');
+
+
+
+
+        newdiv.className = 'DropTarget';
+
+        newdiv.style.background = "white";
+        newdiv.style.border = "1px dashed #b6bcbf";
+
+
+
+        if (!e) var e = window.event;
+        oDragItem = o;
+        newdiv.style.height = oDragItem.style.height;
+
+
+        newdiv.style.width = initialwidth + "px";
+        newdiv.setAttribute("data-id", oDragItem.attributes["data-id"].nodeValue);
+
+
+        newdiv.style.marginLeft = initialMargin + "px";
+        if (e.offsetX) {
+            iClickOffsetX = e.offsetX;
+            iClickOffsetY = e.offsetY;
+        } else {
+            var oPos = GetObjPos(o);
+            iClickOffsetX = e.clientX - oPos.x;
+            iClickOffsetY = e.clientY - oPos.y;
+        }
+
+        if (o.setCapture) {
+            o.setCapture();
+        } else {
+            window.addEventListener("mousemove", DragMove2, true);
+            window.addEventListener("mouseup", DragStop2, true);
+        }
+
+
+
+
+    }
+
+    function DragMove2(e) {
+
+
+        DragMove(oDragItem, e);
+    }
+
+    function DragStop2(e) {
+
+        DragStop(oDragItem, e);
+    }
+    // function DragMove is called when we move the selected item inserts the new div at place of draged item 
+    function DragMove(o, e) {
+
+        if (oDragItem == null) return;
+
+        if ((oDragItem.id == myids[0]))
+            firstdiv = 1;
+        if (oDragItem.id == "pardiv" + myids[0]) {
+            firstdiv = 1;
+        }
+
+        if (!e) var e = window.event;
+        var x = e.clientX + document.body.scrollLeft - document.body.clientLeft - iClickOffsetX;
+        var y = e.clientY + document.body.scrollTop - document.body.clientTop - iClickOffsetY + scrollamount;
+
+        //+ document.getElementById(proposalGroups).scrollTop
+
+        if ((leval == 0) && (movenext == 0)) {
+
+            var childNodeArray = document.getElementById('groups').getElementsByTagName('div');
+
+            var yyy = 0;
+            myids.length = 0;
+            var setreset = 0;
+            // following for loop reinitialise myids array and reome id of draged item
+            for (var i = 0; i < childNodeArray.length; i++) {
+                if (childNodeArray[i].id != oDragItem.id) {
+                    if (setreset == 0) {
+                        myids[i] = childNodeArray[i].id;
+                    } else {
+
+                        myids[i - setreset] = childNodeArray[i].id;
+                    }
+
+
+                } else {
+                    var childNodeArray11 = document.getElementById(oDragItem.id).getElementsByTagName('div');
+                    if (childNodeArray11.length > 0) {
+                        yyy = i;
+                        i = i + childNodeArray11.length;
+                        setreset = childNodeArray11.length + 1;
+                    } else {
+                        yyy = i;
+                        setreset = 1;
+
+                    }
+
+                }
+
+
+
+            }
+
+            setreset = 0;
+
+            // block is excecuted to calculate margin of last item in group
+            if (oDragItem.id[0] == "p") {
+                var firstmargin = document.getElementById(oDragItem.id.substring(6));
+                for (j = itemsrelations[oDragItem.id.substring(6)].length - 1; j >= 0; j--) {
+                    var smallmargin = document.getElementById(itemsrelations[oDragItem.id.substring(6)][j]);
+                    if ((parseInt(smallmargin.style.marginLeft.slice(0, -2)) - parseInt(firstmargin.style.marginLeft.slice(0, -2))) > smallest) {
+                        smallest = parseInt(smallmargin.style.marginLeft.slice(0, -2)) - parseInt(firstmargin.style.marginLeft.slice(0, -2));
+                    }
+
+                }
+            }
+
+
+
+            if (oDragItem.nextSibling) {
+                // block is excecuted if draged item is not last item
+                if (myids[yyy]) {
+
+                    var nextdiv = document.getElementById(myids[yyy]);
+                } else {
+                    var nextdiv = document.getElementById(myids[yyy - 1]);
+                }
+
+                nextdivmargin = parseInt(nextdiv.style.marginLeft.slice(0, -2));
+                var newwidthh = parseInt(nextdiv.style.width.slice(0, -2));
+
+                if (yyy > 0) {
+                    // block is excecuted if draged item is not first item
+                    var prvdiv = document.getElementById(myids[yyy - 1]);
+                    var position2 = prvdiv.getBoundingClientRect();
+
+                    xforoDragTarget2 = position2.left;
+
+                    var a = parseInt(prvdiv.style.marginLeft.slice(0, -2));
+                    var b = parseInt(prvdiv.style.width.slice(0, -2));
+
+
+
+                    xforoDragTarget = a;
+                    widthforoDragTarget = b;
+
+
+                    if (prvdiv.style.display == "none") {
+                        // this block is excecuted if upper div is in colapsed mode
+                        var lastdisplay = 0;
+                        for (var i = 0; i < myids.length; i++) {
+                            if (myids[i] == prvdiv.id)
+                                break;
+                            var lastdisplaydiv = document.getElementById(myids[i]);
+                            if (lastdisplaydiv.style.display == "block") {
+                                lastdisplay = i;
+
+                            }
+
+
+                        }
+                        var lastdisplaydiv2 = document.getElementById(myids[lastdisplay]);
+                        var position22 = lastdisplaydiv2.getBoundingClientRect();
+
+                        xforoDragTarget2 = position22.left;
+                        var ab = parseInt(lastdisplaydiv2.style.marginLeft.slice(0, -2));
+                        var ba = parseInt(lastdisplaydiv2.style.width.slice(0, -2));
+                        xforoDragTarget = ab;
+                        widthforoDragTarget = ba;
+                        colapsed = 1;
+
+                    }
+
+
+                }
+
+                oDragItem.parentNode.insertBefore(newdiv, oDragItem.nextSibling);
+
+            } else {
+
+                // block is excecuted if droptarget is not first item
+                nextdivmargin = 0;
+
+                if (yyy > 0) {
+                    // block is excecuted if draged item is not first item
+                    var prvdiv = document.getElementById(myids[yyy - 1]);
+                    var position2 = prvdiv.getBoundingClientRect();
+
+                    xforoDragTarget2 = position2.left;
+
+                    var a = parseInt(prvdiv.style.marginLeft.slice(0, -2));
+                    var b = parseInt(prvdiv.style.width.slice(0, -2));
+
+
+
+                    xforoDragTarget = a;
+                    widthforoDragTarget = b;
+                    if (prvdiv.style.display == "none") {
+                        var lastdisplay = 0;
+                        for (var i = 0; i < myids.length; i++) {
+                            if (myids[i] == prvdiv.id)
+                                break;
+                            var lastdisplaydiv = document.getElementById(myids[i]);
+                            if (lastdisplaydiv.style.display == "block") {
+                                lastdisplay = i;
+
+                            }
+
+
+                        }
+                        var lastdisplaydiv2 = document.getElementById(myids[lastdisplay]);
+                        var position22 = lastdisplaydiv2.getBoundingClientRect();
+
+                        xforoDragTarget2 = position22.left;
+                        var ab = parseInt(lastdisplaydiv2.style.marginLeft.slice(0, -2));
+                        var ba = parseInt(lastdisplaydiv2.style.width.slice(0, -2));
+                        xforoDragTarget = ab;
+                        widthforoDragTarget = ba;
+                        colapsed = 1;
+
+                    }
+
+
+                }
+
+                oDragItem.parentNode.appendChild(newdiv);
+            }
+            leval = 1;
+        }
+
+        HandleDragMove(x, y);
+
+    }
+    // function HandleDragMove is responsible for changing margin and width of new div according to cusor position,upper div position and next div position
+    function HandleDragMove(x, y) {
+
+        move = 1;
+        movenext = 1;
+        // folowing if else statement handle the change in margin and width of new div according to cursor position
+        // and style of upper item ,lower item,whether its first item or last item
+        if ((x > (xforoDragTarget2 + 30)) && ((xforoDragTarget + 30) <= 90) && ((xforoDragTarget + smallest) <= 60) && (colapsed == 0)) {
+            initialMove = 1;
+
+
+            if (firstdiv == 1) {
+                if (movefirstdiv == 1) {
+                    newdiv.style.marginLeft = xforoDragTarget + 30 + "px";
+                    newdiv.style.width = widthforoDragTarget - 30 + "px";
+                }
+            } else {
+
+                newdiv.style.marginLeft = xforoDragTarget + 30 + "px";
+                newdiv.style.width = widthforoDragTarget - 30 + "px";
+            }
+
+        } else
+            if ((x > (xforoDragTarget2 - 5)) && (initialMove == 0)) {
+
+                newdiv.style.marginLeft = newdiv.style.marginLeft;
+                newdiv.style.width = newdiv.style.width;
+
+            } else
+                if ((x > (xforoDragTarget2 - 15)) && ((nextdivmargin - xforoDragTarget) <= 0) && ((xforoDragTarget + smallest) <= 90)) {
+
+                    newdiv.style.marginLeft = xforoDragTarget + "px";
+                    newdiv.style.width = widthforoDragTarget + "px";
+
+                } else if (((x > (xforoDragTarget2 - 30))) && ((xforoDragTarget - 30) >= 0) && ((nextdivmargin - xforoDragTarget + 30) <= 0) && ((xforoDragTarget + smallest) <= 120)) {
+
+                    newdiv.style.marginLeft = xforoDragTarget - 30 + "px";
+                    newdiv.style.width = widthforoDragTarget + 30 + "px";
+
+                } else if (((x > (xforoDragTarget2 - 60))) && ((xforoDragTarget - 60) >= 0) && ((nextdivmargin - xforoDragTarget + 60) <= 0) && ((xforoDragTarget + smallest) <= 150)) {
+
+                    newdiv.style.marginLeft = xforoDragTarget - 60 + "px";
+                    newdiv.style.width = widthforoDragTarget + 60 + "px";
+
+                } else if (((x > (xforoDragTarget2 - 90))) && ((xforoDragTarget - 90) >= 0) && ((nextdivmargin - xforoDragTarget + 90) <= 0) && ((xforoDragTarget + smallest) <= 180)) {
+
+
+
+                    newdiv.style.marginLeft = xforoDragTarget - 90 + "px";
+                    newdiv.style.width = widthforoDragTarget + 90 + "px";
+
+                }
+
+        popupBody = document.querySelectorAll('.popupBody');
+
+        var positionpopupBody = popupBody[0].getBoundingClientRect();
+
+
+        // here oDragItem is getting x and y position accoding to cusor position
+
+        with (oDragItem.style) {
+
+            position = "absolute";
+            left = x - positionpopupBody.left + "px";
+            top = y - (positionpopupBody.top / 1.5) - scrollamount + "px";
+
+        }
+        // this loop handle calling the OnTargetOver() or OnTargetOut() methods according to dragged item and droptarget positions 
+        for (var i = 0; i < oDragTargets.length; i++) {
+
+            var oTarget = oDragTargets[i];
+            if (oTarget.x < x && oTarget.y < y && (oTarget.x + oTarget.w) > x && (oTarget.y + oTarget.h) > y) {
+                if (oDragTarget != null && oDragTarget != oTarget.o) OnTargetOut();
+                oDragTarget = oTarget.o;
+
+
+                if ((oDragTarget.id == myids[0])) {
+                    if ((oTarget.y + 10) > y) {
+                        // this is called when we move item for top position
+                        isTop = 1;
+
+                    } else {
+                        isTop = 0;
+                    }
+                } else {
+                    isTop = 0;
+                }
+
+                OnTargetOver();
+
+                return;
+            }
+        }
+
+        if (oDragTarget) {
+
+            OnTargetOut();
+            oDragTarget = null;
+        }
+    }
+
+
+
+    function TouchMove(e) {
+        e.preventDefault();
+        var x = e.targetTouches[0].pageX - iClickOffsetX;
+        var y = e.targetTouches[0].pageY - iClickOffsetY;
+
+        oDragItem = e.targetTouches[0].target;
+        HandleDragMove(x, y);
+    }
+    //function DragStop(o, e) is called when we drop the item 
+    function DragStop(o, e) {
+        if (o.releaseCapture) {
+            o.releaseCapture();
+        } else if (oDragItem) {
+            window.removeEventListener("mousemove", DragMove2, true);
+            window.removeEventListener("mouseup", DragStop2, true);
+        }
+
+        HandleDragStop();
+    }
+    //function HandleDragStop() is called by function DragStop(o, e) .in this function newdiv gets all style with id of draged and draged item gets removed
+    //in case of multiple items, newdiv is replaced with all divs 
+    function HandleDragStop() {
+
+
+        if (oDragItem == null) return;
+
+
+
+        if (oDragTarget) {
+
+        } else {
+
+        }
+
+
+
+        var newid = oDragItem.id;
+        newdiv.setAttribute("data-id", oDragItem.attributes["data-id"].nodeValue);
+        newdiv.style.background = "#fafafa";
+        newdiv.style.border = "1px solid #ccc";
+
+        newdiv.style.marginTop = "0px";
+        newdiv.style.display = "block";
+        newdiv.onmouseover = function () {
+
+            onmouseoveritem(this)
+
+        }
+
+
+
+        newdiv.onmouseout = function () {
+
+            onmouseoutitem(this)
+        }
+        newdiv.innerHTML = oDragItem.innerHTML;
+
+
+
+
+        if (movenext == 1) {
+
+            // this block is called if item is actually moved means just not clicked
+            // in this code new div replace the draged item or new new is replaceed by group of items in group dragging
+            var reper3 = document.getElementById(oDragItem.id.substring(6));
+
+
+
+            if ((newdiv != null) && (reper3 != null)) {
+                reper3.onmouseover = function () {
+
+                    onmouseoveritem(this)
+
+                }
+
+                reper3.style.display = "block";
+
+                reper3.onmouseout = function () {
+
+                    onmouseoutitem(this)
+                }
+                var parentmargin = parseInt(reper3.style.marginLeft.slice(0, -2));
+
+                reper3.style.background = "#fafafa";
+                reper3.style.marginLeft = (parseInt(reper3.style.marginLeft.slice(0, -2)) - parentmargin + parseInt(newdiv.style.marginLeft.slice(0, -2))) + "px";
+                reper3.style.width = (parseInt(reper3.style.width.slice(0, -2)) + parentmargin - parseInt(newdiv.style.marginLeft.slice(0, -2))) + "px";
+                for (j = itemsrelations[oDragItem.id.substring(6)].length - 1; j >= 0; j--) {
+                    var reper1 = document.getElementById(itemsrelations[oDragItem.id.substring(6)][j]);
+                    reper1.onmouseover = function () {
+
+                        onmouseoveritem(this)
+
+                    }
+
+
+
+                    reper1.onmouseout = function () {
+
+                        onmouseoutitem(this)
+                    }
+
+                    reper1.style.marginLeft = (parseInt(reper1.style.marginLeft.slice(0, -2)) - parentmargin + parseInt(newdiv.style.marginLeft.slice(0, -2))) + "px";
+                    reper1.style.width = (parseInt(reper1.style.width.slice(0, -2)) + parentmargin - parseInt(newdiv.style.marginLeft.slice(0, -2))) + "px";
+                    reper1.style.background = "#fafafa";
+                    if (newdiv.nextSibling) {
+
+                        newdiv.parentNode.insertBefore(reper1, newdiv.nextSibling);
+                        if (j == 0) {
+                            newdiv.parentNode.insertBefore(reper3, newdiv.nextSibling);
+                        }
+                    } else {
+
+                        newdiv.parentNode.appendChild(reper1);
+                        if (j == 0) {
+                            newdiv.parentNode.insertBefore(reper3, newdiv.nextSibling);
+
+                        }
+                    }
+
+                }
+
+                newdiv.parentNode.removeChild(newdiv);
+
+            }
+        } else {
+
+
+            // else block is called if item is just clicked and not moved
+            var childNodeArray11 = document.getElementById('groups').getElementsByTagName('div');
+            // this loop is  changing background of all items to "#fafafa";
+            for (var i = 0; i < childNodeArray11.length; i++) {
+                var nodes = document.getElementById(childNodeArray11[i].id);
+                var nodess = document.getElementById("expand" + childNodeArray11[i].id);
+                if ((childNodeArray11[i].id != oDragItem.id) && (childNodeArray11[i].id != oDragItem.id.substring(6))) {
+                    nodes.style.background = "#fafafa";
+                    if (nodess != null) {
+                        nodess.style.background = "#fafafa";
+                        selectedGroupRowGuid = null;
+                    }
+                }
+            }
+
+            if (oDragItem.id[0] == "p") {
+                // this block is  changing background of clicked item;
+                var firstitem = document.getElementById(oDragItem.id.substring(6));
+                var nodess = document.getElementById("expand" + oDragItem.id.substring(6));
+
+                if ((firstitem.style.background == "rgb(250, 250, 250)") || (firstitem.style.background == "#fafafa") || (firstitem.style.background == "rgb(250,250,250)")) {
+                    firstitem.style.background = "rgb(75, 140, 200)";
+                    nodess.style.background = "rgb(75, 140, 200)";
+                    selectedGroupRowGuid = oDragItem.attributes["data-id"].nodeValue;
+
+                } else {
+                    firstitem.style.background = "#fafafa";
+                    nodess.style.background = "#fafafa";
+                    selectedGroupRowGuid = null;
+                }
+            } else {
+                var nodess = document.getElementById("expand" + oDragItem.id);
+                if ((oDragItem.style.background == "rgb(250, 250, 250)") || (oDragItem.style.background == "#fafafa") || (oDragItem.style.background == "rgb(250,250,250)")) {
+
+
+                    oDragItem.style.background = "rgb(75, 140, 200)";
+                    selectedGroupRowGuid = oDragItem.attributes["data-id"].nodeValue;
+
+                    if (nodess != null) {
+                        nodess.style.background = "rgb(75, 140, 200)";
+                        selectedGroupRowGuid = oDragItem.attributes["data-id"].nodeValue;
+
+                    }
+                } else {
+                    oDragItem.style.background = "#fafafa";
+                    selectedGroupRowGuid = null;
+                    if (nodess != null) {
+                        nodess.style.background = "#fafafa";
+                        selectedGroupRowGuid = null;
+                    }
+                }
+
+            }
+        }
+
+
+
+        if (move == 1) {
+
+            oDragItem.parentNode.removeChild(oDragItem);
+            move = 0;
+            oDragItem = null;
+        }
+
+        if (newdiv != null) {
+            newdiv.id = newid;
+        }
+        if (oDragItem) {
+            oDragItem.style.zIndex = 1;
+            oDragItem = null;
+        }
+
+
+
+        leval = 0;
+
+        if (movenext == 1) {
+            CreateSerOutput();
+        }
+
+
+        if (movenext == 1) {
+            movenext = 0;
+            if (reper3 != null) {
+                onmouseoveritem(reper3);
+
+            } else {
+
+                onmouseoveritem(newdiv);
+            }
+        }
+        movenext = 0;
+        setstyle = -1;
+        nextdivmargin = 0;
+        smallest = 0;
+        xforoDragTarget = 0;
+        xforoDragTarget2 = 0;
+        widthforoDragTarget = 529;
+        colapsed = 0;
+        initialMargin = 0;
+        initialwidth = 529;
+        initialMove = 0;
+        movefirstdiv = 0;
+        firstdiv = 0;
+    }
+
+    function TouchEnd(e) {
+        e.target.innerHTML = "TouchEnd";
+        HandleDragStop();
+    }
+
+    function $(s) {
+        return document.getElementById(s);
+    }
+
+    function GetObjPos(obj) {
+        var x = 0;
+        var y = 0;
+        var o = obj;
+
+        var w = obj.offsetWidth;
+        var h = obj.offsetHeight;
+        if (obj.offsetParent) {
+            x = obj.offsetLeft
+            y = obj.offsetTop
+            while (obj = obj.offsetParent) {
+                x += obj.offsetLeft;
+                y += obj.offsetTop;
+            }
+        }
+        return {
+            x: x,
+            y: y,
+            w: w,
+            h: h,
+            o: o
+        };
+    }
+
+    //function OnTargetOver() is called when me move dragitem over drag target. this is responsible to calulate largest  margin among 
+    //while moving multiple items together and this function call  .function theFunc() where place of new div is changed
+    function OnTargetOver() {
+
+        var p = 0;
+
+        if (oDragTarget.style.background != "white") {
+
+
+
+            if (oDragItem.id[0] == "p") {
+                var firstmargin = document.getElementById(oDragItem.id.substring(6));
+                for (j = itemsrelations[oDragItem.id.substring(6)].length - 1; j >= 0; j--) {
+                    var smallmargin = document.getElementById(itemsrelations[oDragItem.id.substring(6)][j]);
+                    if ((parseInt(smallmargin.style.marginLeft.slice(0, -2)) - parseInt(firstmargin.style.marginLeft.slice(0, -2))) > smallest) {
+                        smallest = parseInt(smallmargin.style.marginLeft.slice(0, -2)) - parseInt(firstmargin.style.marginLeft.slice(0, -2));
+                    }
+                    if (itemsrelations[oDragItem.id.substring(6)][j] == oDragTarget.id) {
+                        p = 1;
+
+                    }
+                }
+            }
+
+
+
+            if (p == 0) {
+
+                insertNewDiv();
+
+            }
+
+
+
+
+        }
+
+
+    }
+    // function OnTargetOut() is empty but do not remove this 
+    function OnTargetOut() {
+
+    }
+    //function OnTargetDrop() is called if u drop item over drag target
+    function OnTargetDrop() {
+
+
+        oDragTarget.style.background = "";
+
+        oDragItem.style.marginTop = "0px";
+        oDragTarget.appendChild(oDragItem);
+        if (navigator.platform == "iPad") MakeDragable(oDragItem);
+
+    }
+
+</script>
+
+<style type="text/css">
+
+/**
+ * Nestable
+ */
+
+.popupBody {
+    background-color:white; 
+    padding:10px;
+    margin-bottom:34px;
+}
+
+.popupButtons {
+    position:absolute; 
+    left:20px; 
+    bottom:24px; 
+    right:24px; 
+    padding:6px; 
+    text-align:right; 
+    background-color:#F0F0F0; 
+    border-top:1px solid #dedede;
+}
+
+
+
+.dd-handle { display: block; height: 30px; margin: 5px 0; padding: 5px 10px; color: #333; text-decoration: none; font-weight: bold; border: 1px solid #ccc;
+    background: #fafafa;
+    background: -webkit-linear-gradient(top, #fafafa 0%, #eee 100%);
+    background:    -moz-linear-gradient(top, #fafafa 0%, #eee 100%);
+    background:         linear-gradient(top, #fafafa 0%, #eee 100%);
+    -webkit-border-radius: 3px;
+            border-radius: 3px;
+    box-sizing: border-box; -moz-box-sizing: border-box;
+    
+}
+
+.DropTarget { display: block; height: 30px; margin: 5px 0; padding: 5px 10px; color: #333; text-decoration: none; font-weight: bold; border: 1px solid #ccc;
+    background: #fafafa;
+    background: -webkit-linear-gradient(top, #fafafa 0%, #eee 100%);
+    background:    -moz-linear-gradient(top, #fafafa 0%, #eee 100%);
+    background:         linear-gradient(top, #fafafa 0%, #eee 100%);
+    -webkit-border-radius: 3px;
+            border-radius: 3px;
+    box-sizing: border-box; -moz-box-sizing: border-box;
+}
+.dd-handle:hover { color: #2ea8e5; background: #fafafa; }
+.DropTarget:hover { color: #2ea8e5; background: #fafafa; }
+
+    </style>
+</head>
+
+<body  onload="OnLoad()">
+
+<div class="popupBody" style="background-color:white; overflow:hidden;">
+<div id="proposalGroups" style="position:static; z-index:1045; width:600px; min-height:360px; max-height:400px; border:5px solid rgb(236, 238, 242); overflow-y:scroll;  overflow-x:hidden;">
+<table>
+	<tr>
+		<td>
+            <div id="groups">
+            <div class="DropTarget" style ="width :529px;background: #fafafa; margin-top :0px;margin-left :0px;display :block;" onmouseover="onmouseoveritem(this)" onmouseout ="onmouseoutitem(this)" data-id="test1" id ="1">Group 1</div>
+            <div class="DropTarget" style ="width :529px;background: #fafafa; margin-top :0px;margin-left :0px;display :block;" onmouseover="onmouseoveritem(this)" onmouseout ="onmouseoutitem(this)" data-id="test2" id ="2">Group 2</div>
+            <div class="DropTarget" style ="width :499px;background: #fafafa; margin-top :0px;margin-left :30px;display :block;"  onmouseover="onmouseoveritem(this)" onmouseout ="onmouseoutitem(this)" data-id="test3" id ="3">Group 3</div>
+            <div class="DropTarget" style ="width :499px;background: #fafafa; margin-top :0px;margin-left :30px;display :block;"  onmouseover="onmouseoveritem(this)" onmouseout ="onmouseoutitem(this)" data-id="test4" id ="4">Group 4</div>
+            <div class="DropTarget" style ="width :469px;background: #fafafa; margin-top :0px;margin-left :60px;display :block;"  onmouseover="onmouseoveritem(this)" onmouseout ="onmouseoutitem(this)" data-id="test5" id ="5">Group 5</div>
+            <div class="DropTarget" style ="width :439px;background: #fafafa; margin-top :0px;margin-left :90px;display :block;"  onmouseover="onmouseoveritem(this)" onmouseout ="onmouseoutitem(this)" data-id="test6" id ="6">Group 6</div>
+            <div class="DropTarget" style ="width :529px;background: #fafafa; margin-top :0px; margin-left :0px;display :block;" onmouseover="onmouseoveritem(this)" onmouseout ="onmouseoutitem(this)" data-id="test7" id ="7">Group 7</div>
+            <div class="DropTarget" style ="width :529px;background: #fafafa; margin-top :0px;margin-left :0px;display :block;" onmouseover="onmouseoveritem(this)" onmouseout ="onmouseoutitem(this)" data-id="test8" id ="8">Group 8</div>
+            </div>
+        </td>
+	</tr>
+</table>
+</div>
+</div>
+    <br />
+    <input type="button" id="btExpand" onclick="Expand()" value="Expand" />
+    <input type="button" id="Button1" onclick="Colaps()" value="Collapse" />
+      <br />
+       <p><strong>Serialised Output (per list)</strong></p>
+    <textarea id="nestable-output" style="width:900px; height:350px;"></textarea><br />
+</body>
+</html>
