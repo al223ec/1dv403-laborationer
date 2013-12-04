@@ -25,7 +25,8 @@ function Message(text, messageDate, div) {
     this.addDiv = function (that) { // kan kanske lägga denna på prototypen också
         //That är den aktuella messageboarden
         var p = document.createElement("p");
-        p.innerHTML = this.getHTMLText();
+        p.appendChild(document.createTextNode(this.getHTMLText()));
+        //p.innerHTML = this.getHTMLText();
 
         div.setAttribute("class", "large-12 columns mess");
 

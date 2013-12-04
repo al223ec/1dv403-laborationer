@@ -14,11 +14,16 @@ function MemoryBrick(imgId) {
     
     this.flip = function () {
         imgHolder.src = 'pics/' + imgId + '.png';
+        imgHolder.style.transform = "skewX(5deg)";
+        //imgHolder.style.transition = "height 0.2s linear 0s";
+        //imgHolder.style.height = "100%";
     };
 
     this.reset = function () {
+        imgHolder.style.transition = '';
+        imgHolder.style.height = '';
         imgHolder.src = 'pics/0.png';
-    };
+    }
 
     this.getImageId = function () {
         return imgId;
