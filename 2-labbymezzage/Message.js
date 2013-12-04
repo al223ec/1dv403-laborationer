@@ -22,7 +22,7 @@ function Message(text, messageDate, div) {
         }
     });
 
-    this.addDiv = function (that) { // kan lägga denna på prototypen också
+    this.addDiv = function (that) { // kan kanske lägga denna på prototypen också
         //That är den aktuella messageboarden
         var p = document.createElement("p");
         p.innerHTML = this.getHTMLText();
@@ -47,6 +47,7 @@ function Message(text, messageDate, div) {
             that.removeMessage(thisMessage);
         };
         edit.onclick = function (e) {
+            console.log(that);
             that.editMessage(thisMessage);
         };
         dateA.onclick = function (e) {

@@ -1,14 +1,13 @@
 "use strict";
 function LabbyMezz () {
     var arrMessageBoards;
-    var numOfBoards;
     var main; 
 
     this.init = function () {
         arrMessageBoards =[];
-        numOfBoards = 0; 
         main = document.querySelector("body");
     };
+
     this.createBoard = function () {
         var newBoard = document.createElement("div");
         var topBar = document.createElement("div");
@@ -22,29 +21,27 @@ function LabbyMezz () {
         topBar.className = "drag";
         topBar.appendChild(closeButton);
 
-        var that = this;
         closeButton.onclick = function (e) {
             if(!confirm("Vill du stänga detta fönster")){
                 return;
             }
-            that.removeBoard(topBar);
+            removeBoard(topBar);
         };
 
         header.appendChild(document.createTextNode("MessageBoard"));
         newBoard.className = "board";
         newBoard.appendChild(header);
         topBar.appendChild(newBoard); 
-        main.appendChild(topBar );
+        main.appendChild(topBar);
 
         arrMessageBoards.push(new MessageBoard(newBoard, topBar));
-        arrMessageBoards[numOfBoards].init();
-        numOfBoards++;
+        arrMessageBoards[arrMessageBoards.length -1].init();
 
-        topBar.style.left = 100 + (numOfBoards * 10) + 'px';
-        topBar.style.top = 100 + (numOfBoards * 10) + 'px';
+        topBar.style.left = 100 + (arrMessageBoards.length * 10) + 'px';
+        topBar.style.top = 100 + (arrMessageBoards.length * 10) + 'px';
     };
 
-    removeBoard = function(boardToRemove){
+    function removeBoard(boardToRemove){
         var boardIndex;
         main.removeChild(boardToRemove);
         arrMessageBoards.map(function (board, index) {
@@ -53,7 +50,6 @@ function LabbyMezz () {
             }
         });
         arrMessageBoards.splice(boardIndex, 1);
-        numOfBoards--;
     };
 };
 
