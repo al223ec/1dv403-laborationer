@@ -1,31 +1,26 @@
 "use strict";
-
-function MemoryBrick(img) {
-    var _img = img; 
-    this.getBrickLink = function () {
-        var imgHolder = document.createElement("img"); 
-        var link = document.createElement("a");
-        imgHolder.src = 'pics/0.png';
-        link.appendChild(imgHolder);
-        return link; 
-    }
-    this.getImageLink = function () {
-        var imgHolder = document.createElement("img");
-        imgHolder.className = "brick"; 
-        var link = document.createElement("a");
-        imgHolder.src = 'pics/' + _img + '.png';
-        link.appendChild(imgHolder);
-        return link;
-    }
-    
-}
-MemoryBrick.prototype.getBrickLink = function () {
+function MemoryBrick(imgId) {
     var imgHolder = document.createElement("img");
-    var link = document.createElement("a");
-    imgHolder.src = 'pics/0.png';
-    link.appendChild(imgHolder);
-    return link;
-};
-MemoryBrick.prototype.getImgId = function () {
-    return this._img;
-}; 
+    imgHolder.className = "brick";
+
+    this.init = function () {
+        imgHolder.src = 'pics/0.png';
+        return imgHolder;
+    };
+
+    this.getImage = function () {
+        return imgHolder; 
+    }; 
+    
+    this.flip = function () {
+        imgHolder.src = 'pics/' + imgId + '.png';
+    };
+
+    this.reset = function () {
+        imgHolder.src = 'pics/0.png';
+    };
+
+    this.getImageId = function () {
+        return imgId;
+    };
+}
