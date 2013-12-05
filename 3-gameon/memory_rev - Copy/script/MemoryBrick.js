@@ -4,11 +4,10 @@ function MemoryBrick(imgId, memoryGame) {
     var brickFlipper = document.createElement("div");
     var front = document.createElement("div");
     var back = document.createElement("div");
-    var isSolved = false; 
 
     var that = this; 
     brickContainer.onclick = function () {
-        memoryGame.clicket(that);
+        memoryGame.brickIsClicked(that);
     };
 
     this.init = function () {
@@ -27,8 +26,8 @@ function MemoryBrick(imgId, memoryGame) {
 
     this.getDiv = function () {
         return brickContainer;
-    }; 
-    
+    };
+
     this.flip = function () {
         brickContainer.onclick = null; //Tar bort click event medans bilden är flippad
         brickContainer.classList.toggle('flip');
@@ -36,11 +35,11 @@ function MemoryBrick(imgId, memoryGame) {
 
     this.reset = function () {
         brickContainer.classList.toggle('flip');
+        brickContainer.style.zIndex = 0;
         brickContainer.onclick = function () {
-            memoryGame.clicket(that);
+            memoryGame.brickIsClicked(that);
         };
-    }
-
+    };
     this.getImageId = function () {
         return imgId;
     };

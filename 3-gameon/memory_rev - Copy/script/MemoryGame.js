@@ -1,5 +1,4 @@
 "use strict";
-
 function MemoryGame(gameContainer, row, col) {    // gameContainer Används för att ta bort mousedown lyssnaren
     var gameBricks;
     var click; 
@@ -39,21 +38,19 @@ function MemoryGame(gameContainer, row, col) {    // gameContainer Används för a
         heading.appendChild(headingText);
 
         var pictureArray = RandomGenerator.getPictureArray(row, col);
-        var picIndex = 0;
         boardDiv.appendChild(heading);
 
-        for (var i = 0; i < row; i += 1) {
-            for (var j = 0; j < col; j += 1) {
-                var brick = new MemoryBrick(pictureArray[picIndex], that);
-                gameBricks.push(brick);
-                boardDiv.appendChild(brick.init());
-                picIndex++;
-            }
+        var numOfBricks = row * col;
+
+        for (var i = 0; i < numOfBricks; i += 1) {
+            var brick = new MemoryBrick(pictureArray[i], that);
+            gameBricks.push(brick);
+            boardDiv.appendChild(brick.init());
         }
 
     };
 
-    this.clicket = function (memoryBrick) {
+    this.brickIsClicked = function (memoryBrick) {
         if (currentImage !== null && previousImage !== null) { //Under tiden som användaren har vänt upp två kort ska inte denna funktion fungera
             return; 
         }
@@ -92,7 +89,7 @@ function MemoryGame(gameContainer, row, col) {    // gameContainer Används för a
                     initGame(boardDiv);
                 }
                 else {
-                    gameContainer.innerHTML = ''; //Ifall man vill att spelet ska försvinna
+                    gameContainer.innerHTML = ''; //Ifall man vill att spelet ska försvinna gör det här, tillfällig lösning
                 }
             }
 
@@ -108,9 +105,15 @@ window.onload = function () {
     memoGame.init();
     games.appendChild(div);
 
-    var div1 = document.createElement("div");
-
-    var memoGame2 = new MemoryGame(div1, 2, 2);
-    games.appendChild(div1);
+    var memoGame2 = new MemoryGame(div, 2, 2);
+    games.appendChild(div);
     memoGame2.init();
+
+    var memoGame3 = new MemoryGame(div, 4, 4);
+    memoGame3.init();
+    games.appendChild(div);
+
+    var memoGame4 = new MemoryGame(div, 2, 2);
+    games.appendChild(div);
+    memoGame4.init();
 }; 
