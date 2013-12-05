@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="styleAnimation.css">
+<script>
+function slideOpen(el){
+	var elem = document.getElementById(el);
+	elem.style.transition = "height 0.2s linear 0s";
+	elem.style.height = "200px";
+}
+function slideClosed(el){
+	var elem = document.getElementById(el);
+	elem.style.transition = "height 0.2s linear 0s";
+	elem.style.height = "0px";
+}
+
+document.querySelector("#myCard").classList.toggle("flip");
+</script>
+</head>
+<body>
+<button onclick="slideClosed('box1');">slideClosed</button>
+<button onclick="slideOpen('box1');">slideOpen</button>
+<div id="box1">Content in box 1 ...</div>
+
+<div class="flip-container">
+	<div class="flipper">
+		<div class="front">
+			<!-- front content -->
+            <p>Front</p>
+		</div>
+		<div class="back">
+			<!-- back content -->
+            <p>Back</p>
+		</div>
+	</div>
+</div>
+
+</body>
+</html>

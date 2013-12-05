@@ -1,7 +1,11 @@
 "use strict";
-function MemoryBrick(imgId) {
+function MemoryBrick(imgId, memoryGame) {
     var imgHolder = document.createElement("img");
-    imgHolder.className = "brick";
+    var that = this;
+
+    imgHolder.onclick = function () {
+        memoryGame.clicket(that);
+    };
 
     this.init = function () {
         imgHolder.src = 'pics/0.png';
