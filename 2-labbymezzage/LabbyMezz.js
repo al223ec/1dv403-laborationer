@@ -34,7 +34,7 @@ function LabbyMezz () {
         topBar.appendChild(newBoard); 
         main.appendChild(topBar);
 
-        arrMessageBoards.push(new MessageBoard(newBoard, topBar));
+        arrMessageBoards.push(new MessageBoard(newBoard));
         arrMessageBoards[arrMessageBoards.length -1].init();
 
         topBar.style.left = 100 + (arrMessageBoards.length * 10) + 'px';

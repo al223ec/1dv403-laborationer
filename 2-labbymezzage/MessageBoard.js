@@ -1,7 +1,6 @@
 ﻿"use strict";
-function MessageBoard(container, topBar) { //conatiner den div som håller hela messageBoarden, top bar div ligger utanför denna och gör att man kan röra 
+function MessageBoard(container) { //conatiner den div som håller hela messageBoarden, top bar div ligger utanför denna och gör att man kan röra 
     var messages = [];
-    var topBar = topBar; 
     var textarea = document.createElement("textarea");
     var messageContainerDiv = document.createElement("div");
     var numberDiv = document.createElement("div");
@@ -33,15 +32,17 @@ function MessageBoard(container, topBar) { //conatiner den div som håller hela 
         inputButton.onclick = function (e) {
             addMessage(textarea.value);
         };
-
+        
+        textarea.removeEventListener("keypress", shiftEnterEdit, false); //Detta ska inte skapa något problem; att ta bort en Eventlyssnare som inte finns
         textarea.addEventListener("keypress", shiftEnter, false);
+        
     };
 
     function shiftEnter(e) {
         if (!e) { var e = window.event; }
 
         if (e.keyCode === 13 && !e.shiftKey) { //keycode 13 = enter
-            e.preventDefault(); //behövs ingen radbrytning
+            e.preventDefault();
             addMessage(textarea.value);
         }
     };
@@ -61,12 +62,12 @@ function MessageBoard(container, topBar) { //conatiner den div som håller hela 
         numberDiv.appendChild(document.createTextNode("Antal mess: " + messages.length));
     };
 
-    Object.defineProperties(this, {
-        Messages: {
-            get: function () { return messages; },
-            set: function (vaue) { messages = value; },
-        }
-    });
+    //Object.defineProperties(this, {
+    //    Messages: {
+    //        get: function () { return messages; },
+    //        set: function (vaue) { messages = value; },
+    //    }
+    //});
 
     function addMessage(text) {
         text = text.trim();
@@ -95,6 +96,7 @@ function MessageBoard(container, topBar) { //conatiner den div som håller hela 
                 }
             });
             messages.splice(messIndex, 1);
+            initInput();
             upDateNumber();
     };
 
@@ -106,9 +108,9 @@ function MessageBoard(container, topBar) { //conatiner den div som håller hela 
                     editMessageIndex = index;
                 }
             });
-            
+
             inputButton.onclick = function (e) {
-                upDateMessages(that, editMessageIndex);
+                upDateMessages(editMessageIndex);
                 initInput();
             };
             textarea.removeEventListener("keypress", shiftEnter, false);
@@ -122,6 +124,7 @@ function MessageBoard(container, topBar) { //conatiner den div som håller hela 
             messages[messIndex] = newMess;
             textarea.value = "";
         }
+
         textarea.removeEventListener("keypress", shiftEnterEdit, false);
         initInput();
         textarea.value = "";
