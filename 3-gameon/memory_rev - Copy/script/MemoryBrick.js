@@ -1,31 +1,44 @@
 "use strict";
 function MemoryBrick(imgId, memoryGame) {
-    var imgHolder = document.createElement("img");
-    var that = this;
+    var brickContainer = document.createElement("div");
+    var brickFlipper = document.createElement("div");
+    var front = document.createElement("div");
+    var back = document.createElement("div");
+    var isSolved = false; 
 
-    imgHolder.onclick = function () {
+    var that = this; 
+    brickContainer.onclick = function () {
         memoryGame.clicket(that);
     };
 
     this.init = function () {
-        imgHolder.src = 'pics/0.png';
-        return imgHolder;
+        brickContainer.className = "flip-container";
+        brickFlipper.className = "flipper";
+        front.className = "front";
+        back.className = "back";
+
+        brickFlipper.appendChild(front);
+        brickFlipper.appendChild(back);
+        brickContainer.appendChild(brickFlipper);
+
+        back.style.backgroundImage = "url(pics/" + imgId + ".png)";
+        return brickContainer;
     };
 
-    this.getImage = function () {
-        return imgHolder; 
+    this.getDiv = function () {
+        return brickContainer;
     }; 
     
     this.flip = function () {
-        imgHolder.src = 'pics/' + imgId + '.png';
-        imgHolder.style.transition = "height 0.2s linear 0s";
-        imgHolder.style.height = "100%";
+        brickContainer.onclick = null; //Tar bort click event medans bilden är flippad
+        brickContainer.classList.toggle('flip');
     };
 
     this.reset = function () {
-        imgHolder.style.transition = '';
-        imgHolder.style.height = '';
-        imgHolder.src = 'pics/0.png';
+        brickContainer.classList.toggle('flip');
+        brickContainer.onclick = function () {
+            memoryGame.clicket(that);
+        };
     }
 
     this.getImageId = function () {

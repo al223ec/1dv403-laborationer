@@ -7,53 +7,48 @@ function MemoryGame(gameContainer, row, col) {    // gameContainer Används för a
     var currentImage;
     var numOfMoves; 
     var numOfSolvedBricks;
-    var table;
+    var boardDiv;
 
     var that = this;
 
     this.init = function () {
+        var gameDiv = document.createElement("div");
+        boardDiv = document.createElement("div");
+        
+        gameDiv.className = "large-9 columns";
+        boardDiv.className = "large-12";
+
+        initGame(boardDiv);
+        gameDiv.appendChild(boardDiv);
+        gameContainer.appendChild(gameDiv);
+    };
+
+    function initGame(boardDiv) {
+        boardDiv.innerHTML = '';
         gameBricks = [];
         click = 0;
         previousImage = null;
         currentImage = null;
         numOfMoves = 0;
         numOfSolvedBricks = 0;
-        var gameDiv = document.createElement("div");
-        table = document.createElement("table");
-        
-        gameDiv.className = "large-9 columns";
-        table.className = "large-12";
 
-        initGame(table);
-        gameDiv.appendChild(table);
-        gameContainer.appendChild(gameDiv);
-    };
-
-    function initGame(table) {
-        table.innerHTML = '';
         var caption = document.createElement("caption");
         var heading = document.createElement("h3");
         var headingText = document.createTextNode("Memory game");
 
         heading.appendChild(headingText);
-        caption.appendChild(heading);
-        table.appendChild(caption);
-        table.appendChild(document.createElement("tbody"));
 
         var pictureArray = RandomGenerator.getPictureArray(row, col);
         var picIndex = 0;
+        boardDiv.appendChild(heading);
 
         for (var i = 0; i < row; i += 1) {
-            var tr = document.createElement("tr");
             for (var j = 0; j < col; j += 1) {
-                var td = document.createElement("td");
                 var brick = new MemoryBrick(pictureArray[picIndex], that);
                 gameBricks.push(brick);
-                td.appendChild(brick.init());
-                tr.appendChild(td);
+                boardDiv.appendChild(brick.init());
                 picIndex++;
             }
-            table.appendChild(tr);
         }
 
     };
@@ -73,13 +68,10 @@ function MemoryGame(gameContainer, row, col) {    // gameContainer Används för a
         if (click >= 2) {
             currentImage = memoryBrick;
             currentImage.flip();
+            numOfMoves++;
 
-            if (currentImage == null || previousImage == null) {
-                return;
-            }
             if (currentImage.getImageId() === previousImage.getImageId() && currentImage !== previousImage) {
                 numOfSolvedBricks += 1;
-                numOfMoves += 1;
                 currentImage = null;
                 previousImage = null;
             } else if (currentImage !== previousImage) {
@@ -89,7 +81,6 @@ function MemoryGame(gameContainer, row, col) {    // gameContainer Används för a
                     currentImage = null;
                     previousImage = null;
                 }, 500);
-                numOfMoves += 1;
             } else { //Användaren har tryckt på samma bild som tidigare
                 click -= 1;
                 currentImage = null; 
@@ -97,14 +88,14 @@ function MemoryGame(gameContainer, row, col) {    // gameContainer Används för a
             }
 
             if (numOfSolvedBricks >= (gameBricks.length / 2)) {
-                console.log("Grattis du har löst memory spelet, du gjorde det på " + numOfMoves + " försök, spela igen?");
-                //if (confirm("Grattis du har löst memory spelet, du gjorde det på " + numOfMoves + " försök, spela igen?")) {
-                //   // initGame(table);
-                //}
-                //else {
-                //    gameContainer.innerHTML = ''; //Ifall man vill att spelet ska försvinna
-                //}
+                if (confirm("Grattis du har löst memory spelet, du gjorde det på " + numOfMoves + " försök, spela igen?")) {
+                    initGame(boardDiv);
+                }
+                else {
+                    gameContainer.innerHTML = ''; //Ifall man vill att spelet ska försvinna
+                }
             }
+
             click = 0;
         }
     };
@@ -112,6 +103,7 @@ function MemoryGame(gameContainer, row, col) {    // gameContainer Används för a
 window.onload = function () {
     var games = document.querySelector("#games"); 
     var div = document.createElement("div");
+    div.className = "gameContainer"; 
     var memoGame = new MemoryGame(div, 4, 4);
     memoGame.init();
     games.appendChild(div);
