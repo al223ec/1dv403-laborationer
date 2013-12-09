@@ -15,7 +15,10 @@ function MemoryBrick(imgId, memoryGame) {
         brickFlipper.className = "flipper";
         front.className = "front";
         back.className = "back";
-
+        //var a = document.createElement("a");
+        //var img = document.createElement("img");
+        //img.src = "pics/0.png";
+        //a.appendChild(img);
         brickFlipper.appendChild(front);
         brickFlipper.appendChild(back);
         brickContainer.appendChild(brickFlipper);
@@ -31,15 +34,15 @@ function MemoryBrick(imgId, memoryGame) {
     this.flip = function () {
         brickContainer.onclick = null; //Tar bort click event medans bilden är flippad
         brickContainer.classList.toggle('flip');
-    };
+     };
 
     this.reset = function () {
         brickContainer.classList.toggle('flip');
-        brickContainer.style.zIndex = 0;
         brickContainer.onclick = function () {
             memoryGame.brickIsClicked(that);
         };
     };
+
     this.getImageId = function () {
         return imgId;
     };

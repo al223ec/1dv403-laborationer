@@ -1,5 +1,5 @@
 "use strict";
-function MemoryGame(gameContainer, row, col) {    // gameContainer Används för att ta bort mousedown lyssnaren
+function MemoryGame(gameContainer, row, col) {  
     var gameBricks;
     var click; 
     var previousImage;
@@ -14,7 +14,7 @@ function MemoryGame(gameContainer, row, col) {    // gameContainer Används för a
         var gameDiv = document.createElement("div");
         boardDiv = document.createElement("div");
         
-        gameDiv.className = "large-9 columns";
+        gameDiv.className = "large-9 columns gameContainer";
         boardDiv.className = "large-12";
 
         initGame(boardDiv);
@@ -33,7 +33,7 @@ function MemoryGame(gameContainer, row, col) {    // gameContainer Används för a
 
         var caption = document.createElement("caption");
         var heading = document.createElement("h3");
-        var headingText = document.createTextNode("Memory game");
+        var headingText = document.createTextNode("MemoryGame");
 
         heading.appendChild(headingText);
 
@@ -47,7 +47,6 @@ function MemoryGame(gameContainer, row, col) {    // gameContainer Används för a
             gameBricks.push(brick);
             boardDiv.appendChild(brick.init());
         }
-
     };
 
     this.brickIsClicked = function (memoryBrick) {
@@ -89,7 +88,13 @@ function MemoryGame(gameContainer, row, col) {    // gameContainer Används för a
                     initGame(boardDiv);
                 }
                 else {
-                    gameContainer.innerHTML = ''; //Ifall man vill att spelet ska försvinna gör det här, tillfällig lösning
+                    //while (gameContainer.firstChild) {
+                    //    gameContainer.removeChild(gameContainer.firstChild);
+                    //}
+                    //gameContainer.innerHTML = ''; //Ifall man vill att spelet ska försvinna gör det här, tillfällig lösning känns farligt om man har kvar referenser
+                    console.log(document.querySelector("main"));
+                    document.querySelector("main").removeChild(gameContainer);
+                    console.log(document.querySelector("main"));
                 }
             }
 
@@ -98,22 +103,22 @@ function MemoryGame(gameContainer, row, col) {    // gameContainer Används för a
     };
 };
 window.onload = function () {
-    var games = document.querySelector("#games"); 
-    var div = document.createElement("div");
-    div.className = "gameContainer"; 
-    var memoGame = new MemoryGame(div, 4, 4);
-    memoGame.init();
-    games.appendChild(div);
+    var main = document.querySelector("main")
+    var game1 = document.createElement("div");
+    var memoGame1 = new MemoryGame(game1, 4, 4);
+    memoGame1.init();
+    main.appendChild(game1);
 
-    var memoGame2 = new MemoryGame(div, 2, 2);
-    games.appendChild(div);
+
+    var game2 = document.createElement("div");
+    var memoGame2 = new MemoryGame(game2, 2, 2);
+    main.appendChild(game2);
     memoGame2.init();
 
-    var memoGame3 = new MemoryGame(div, 4, 4);
-    memoGame3.init();
-    games.appendChild(div);
+    //var game3 = document.createElement("div");
+    //game3.className = "gameContainer";
+    //var memoGame3 = new MemoryGame(game3, 4, 4);
+    //memoGame3.init();
+    //games.appendChild(game3);
 
-    var memoGame4 = new MemoryGame(div, 2, 2);
-    games.appendChild(div);
-    memoGame4.init();
 }; 
