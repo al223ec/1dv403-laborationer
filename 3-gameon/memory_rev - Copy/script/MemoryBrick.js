@@ -1,6 +1,6 @@
 "use strict";
 function MemoryBrick(imgId, memoryGame) {
-    var brickContainer = document.createElement("div");
+    var brickContainer = document.createElement("a");
     var brickFlipper = document.createElement("div");
     var front = document.createElement("div");
     var back = document.createElement("div");
@@ -12,6 +12,8 @@ function MemoryBrick(imgId, memoryGame) {
 
     this.init = function () {
         brickContainer.className = "flip-container";
+        brickContainer.href = "#";
+        //brickContainer.preventDefault; 
         brickFlipper.className = "flipper";
         front.className = "front";
         back.className = "back";
