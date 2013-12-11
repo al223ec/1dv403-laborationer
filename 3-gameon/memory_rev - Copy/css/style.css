@@ -7,7 +7,7 @@
 			perspective: 1000;
             float:left;
 		}
-/*Rotation*/
+/* Rotation */
         .flip-container:nth-child(1n) {
             -webkit-transform: rotate(-4deg);  
             -moz-transform: rotate(-4deg); 
@@ -23,7 +23,7 @@
             -moz-transform: rotate(-10deg); 
             transform: rotate(-10deg); 
         }
-/*Slut rotation*/
+/* Slut rotation */
         flipper, .flip .flipper {
 			-webkit-transform: rotateY(180deg);
 			-moz-transform: rotateY(180deg);
