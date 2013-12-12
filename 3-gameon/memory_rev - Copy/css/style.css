@@ -1,14 +1,15 @@
  .gameContainer {
-        width:200px; 
+        width:250px; 
     }
 		.flip-container {
 			-webkit-perspective: 1000;
 			-moz-perspective: 1000;
 			perspective: 1000;
             float:left;
+            margin:5px;
 		}
 /* Rotation */
-        .flip-container:nth-child(1n) {
+        /*.flip-container:nth-child(1n) {
             -webkit-transform: rotate(-4deg);  
             -moz-transform: rotate(-4deg); 
             transform: rotate(-4deg); 
@@ -22,7 +23,7 @@
             -webkit-transform: rotate(-10deg);  
             -moz-transform: rotate(-10deg); 
             transform: rotate(-10deg); 
-        }
+        }*/
 /* Slut rotation */
         flipper, .flip .flipper {
 			-webkit-transform: rotateY(180deg);

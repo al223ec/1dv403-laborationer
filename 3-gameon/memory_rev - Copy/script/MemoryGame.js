@@ -25,7 +25,6 @@ function MemoryGame(gameContainer, row, col) {
 
     function initGame(boardDiv) {
         boardDiv.innerHTML = '';
-        //gameBricks = [];
         click = 0;
         previousImage = null;
         currentImage = null;
@@ -46,23 +45,9 @@ function MemoryGame(gameContainer, row, col) {
         for (var i = 0; i < numOfBricks; i += 1) {
             var brick = new MemoryBrick(pictureArray[i], that);
             boardDiv.appendChild(brick.init());
-            //var a = document.createElement("a");
-            //var img = document.createElement("img");
-            //img.src = "pics/" + pictureArray[i] + ".png";
-            //var thisId = pictureArray[i];
-            //console.log(thisId);
-            //a.onclick = clicket(pictureArray[i]);
-            //a.appendChild(img);
-            //boardDiv.appendChild(a);
         }
-        //var clicket = function (id) {
-        //    console.log(id);
-        //}
-
     };
-    //this.clickedt = function(brickID) {
-    //    console.log(brickID);
-    //}
+
 
     this.brickIsClicked = function (memoryBrick) {
         if (currentImage !== null && previousImage !== null) { //Under tiden som användaren har vänt upp två kort ska inte denna funktion fungera
@@ -102,11 +87,7 @@ function MemoryGame(gameContainer, row, col) {
                     initGame(boardDiv);
                 }
                 else {
-                    //while (gameContainer.firstChild) {
-                    //    gameContainer.removeChild(gameContainer.firstChild);
-                    //}
-                    //gameContainer.innerHTML = ''; //Ifall man vill att spelet ska försvinna gör det här, tillfällig lösning känns farligt om man har kvar referenser
-                    document.querySelector("main").removeChild(gameContainer);
+                     document.querySelector("main").removeChild(gameContainer);
                 }
             }
         }
@@ -115,10 +96,10 @@ function MemoryGame(gameContainer, row, col) {
 };
 window.onload = function () {
     var main = document.querySelector("main")
-    //var game1 = document.createElement("div");
-    //var memoGame1 = new MemoryGame(game1, 4, 4);
-    //memoGame1.init();
-    //main.appendChild(game1);
+    var game1 = document.createElement("div");
+    var memoGame1 = new MemoryGame(game1, 4, 4);
+    memoGame1.init();
+    main.appendChild(game1);
 
     var game2 = document.createElement("div");
     var memoGame2 = new MemoryGame(game2, 2, 2);
