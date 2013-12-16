@@ -1,0 +1,114 @@
+﻿<script type="text/javascript">
+var ck_name = /^[A-Za-z0-9 ]{3,20}$/;
+var ck_email = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i 
+var ck_username = /^[A-Za-z0-9_]{1,20}$/;
+var ck_password =  /^[A-Za-z0-9!@#$%^&*()_]{6,20}$/;
+
+
+function validate(form){
+var name = form.name.value;
+ var email = form.email.value;
+ var username = form.username.value;
+ var password = form.password.value;
+ var gender = form.gender.value;
+  
+  
+ var errors = [];
+ 
+ if (!ck_name.test(name)) {
+     errors[errors.length] = "You  must enter valid Name .";
+ }
+  
+ if (!ck_email.test(email)) {
+  errors[errors.length] = "You must enter a valid email address.";
+ }
+ if (!ck_username.test(username)) {
+  errors[errors.length] = "You valid UserName no special char .";
+ }
+
+ if (!ck_password.test(password)) {
+  errors[errors.length] = "You must enter a valid Password min 6 char.";
+ }
+ if (gender==0) {
+  errors[errors.length] = "Select Gender";
+ }
+ 
+ 
+ if (errors.length > 0) {
+  reportErrors(errors);
+  return false;
+ }
+ 
+ return true;
+}
+
+function reportErrors(errors){
+ var msg = "Please Enter Valide Data...\n";
+ for (var i = 0; i<errors.length; i++) {
+  var numError = i + 1;
+  msg += "\n" + numError + ". " + errors[i];
+ }
+ alert(msg);
+}
+</script>
+
+<body id="public">
+
+<ul>
+		
+	
+<li id="foli1" 		class="   ">
+	<label class="desc" id="title1" for="Field1">
+		Full Name			</label>
+	<div>
+		<input id="name" 			name="name" 			type="text" 			class="field text medium" 			value="" 			maxlength="255" 			tabindex="1" 						/>
+		</div>
+	</li>
+
+
+<li id="foli2" 		class="   ">
+	<label class="desc" id="title2" for="Field2">
+		Email			</label>
+	<div>
+		<input id="email" 			name="email" 			type="text" 			class="field text medium" 			value="" 			maxlength="255" 			tabindex="2" 						/>
+		</div>
+	</li>
+
+
+<li id="foli3" 		class="   ">
+	<label class="desc" id="title3" for="Field3">
+		User-ID			</label>
+	<div>
+		<input id="username" 			name="username" 			type="text" 			class="field text medium" 			value="" 			maxlength="255" 			tabindex="3" 						/>
+		</div>
+	</li>
+
+
+<li id="foli4" 		class="   ">
+	<label class="desc" id="title4" for="Field4">
+		Password			</label>
+	<div>
+		<input id="password" 			name="password" 			type="password" 			class="field text medium" 			value="" 			maxlength="255" 			tabindex="4" 						/>
+		</div>
+	</li>
+
+
+<li id="foli6" 		class="   ">
+	<label class="desc" id="title6" for="Field6">
+		Gender			</label>
+	<div>
+		<select id="gender" 			name="gender" 			class="field select medium" 			tabindex="5"> 
+						<option value="0">Gender</option><option value="1">Male</option><option value="2">Female</option>
+		  </select>
+	</div>
+	</li>
+
+
+<li id="foli15" 		class="   "></li>
+    <li class="buttons">
+	<input  type="submit" value="Submit" style=" background:#0060a1; color:#FFFFFF; font-size:14px; border:1px solid #0060a1"/>
+    </li>
+</ul>
+</form>
+</body>
+</html>

@@ -2,21 +2,45 @@
 <html lang="sv">
 <head>
     <meta charset="ISO-8859-1" />
-    <title>JavaScript - MemoryGame</title>
+    <title>JavaScript - Form</title>
     <link rel="stylesheet" href="css/foundation.css">
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<main>    
-<!--    <div class="large-3 columns">
-         <h3>MemoryGame <small> subtitle</small></h3>
-    </div>-->
+<main>
+    <form class="columns large-12" id="myform" target="_blank" action="http://voyager.lnu.se/tekinet/kurser/dtt/wp_webbteknik/process_form.php" method="post">
+      <div class="large-6 left columns">
+      <label for="firstname">First name: </label><input type="text" id="firstname" class="notEmpty" /> <!--Får inte vara tom-->
+      <label for="lastname">Last name: </label><input type="text" id="lastname" class="notEmpty" /><!--Får inte vara tom-->
+      </div>
+      <div class="large-4 left columns">
+      <label for="postnr">Postnr: </label><input type="text" id ="postnr" class="onlyNumbers"/><!--Endast siffror, i formen XXXXX-->
+      <label for="mail">Email: </label><input type="email" id="mail" class="mail"/><!-- Enbart e-postadresser på korrekt form får anges här -->
+      <input type="submit" value="Posta!"/>
+    </div>
+    </form>
 </main>
-<!--<script src="Drag.js"></script>-->
-<script src="script/random.js"></script>
-<script src="script/MemoryBrick.js"></script>
-<script src="script/MemoryGame.js"></script>
+<script src="script.js"></script>
 
+<!--    <form id="Form1">
+<label>Type anything but "fun": <input id="noFun" type="text" oninput="checkValid(this)" required ><input type="submit"></label>
+
+<div id="err"></div>
+</form>
+<script>
+    function checkValid(input) {
+        if (input.value == "fun") {
+            input.setCustomValidity("You're having too much fun!");
+        } else {
+            // input is fine -- reset the error message
+            input.setCustomValidity('');
+        }
+    }
+    function previewMessage() {
+        //var myform = document.getElementById("noFun")
+        //document.getElementById("err").innerHTML = myform.validationMessage;
+    }
+</script>-->
 </body>
 </html>
