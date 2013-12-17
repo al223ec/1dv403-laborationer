@@ -9,38 +9,57 @@
 </head>
 <body>
 <main>
-    <form class="columns large-12" id="myform" target="_blank" action="http://voyager.lnu.se/tekinet/kurser/dtt/wp_webbteknik/process_form.php" method="post">
-      <div class="large-6 left columns">
-      <label for="firstname">First name: </label><input type="text" id="firstname" class="notEmpty" /> <!--Får inte vara tom-->
-      <label for="lastname">Last name: </label><input type="text" id="lastname" class="notEmpty" /><!--Får inte vara tom-->
-      </div>
-      <div class="large-4 left columns">
-      <label for="postnr">Postnr: </label><input type="text" id ="postnr" class="onlyNumbers"/><!--Endast siffror, i formen XXXXX-->
-      <label for="mail">Email: </label><input type="email" id="mail" class="mail"/><!-- Enbart e-postadresser på korrekt form får anges här -->
-      <input type="submit" value="Posta!"/>
-    </div>
+    <div class="large-9 columns" id="formContainer">
+    <h1>Hantera formulär</h1>
+    <h4>Hata formulär</h4>
+    <p>Alla fält är obligatoriska</p>
+    <form class="columns large-12" id="myform" action="http://voyager.lnu.se/tekinet/kurser/dtt/wp_webbteknik/process_form.php" method="post">
+<!--      <div class="large-6 left columns">-->
+      <label for="firstname">Förnamn: </label><input type="text" id="firstname" name="Förnamn" class="notEmpty"/><div class="err"></div> <!--Får inte vara tom-->
+      <label for="lastname">Efternamn: </label><input type="text" id="lastname" name="efternamn" class="notEmpty" /><div class="err"></div><!--Får inte vara tom-->
+      <label for="select">Välj prisklasss: </label>
+        <select>
+          <option>Låg</option>
+          <option>Medel</option>
+          <option>Hög</option>
+          <option>Apple</option>
+      </select>
+<!--      </div>-->
+<!--      <div class="large-4 left columns">-->
+      <label for="postnr">Postnr: </label><input type="text" id ="postal" name="onlyNumbers"/><div class="err"></div><!--Endast siffror, i formen XXXXX-->
+      <label for="mail">Email: </label><input type="text" id="mail" name="mail"/><div class="err"></div><!-- Enbart e-postadresser på korrekt form får anges här -->
+      <button type="submit" id="submitBtn" name="submitBtn">Posta!!</button>
+<!--    </div>-->
     </form>
+    </div>
+   <!-- <div id="popup">
+        <h1>Bekräfta dina uppgifter</h1>
+        <table>
+            <tr>
+                <td> Förnamn: </td>
+                <td>förnamnet</td>
+            </tr>
+            <tr>
+                <td> Efternamn: </td>
+                <td>efternamnet</td>
+            </tr>
+            <tr>
+                <td> Val: </td>
+                <td>Valet</td>
+            </tr>
+            <tr>
+                <td> Postkod: </td>
+                <td>postkoden</td>
+            </tr>
+            <tr>
+                <td> Mail: </td>
+                <td>Mailen</td>
+            </tr>
+        </table>
+        <button id="confirm">Bekräfta</button>
+       <button id="confirm">avbryt</button>
+    </div>-->
 </main>
 <script src="script.js"></script>
-
-<!--    <form id="Form1">
-<label>Type anything but "fun": <input id="noFun" type="text" oninput="checkValid(this)" required ><input type="submit"></label>
-
-<div id="err"></div>
-</form>
-<script>
-    function checkValid(input) {
-        if (input.value == "fun") {
-            input.setCustomValidity("You're having too much fun!");
-        } else {
-            // input is fine -- reset the error message
-            input.setCustomValidity('');
-        }
-    }
-    function previewMessage() {
-        //var myform = document.getElementById("noFun")
-        //document.getElementById("err").innerHTML = myform.validationMessage;
-    }
-</script>-->
 </body>
 </html>

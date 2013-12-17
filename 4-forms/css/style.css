@@ -1,14 +1,38 @@
 input:not(:focus):invalid {
-  outline: 2px solid red;
-  background-color:red;
+  outline: 1px solid red;
+  background-color:#fdc1ca;
 }
 input:focus:invalid {
-  outline: 2px solid blue;
+  outline: 1px solid blue;
 }
-/*input:focus:invalid {
-  outline: 2px solid blue;
+/*input:not(:focus):valid {
+  outline: 1px solid blue;
+  background-color:#d8eff1;
 }*/
 .err {
     color:red; 
-    font-size:80%;
+    font-size:70%;
+    margin:10px;
 }
+select {
+    margin-top:10px;
+    margin-bottom:10px;
+}
+body {
+    background-color:#e2e4e4;
+}
+#formContainer {
+    background-color:white; 
+    z-index:10;
+}
+.popup {
+    position:absolute;
+    background-color:white; 
+    top:50px;
+    left:50px;
+    z-index:20;
+    padding:10px;
+}
+    .popup table {
+        width:100%;
+    }
