@@ -50,7 +50,7 @@ function Validator(form) {
             if (form.checkValidity()) {
               blurForm(form);
               var data = [["Förnamn: ", notEmptyFields[0].value], ["Efternamn: ", notEmptyFields[1].value], ["Select: ", selectElement.value], ["Postnr: ", postKodField.value], ["Email: ", emailField.value]];
-                CreatePupup.init(form, data, that);
+              CreatePupup.init(form, data, that);
             }
         }
     }; 
@@ -72,7 +72,7 @@ function Validator(form) {
 
     function checkEmail() {
         var field = this.value.trim();
-        var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/; //Inte optimal tex l@------.se fungerar
         var error = '';
         if (!re.test(field)) {
             error = "Detta är inte en giltig emailadress";
@@ -161,8 +161,8 @@ var CreatePupup = {
         popupDiv.appendChild(button);
 
         main.appendChild(popupDiv);
-     
-    }, 
+    },
+
     createTr: function (text, value) {
         var tr = document.createElement("tr");
         var tdText = document.createElement("td");
