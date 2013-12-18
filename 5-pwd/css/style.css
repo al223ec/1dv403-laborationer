@@ -1,0 +1,31 @@
+.drag {
+    border:1px solid #ececec;
+    position:absolute; 
+    cursor:move;
+    box-shadow: 2px 6px 5px #ececec;
+    height:450px;
+    width:200px; 
+    overflow:scroll;
+    overflow-x: hidden;
+    background-color:grey; 
+}
+
+.topBar {
+}
+
+.close {
+    position:absolute; 
+    float:right;
+    background:red;
+    color:white;
+    top:0px;
+    right:0px;
+}
+.navigation {
+    padding:0px; 
+    margin:0px; 
+}
+.windowName {
+    padding:4px; 
+    margin:0px; 
+}

@@ -1,0 +1,92 @@
+SCRUM
+----- 
+Första sprint
+------------- 
+Prioriteringar.. 
+Ska kanske börja från betygsnivå 3, risker? Stora risker med fönsterhantering srora många buggar/ möjligheter för buggar. 
+
+//Risk
+Skapa fönster, med stäng möjlighet och anna funktionalitet
+Drag windows, skapa flera fönster, fokusera fönster
+Ajax anrop, 
+Bildhanteringen
+Inställnigs meny. 
+Memory, 
+Server komm, hämta gamla meddelanden, posta meddelanden
+Styra med hjälp av tangentbordet
+Ändra storlek.
+Ritmöjligheter
+Cookies
+
+RSS-läsare
+Högerklick
+
+Funktionalitet först
+Stil
+#389fa8
+
+Product backloggen - Vad som ska implementeras, prioriterat enligt önskningar.All funktionalitet ska vara här
+Det ska skapas ett virtuellt skrivbord på webben. 
+Avancerad hantering av fönster och innehåll.
+Användaren kommer att kunna skapa nya fönster, flytta och skala om dessa samt påverka innehållet i fönstret.
+
+Allmänt
+* Applikationen fungerar i senaste versionen av Firefox, Internet Explorer eller Chrome.
+* Det finns ingen JavaScript-kod i .html-dokumentet.
+* Förutom funktionskraven ska applikationen vara visuellt tilltalande, lättarbetad och ge ett proffsigt intryck.
+* Inga objekt eller variabler, förutom de statiska objekt som används för uppgiften är skapade globalt på window-objektet.
+
+3:
+* Man kan öppna fönster, man kan stänga ett fönster genom att klicka på stängknappen.
+* När Ajaxanropet dröjer ska användaren göras uppmärksam på detta. T.ex. genom en animerad gif-bild.
+* Samtliga tumnagelbilders boxar är lika stora och dess storlek räknas automatiskt ut med hjälp av de storleksangivelser som tagits emot i JSON-strängen.
+
+4:
+* Samtliga krav för betyg 3 (förutom skrivbordsbildsbyte) är uppfyllda.
+* En objektorienterad applikationsdesign används för fönsterhanteringen.
+* Det går att öppna nya fönster som hamnar förskjutna i förhållande till sina syskon och dessa fönster hamnar aldrig utanför skrivbordets yta.
+* Fönster kan få fokus genom att användaren klickar på dem
+* De olika fönstren är inte beroende av varandra. (Man kan t.ex. ha olika RSS-flöden i olika fönster samtidigt eller spela flera memoryspel samtidigt.)
+
+5:
+* RSS-läsaren har en meny med ovan beskriven funktionalitet.
+* Memoryt har en meny med ovan beskriven funktionalitet.
+* RSS-läsaren har en statusrad som talar om när den senast uppdaterades.
+* Fönstren går att dra runt på skrivbordet.
+* Det går inte att placera ett fönster helt eller delvis utanför skrivbordet.
+* Det går att ändra storlek på de fönster som detta är intressant för.
+* Det går kodmässigt enkelt att ändra storleken på skrivbordsytan, om denna inte täcker hela webbläsarfönstret.
+* Storleken på ett fönster kan inte bli större än skrivbordsytan.
+* Mikrobloggen fungerar enligt kraven för denna och har en contextmeny enligt beskrivningen.
+
+
+//* Min applikation uppfyller i övrigt de krav som är satta enligt beskrivningen ovan.
+
+En product backlog är aldrig komplett. Den tidigaste utvecklingen av den bara lägger ut de ursprungligen
+kända och förstådda krav. Product backlogen utvecklas som produkten och
+miljön där den ska användas utvecklas. Product backlogen är dynamisk, det ständigt
+ändringar för att identifiera vad produkten måste vara för att vara lämplig, konkurrenskraftig, och användbart. Så länge
+som en produkt existerar, existerar också dess product backlog
+
+
+
+Product backlog
+----------------
+En samlingsplats för alla önskemål om förändringar av produkten. Ägs och hanteras av produktägaren. 
+Det finns ingen begränsning på antal önskemål. I stället används prioritering. 
+Ju högre prioritet, desto bättre specificerat ska ändringsönskemålet vara. 
+
+Sprint backlog
+----------------
+Den delen av en product backlog som utvecklingsteamet åtar sig att implementera under den kommande 
+sprinten samt den plan som de formulerat för hur de ska göra det.
+
+The Sprint Backlog is the set of Product Backlog items selected for the Sprint plus a plan for 
+delivering the product Increment and realizing the Sprint Goal. The Sprint Backlog is a forecast 
+by the Development Team about what functionality will be in the next Increment and the work 
+needed to deliver that functionality. 
+
+Sprint Goal 
+-------------------
+The Sprint Goal gives the Development Team some flexibility regarding the functionality 
+implemented within the Sprint. 
