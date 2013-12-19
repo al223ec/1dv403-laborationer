@@ -5,6 +5,9 @@ Första sprint
 Prioriteringar.. 
 Ska kanske börja från betygsnivå 3, risker? Stora risker med fönsterhantering srora många buggar/ möjligheter för buggar. 
 
+http://colourco.de/
+#389fa8
+
 //Risk
 Skapa fönster, med stäng möjlighet och anna funktionalitet
 Drag windows, skapa flera fönster, fokusera fönster
@@ -23,9 +26,10 @@ Högerklick
 
 Funktionalitet först
 Stil
-#389fa8
 
 Product backloggen - Vad som ska implementeras, prioriterat enligt önskningar.All funktionalitet ska vara här
+PWD, personal web desktop
+--------------------
 Det ska skapas ett virtuellt skrivbord på webben. 
 Avancerad hantering av fönster och innehåll.
 Användaren kommer att kunna skapa nya fönster, flytta och skala om dessa samt påverka innehållet i fönstret.
@@ -37,9 +41,19 @@ Allmänt
 * Inga objekt eller variabler, förutom de statiska objekt som används för uppgiften är skapade globalt på window-objektet.
 
 3:
-* Man kan öppna fönster, man kan stänga ett fönster genom att klicka på stängknappen.
-* När Ajaxanropet dröjer ska användaren göras uppmärksam på detta. T.ex. genom en animerad gif-bild.
+* Man kan öppna fönster, samt man kan stänga ett fönster genom att klicka på stängknappen.
+	När användaren klickar på ikonen så ska ett fönster visas för användaren. Detta fönster ska ha en tilltalande layout och
+	minst innehålla följande:
+	• En ram runt hela fönstret.
+	• En liten ikon i övre vänstra hörnet tillsammans med en text.
+	• En knapp för att stänga fönstret.
+	• En statusrad i vilken det ska gå att skriva ut information.
+	• En tom yta i vilken man ska kunna lägga in valfritt innehåll.
+* När fönstret väl har laddats så ska ett ajaxanrop mot adressen ”http://homepage.lnu.se/staff/tstjo/labbyServer/imgviewer/” göras.
+	• Detta anrop kommer att returnera JSON innehållandes samtliga bilder i katalogen ”pics/thumbs”
+ 	• När Ajaxanropet dröjer ska användaren göras uppmärksam på detta. T.ex. genom en animerad gif-bild.
 * Samtliga tumnagelbilders boxar är lika stora och dess storlek räknas automatiskt ut med hjälp av de storleksangivelser som tagits emot i JSON-strängen.
+* Bildhantering, fönstret innehåller tummnagelbilder som ändrar skrivbordets backgrund när de klickas på. 
 
 4:
 * Samtliga krav för betyg 3 (förutom skrivbordsbildsbyte) är uppfyllda.
