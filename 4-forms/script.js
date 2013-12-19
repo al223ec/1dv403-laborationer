@@ -22,10 +22,8 @@ function Validator(form) {
         emailField.onblur = checkEmail;
 
         form.onsubmit = function (e) {
-            console.log(selectElement.value);
-            if (!formIsConfirmed) {
-                e.preventDefault();
-            }
+            if (!formIsConfirmed) { e.preventDefault(); }
+
             for (var i = 0; i < notEmptyFields.length; i++) {
                 notEmptyFields[i].required = true;
                 if (!notEmptyFields[i].checkValidity()) {
@@ -109,7 +107,7 @@ function Validator(form) {
         for (var i = 0; i < allFormElments.length; i++) {
             allFormElments[i].disabled = true;
         }
-        form.style.opacity = '0.5';
+        form.styleName = 'blurForm';
     };
 
     this.resetForm = function() {
@@ -118,7 +116,7 @@ function Validator(form) {
         for (var i = 0; i < allFormElments.length; i++) {
             allFormElments[i].disabled = false;
         }
-        form.style.opacity = '1';
+        form.styleName = 'resetForm';
     }
 
     this.setFormIsConfirmed = function (bool) {

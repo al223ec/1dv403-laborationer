@@ -36,3 +36,10 @@ body {
     .popup table {
         width:100%;
     }
+
+.blurForm {
+    opacity:0.2; 
+}
+.resetForm {
+    opacity:1; 
+}
