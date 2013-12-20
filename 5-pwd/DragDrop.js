@@ -1,8 +1,9 @@
 "use strict";
 //Kan vara ett "statiskt objekt"
 function DragDrop(PWD) {
-    document.onmousedown = OnMouseDown;
-    document.onmouseup = OnMouseUp;
+    if (!PWD) { throw Error("Detta objekt måste ha en referens till PWO när det skapas"); } //Detta kan utvecklas
+    document.onmousedown = onMouseDown;
+    document.onmouseup = onMouseUp;
     var objectX;
     var objectY;
     var mouseStartX;
@@ -13,7 +14,8 @@ function DragDrop(PWD) {
         console.log(PWD);
     };
 
-    function GetWidth() {
+    //getWidth och height beräknar anändarens höjd resp bredd
+    function getWidth() {
         if (self.innerHeight) { //Denna är aktuell
             return self.innerWidth;
         }
@@ -26,7 +28,7 @@ function DragDrop(PWD) {
         return 0;
     }
 
-    function GetHeight() {
+    function getHeight() {
         if (self.innerHeight) { //Denna
             return self.innerHeight;
         }
@@ -39,32 +41,58 @@ function DragDrop(PWD) {
         return 0;
     }
 
-    function OnMouseDown(e) {
+    function onMouseDown(e) {
+        console.log(e.target.parentNode);
         if (e.target.className === 'drag') {
-            var target = e.target;
-            
-            objectX = target.style.left.replace(/[^0-9]/g, ''); //Måste ta bort px, annars blir resultatet NaN
-            objectY = target.style.top.replace(/[^0-9]/g, '');
-
-            objectX = parseInt(objectX);
-            console.log(objectY);
-
-            mouseStartX = e.pageX;
-            mouseStartY = e.pageY;
-            document.onmousemove = moveWindow; //Gör detta om anändare klckar på något dragbart
-
-            targetELement = target;
-            return false; 
+            targetELement = e.target;
+        } else if (e.target.parentNode.className === 'drag') {
+            targetELement = e.target.parentNode;
+        } else {
+            targetELement = null; 
         }
+        if (targetELement === null) { return; }
+        //Fixa browsersupport
+            
+        objectX = +(targetELement.style.left.replace(/[^0-9\-]/g, '')); //Måste ta bort px, annars blir resultatet NaN +omvandling
+        objectY = +(targetELement.style.top.replace(/[^0-9\-]/g, ''));
+
+        mouseStartX = e.pageX;
+        mouseStartY = e.pageY;
+
+        document.onmousemove = moveWindow; //Gör detta om anändare klckar på något dragbart
+
+        return false; 
     }
-    function OnMouseUp(e) {
-        document.onmousemove = null;
-        targetELement = null;
+    function onMouseUp(e) {
+        if (targetELement) { //Behöver endast göras om användaren faktiskt har tryckt på en "dragable" div
+            document.onmousemove = null;
+            targetELement = null;
+        }
     }
 
     function moveWindow(e) {
-        targetELement.style.left = (+objectX + e.pageX - mouseStartX) + 'px';
-        targetELement.style.top = (+objectY + e.pageY - mouseStartY) + 'px';
+        var nextXPos = objectX + e.pageX - mouseStartX; 
+        //Xleds kontroll
+        if (targetELement.offsetWidth + nextXPos < PWD.width) {
+            targetELement.style.left = nextXPos + 'px';
+        } else {
+            targetELement.style.left = PWD.width - targetELement.offsetWidth +'px';
+        }
+        if (nextXPos < 0) {
+            targetELement.style.left = '0px';
+        }
+
+        //yleds kontroll
+        var nextYPos = objectY + e.pageY - mouseStartY; 
+        if ((targetELement.offsetHeight + nextYPos) < PWD.height) {
+            if (nextYPos < 0) {
+                targetELement.style.top = '0px';
+            } else {
+                targetELement.style.top = nextYPos + 'px';
+            }
+        } else {
+            targetELement.style.top = PWD.height - targetELement.offsetHeight + 'px';
+        }
     }
 };
 

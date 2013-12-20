@@ -9,6 +9,8 @@ function WindowCreator(PWD) {
         var drag = document.createElement("div"); 
         var header = document.createElement("h4");
         var closeButton = document.createElement("input");
+        var footer = document.createElement("footer");
+        var text = document.createTextNode("Information");
 
         closeButton.type = "button";
         closeButton.value = "X";
@@ -25,9 +27,13 @@ function WindowCreator(PWD) {
         header.appendChild(document.createTextNode("Fönster"));
         header.className = "windowName";
         windowDiv.className = "windowDiv";
+
+        footer.appendChild(text); 
+
         drag.appendChild(header);
         drag.appendChild(windowDiv);
 
+        drag.appendChild(footer); 
         return drag;
     }
 

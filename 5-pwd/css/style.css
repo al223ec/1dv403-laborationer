@@ -3,21 +3,32 @@
     position:absolute; 
     cursor:move;
     box-shadow: 2px 6px 5px #ececec;
-    height:450px;
     width:200px; 
     overflow:scroll;
     overflow-x: hidden;
     background-color:grey; 
 }
+    .drag footer {
+        background-color:red;
+        position:absolute; 
+        bottom:0px;
+        width:100%;
+        padding-left:20px;
+        padding-top:10px;
+        padding-bottom:10px;
+    }
 
 .topBar {
+}
+.windowDiv {
+    width:100%;
+    height:200px; 
+    background-color:white;
 }
 
 .close {
     position:absolute; 
     float:right;
-    background:red;
-    color:white;
     top:0px;
     right:0px;
 }
@@ -26,6 +37,10 @@
     margin:0px; 
 }
 .windowName {
-    padding:4px; 
+    background-image:url('');
+    background-repeat:no-repeat;
+    padding-left:20px;
+    padding-top:4px;
+    /*padding:4px;*/ 
     margin:0px; 
 }
