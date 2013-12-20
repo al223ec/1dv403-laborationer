@@ -1,11 +1,12 @@
 "use strict";
+function WindowCreator(PWD) {
+    var that = this;
 
-var CreateWindow = {
-    add: function (main, content) {
-        if (!main) { main = document.querySelector("main"); }
+    this.add = function (content) {
+       // if (!main) { main = document.querySelector("main"); }
 
         var windowDiv = document.createElement("div");
-        var topBar = document.createElement("div"); 
+        var drag = document.createElement("div"); 
         var header = document.createElement("h4");
         var closeButton = document.createElement("input");
 
@@ -13,23 +14,25 @@ var CreateWindow = {
         closeButton.value = "X";
         closeButton.className = "close";
 
-        topBar.className = "topBar";
-        topBar.appendChild(closeButton);
+        drag.className = "drag";
+        drag.appendChild(closeButton);
 
         closeButton.onclick = function (e) {
-            if (!confirm("Vill du stänga detta fönster")) {
-                return;
-            }
-            removeBoard(topBar);
+            that.removeWindow(drag);
+            //PWD.removeWindow(drag);
         };
 
         header.appendChild(document.createTextNode("Fönster"));
-        windowDiv.className = "board";
-        windowDiv.appendChild(header);
-        topBar.appendChild(windowDiv);
-        main.appendChild(topBar);
+        header.className = "windowName";
+        windowDiv.className = "windowDiv";
+        drag.appendChild(header);
+        drag.appendChild(windowDiv);
 
+        return drag;
     }
 
+    this.removeWindow = function (windowToRemove) {
+        windowToRemove.parentNode.removeChild(windowToRemove);
+    }
 }; 
 

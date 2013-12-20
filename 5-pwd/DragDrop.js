@@ -1,12 +1,16 @@
 "use strict";
 //Kan vara ett "statiskt objekt"
-function DragDrop() {
+function DragDrop(PWD) {
     document.onmousedown = OnMouseDown;
     document.onmouseup = OnMouseUp;
+    var objectX;
+    var objectY;
+    var mouseStartX;
+    var mouseStartY; 
+    var targetELement; 
 
     this.init = function () { //Hämtar alla element som ska vara dragbara
-        console.log(GetHeight());
-        console.log(GetWidth());
+        console.log(PWD);
     };
 
     function GetWidth() {
@@ -36,18 +40,31 @@ function DragDrop() {
     }
 
     function OnMouseDown(e) {
-        console.log(e); 
+        if (e.target.className === 'drag') {
+            console.log("click");
+            var target = e.target;
+
+            objectX = target.style.left;
+            objectY = target.style.top;
+
+            mouseStartX = e.pageX;
+            mouseStartY = e.pageY;
+            document.onmousemove = moveWindow; //Gör detta om anändare klckar på något dragbart
+
+            targetELement = target;
+            return false; 
+        }
     }
     function OnMouseUp(e) {
-        console.log(e);
+        document.onmousemove = null;
+        targetELement = null;
+    }
+    function moveWindow(e) {
+        console.log(targetELement);
+        console.log(targetELement.style.left);
+        console.log(targetELement.style.left);
+        targetELement.style.left = objectX + (e.pageX - mouseStartX) + 'px';
+        targetELement.style.top = objectY + (e.pageY - mouseStartY) + 'px';
     }
 };
 
-window.onload = function () {
-    var dragDrop = new DragDrop();
-    dragDrop.init();
-    console.log(dragDrop);
-
-    console.log(window);
-
-};
