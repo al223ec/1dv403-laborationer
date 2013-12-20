@@ -41,11 +41,13 @@ function DragDrop(PWD) {
 
     function OnMouseDown(e) {
         if (e.target.className === 'drag') {
-            console.log("click");
             var target = e.target;
+            
+            objectX = target.style.left.replace(/[^0-9]/g, ''); //Måste ta bort px, annars blir resultatet NaN
+            objectY = target.style.top.replace(/[^0-9]/g, '');
 
-            objectX = target.style.left;
-            objectY = target.style.top;
+            objectX = parseInt(objectX);
+            console.log(objectY);
 
             mouseStartX = e.pageX;
             mouseStartY = e.pageY;
@@ -59,12 +61,10 @@ function DragDrop(PWD) {
         document.onmousemove = null;
         targetELement = null;
     }
+
     function moveWindow(e) {
-        console.log(targetELement);
-        console.log(targetELement.style.left);
-        console.log(targetELement.style.left);
-        targetELement.style.left = objectX + (e.pageX - mouseStartX) + 'px';
-        targetELement.style.top = objectY + (e.pageY - mouseStartY) + 'px';
+        targetELement.style.left = (+objectX + e.pageX - mouseStartX) + 'px';
+        targetELement.style.top = (+objectY + e.pageY - mouseStartY) + 'px';
     }
 };
 
