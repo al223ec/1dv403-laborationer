@@ -1,6 +1,10 @@
 "use strict";
 function WindowCreator(PWD) {
     var that = this;
+    var dragWindows = [[]];
+    // imageGallery = 0;
+    // memory = 1;
+    // RSS = 2;
 
     this.add = function (content) {
        // if (!main) { main = document.querySelector("main"); }
@@ -23,6 +27,8 @@ function WindowCreator(PWD) {
             that.removeWindow(drag);
             //PWD.removeWindow(drag);
         };
+        drag.style.left = '50px'; 
+        drag.style.top = '50px';
 
         header.appendChild(document.createTextNode("Fönster"));
         header.className = "windowName";

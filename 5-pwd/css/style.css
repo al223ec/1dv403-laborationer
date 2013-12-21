@@ -7,6 +7,8 @@
     overflow:scroll;
     overflow-x: hidden;
     background-color:grey; 
+    top:50px;
+    left:50px;
 }
     .drag footer {
         background-color:red;
@@ -44,3 +46,37 @@
     /*padding:4px;*/ 
     margin:0px; 
 }
+
+nav {
+    position:absolute;
+    bottom:0;
+    width:100%;
+    background-color:#00ccff;
+    float: left;
+}
+    nav ul{
+        max-width:1080px;
+        margin:auto;
+        list-style: none;
+    }
+    nav ul li{
+        float: left;
+        border:1px solid;
+    }
+    nav ul li a{
+        display: block;
+        text-align: center;
+        font-size:30px;
+        text-decoration: none;
+        color: #ffffff;
+        width:100px;
+        height:125px;
+        transition: width 0.2s, height 0.2s;
+        -webkit-transition: width 0.2s, height 0.2s; /* Safari */
+        /*background: #00ccff url('pics/sprite.png') no-repeat;*/ 
+        bottom:0; 
+    }
+        nav ul li a:hover {
+            width:125px;
+            height:150px;
+        }

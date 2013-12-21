@@ -9,11 +9,17 @@ function DragDrop(PWD) {
     var mouseStartX;
     var mouseStartY; 
     var targetELement; 
+    var allDragElements;
 
     this.init = function () { //Hämtar alla element som ska vara dragbara
         console.log(PWD);
+        this.addWindow();
     };
 
+    this.addWindow = function () {
+        allDragElements = document.querySelectorAll(".drag");
+        console.log(allDragElements);
+    }; 
     //getWidth och height beräknar anändarens höjd resp bredd
     function getWidth() {
         if (self.innerHeight) { //Denna är aktuell
@@ -42,7 +48,6 @@ function DragDrop(PWD) {
     }
 
     function onMouseDown(e) {
-        console.log(e.target.parentNode);
         if (e.target.className === 'drag') {
             targetELement = e.target;
         } else if (e.target.parentNode.className === 'drag') {
@@ -61,6 +66,7 @@ function DragDrop(PWD) {
 
         document.onmousemove = moveWindow; //Gör detta om anändare klckar på något dragbart
 
+        //Fixa browsersupport här, så inte text markeras etc
         return false; 
     }
     function onMouseUp(e) {
@@ -72,14 +78,16 @@ function DragDrop(PWD) {
 
     function moveWindow(e) {
         var nextXPos = objectX + e.pageX - mouseStartX; 
+
         //Xleds kontroll
         if (targetELement.offsetWidth + nextXPos < PWD.width) {
-            targetELement.style.left = nextXPos + 'px';
+            if (nextXPos < 0) {
+                targetELement.style.left = '0px';
+            } else {
+                targetELement.style.left = nextXPos + 'px';
+            }
         } else {
             targetELement.style.left = PWD.width - targetELement.offsetWidth +'px';
-        }
-        if (nextXPos < 0) {
-            targetELement.style.left = '0px';
         }
 
         //yleds kontroll
