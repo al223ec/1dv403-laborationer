@@ -1,6 +1,5 @@
 "use strict";
-
-function DragWindow(windowHandler) {
+function DragWindow(WH) {
     var windowDiv = document.createElement("div");
     var drag = document.createElement("div");
     var header = document.createElement("h4");
@@ -9,8 +8,10 @@ function DragWindow(windowHandler) {
     var text;
     var restoreWidth;
     var restoreHeight;
+    var that = this;
+    var app; 
 
-    this.add = function (windowName) {
+    this.add = function (windowName, content) {
         closeButton.type = "button";
         closeButton.value = "X";
         closeButton.className = "close";
@@ -21,8 +22,11 @@ function DragWindow(windowHandler) {
         drag.appendChild(closeButton);
 
         closeButton.onclick = function (e) {
-            windowHandler.removeWindow(drag);
+            WH.removeWindow(drag, that);
         };
+
+        drag.style.left = '50px';
+        drag.style.top = '50px';
 
         header.appendChild(document.createTextNode(windowName));
         header.className = "windowName";
