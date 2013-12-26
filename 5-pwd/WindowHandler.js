@@ -1,17 +1,22 @@
 "use strict";
-function WindowCreator(PWD) {
+function WindowHandler(PWD) {
     var that = this;
-    var dragWindows = []; 
-    dragWindows.push(["app0"]);
-    dragWindows.push(["app1"]);
+    var dragWindows = [];
+    dragWindows.push(['ImageGallery']);
+    dragWindows.push(['MemoryGame']);
     dragWindows.push(["app2"]);
+    
+    var numberOfWindows = 0;
 
-    this.add = function (content, type) {
-        var newWindow = new DragWindow(that);
-        console.log(dragWindows.length);
-        dragWindows[0].push(newWindow);
+    this.add = function (app) {
         console.log(dragWindows);
-        return dragWindows[0][dragWindows[0].length - 1].add();
+        var newWindow = new DragWindow(that);
+        for (var i = 0; i < dragWindows.length; i++) {
+            if (dragWindows[i][0] === app.getName()) {
+                dragWindows[i].push(newWindow);
+                return newWindow.add(app.getName() + numberOfWindows++, app); 
+            }
+        }
     }; 
 
     this.removeWindow = function (div, windowToRemove) {

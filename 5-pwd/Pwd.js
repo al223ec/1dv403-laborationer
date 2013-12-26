@@ -4,27 +4,35 @@ var PWD = {//statiska objektet som startar applikationen
     main: document.querySelector("main"),
     width: 1920,
     height: 946,
+
     init: function () {
         //intiera alla objekt här
         var dragDrop = new DragDrop(this);
-        var windowCreator = new WindowCreator(this);
-        //Bör kanske ha en windowHandler klass, sköta allt med fönster i den
-        var imageA = document.querySelector(".appImage");
-        var that = this; 
-        imageA.onclick = function () {
-            that.main.appendChild(windowCreator.add());
-        }; 
-        dragDrop.init();
-    },
-    addWindow: function (windowType) {
+        var windowHandler = new WindowHandler(this);
+        var that = this;
 
-    },
-    removeWindow: function (thatWindow) {
-        this.main.removeChild(thatWindow);
+        //Ska jag hantera dessa från scripten?
+        var imageGallery = document.querySelector(".appImage");
+        imageGallery.onclick = function () {
+            that.main.appendChild(windowHandler.add(new ImageGallery()));
+        };
+
+        var memory = document.querySelector(".appMemory");
+        memory.onclick = function () {
+            that.main.appendChild(windowHandler.add(new MemoryGame()));
+        };
+
+
+        dragDrop.init();
     }
 };
 
-window.onload = function () {
+Object.prototype.getName = function () {
+    var funcNameRegex = /function (.{1,})\(/;
+    var results = (funcNameRegex).exec((this).constructor.toString());
+    return (results && results.length > 1) ? results[1] : "";
+};
 
+window.onload = function () {
     PWD.init();
 };

@@ -2,8 +2,7 @@
 //Kan vara ett "statiskt objekt"
 function DragDrop(PWD) {
     if (!PWD) { throw Error("Detta objekt måste ha en referens till PWO när det skapas"); } //Detta kan utvecklas
-    document.onmousedown = onMouseDown;
-    document.onmouseup = onMouseUp;
+
     var objectX;
     var objectY;
     var mouseStartX;
@@ -12,14 +11,10 @@ function DragDrop(PWD) {
     var allDragElements;
 
     this.init = function () { //Hämtar alla element som ska vara dragbara
-        console.log(PWD);
-        this.addWindow();
+        document.onmousedown = onMouseDown;
+        document.onmouseup = onMouseUp;
     };
 
-    this.addWindow = function () {
-        allDragElements = document.querySelectorAll(".drag");
-        console.log(allDragElements);
-    }; 
     //getWidth och height beräknar anändarens höjd resp bredd
     function getWidth() {
         if (self.innerHeight) { //Denna är aktuell
@@ -50,14 +45,34 @@ function DragDrop(PWD) {
     function onMouseDown(e) {
         if (e.target.className === 'drag') {
             targetELement = e.target;
-        } else if (e.target.parentNode.className === 'drag') {
-            targetELement = e.target.parentNode;
         } else {
-            targetELement = null; 
+            targetELement = e.target; 
+            while (targetELement.parentNode) {
+                if (targetELement.className === 'drag') {
+                   break;
+                }
+                targetELement = targetELement.parentNode;
+            }
         }
-        if (targetELement === null) { return; }
+        if(targetELement.className !== 'drag') {
+            return;
+        }
         //Fixa browsersupport
-            
+    
+        //Fokus
+        allDragElements = document.querySelectorAll(".drag");
+        for (var i = 0; i < allDragElements.length; i++) {
+            if (allDragElements[i] === targetELement) {
+                targetELement.style.zIndex = 1000;
+            } else {
+                if (allDragElements[i].style.zIndex - 10 > 0) {
+                    allDragElements[i].style.zIndex -= 10;
+                } else {
+                    allDragElements[i].style.zIndex = 0;
+                }
+            }
+        }
+
         objectX = +(targetELement.style.left.replace(/[^0-9\-]/g, '')); //Måste ta bort px, annars blir resultatet NaN +omvandling
         objectY = +(targetELement.style.top.replace(/[^0-9\-]/g, ''));
 
@@ -72,11 +87,12 @@ function DragDrop(PWD) {
     function onMouseUp(e) {
         if (targetELement) { //Behöver endast göras om användaren faktiskt har tryckt på en "dragable" div
             document.onmousemove = null;
-            targetELement = null;
+            targetELement = null
         }
     }
 
     function moveWindow(e) {
+        //if (3 > (e.pageX - mouseStartX) || 3 >(e.pageY - mouseStartY)) { return;} //Vänta tills änvändaren har rört musen mer än 3 pixlar
         var nextXPos = objectX + e.pageX - mouseStartX; 
 
         //Xleds kontroll

@@ -3,33 +3,20 @@
 <head>
     <meta charset="ISO-8859-1" />
     <title>JavaScript - 5 PWD</title>
-    <link rel="stylesheet" href="css/normalize.css">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/normalize.css" />
+
+    <link rel="stylesheet" href="css/windowStyle.css" />
+    <link rel="stylesheet" href="apps/css/memoryStyle.css" />
 </head>
 <body>
 <main>
-    <!--<div class="drag">
-        <input type="button" class="close" value="X"/>
-        <h4 class="windowName">WindowName</h4>
-            <!--<ul class="navigation">
-                <li>Inställningar
-                   <ul>
-                   <li>List item</li>
-                   <li>List item</li>
-                   </ul>
-                 </li>
-                <li>Lista</li>
-            </ul>
-       <div class="windowDiv"></div>
-    </div>
-    -->
     <nav>
         <ul>
             <li>
                 <a href="#" class="appImage">App starts ikon</a>
             </li>
             <li>
-                <a href="#" class="vilkenAppSomSkaStartas">App starts ikon</a>
+                <a href="#" class="appMemory">App starts ikon</a>
             </li>
             <li>
                 <a href="#" class="vilkenAppSomSkaStartas">App starts ikon</a>
@@ -46,9 +33,18 @@
         </ul>
     </nav>
 </main>
+    <!-- PWD -->
 <script src="WindowHandler.js"></script>
 <script src="DragWindow.js"></script>
 <script src="DragDrop.js"></script>
 <script src="PWD.js"></script>
+<script src="App.js"></script>
+    <!-- Image gallery -->
+<script src="apps/imagegallery/ImageGallery.js"></script>
+
+    <!-- Memory app -->
+<script src="apps/memory/random.js"></script>
+<script src="apps/memory/MemoryGame.js"></script>
+<script src="apps/memory/MemoryBrick.js"></script>
 </body>
 </html>

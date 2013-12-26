@@ -2,17 +2,15 @@
     border:1px solid #ececec;
     position:absolute; 
     cursor:move;
-    box-shadow: 2px 6px 5px #ececec;
-    width:200px; 
+    /*box-shadow: 2px 6px 5px #000000;*/
+    min-height:20px;
+    min-width:150px;
     overflow:scroll;
     overflow-x: hidden;
     background-color:grey; 
-    top:50px;
-    left:50px;
 }
     .drag footer {
         background-color:red;
-        position:absolute; 
         bottom:0px;
         width:100%;
         padding-left:20px;
@@ -20,19 +18,20 @@
         padding-bottom:10px;
     }
 
-.topBar {
-}
-.windowDiv {
-    width:100%;
-    height:200px; 
-    background-color:white;
-}
+.topBar {}
+.windowDiv {}
 
 .close {
     position:absolute; 
     float:right;
     top:0px;
     right:0px;
+}
+.minimize {
+    position:absolute; 
+    float:right;
+    top:0px;
+    right:25px;
 }
 .navigation {
     padding:0px; 
@@ -45,6 +44,7 @@
     padding-top:4px;
     /*padding:4px;*/ 
     margin:0px; 
+    padding-bottom:0px;
 }
 
 nav {
