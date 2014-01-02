@@ -1,6 +1,5 @@
 "use strict";
 function MemoryGame() {
-    var row = 4, col = 4; 
     var gameContainer = document.createElement("div");
     var click;
     var previousImage;
@@ -8,43 +7,35 @@ function MemoryGame() {
     var numOfMoves; 
     var numOfSolvedBricks;
     var numOfBricks; 
-    var boardDiv;
-
+ 
     var that = this;
 
     this.init = function () {
-        var gameDiv = document.createElement("div");
-        boardDiv = document.createElement("div");
-        
-        gameDiv.className = "gameContainer";
- 
-        initGame(boardDiv);
-        gameDiv.appendChild(boardDiv);
-        gameContainer.appendChild(gameDiv);
+        initGame(gameContainer);
+        gameContainer.className = "gameContainer";
+
         return gameContainer;
     };
 
-    function initGame(boardDiv) {
-        boardDiv.innerHTML = '';
+    function initGame(row, col) {
+        if (!row || !col) {
+            row = 4;
+            col = 4; 
+        }
+        gameContainer.innerHTML = '';
         click = 0;
         previousImage = null;
         currentImage = null;
         numOfMoves = 0;
         numOfSolvedBricks = 0;
 
-        var heading = document.createElement("h3");
-        var headingText = document.createTextNode("MemoryGame");
-
-        heading.appendChild(headingText);
-
         var pictureArray = RandomGenerator.getPictureArray(row, col);
-        boardDiv.appendChild(heading);
 
         numOfBricks = row * col;
         
         for (var i = 0; i < numOfBricks; i += 1) {
             var brick = new MemoryBrick(pictureArray[i], that);
-            boardDiv.appendChild(brick.init());
+            gameContainer.appendChild(brick.init());
         }
     };
 
@@ -82,8 +73,8 @@ function MemoryGame() {
             }
 
             if (numOfSolvedBricks >= (numOfBricks / 2)) {
-                confirm("Grattis du har löst memory spelet, du gjorde det på " + numOfMoves);
-                initGame(boardDiv);
+                confirm("Grattis du har löst memory spelet, du gjorde det på " + numOfMoves + " försök!!!");
+                initGame(gameContainer);
             }
         }
         click = 0;

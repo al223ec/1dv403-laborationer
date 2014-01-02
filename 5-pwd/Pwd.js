@@ -22,16 +22,22 @@ var PWD = {//statiska objektet som startar applikationen
             that.main.appendChild(windowHandler.add(new MemoryGame()));
         };
 
-
         dragDrop.init();
     }
 };
-
+//http://stackoverflow.com/questions/332422/how-do-i-get-the-name-of-an-objects-type-in-javascript
+//Vet inte om jag ska använda denna än
 Object.prototype.getName = function () {
     var funcNameRegex = /function (.{1,})\(/;
     var results = (funcNameRegex).exec((this).constructor.toString());
     return (results && results.length > 1) ? results[1] : "";
 };
+
+//window.oncontextmenu = function (e) { //Högerklick 
+//    console.log(e);
+//    console.log(e.target);
+//    return false;     // cancel default menu
+//};
 
 window.onload = function () {
     PWD.init();

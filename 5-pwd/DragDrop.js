@@ -17,10 +17,10 @@ function DragDrop(PWD) {
 
     //getWidth och height beräknar anändarens höjd resp bredd
     function getWidth() {
-        if (self.innerHeight) { //Denna är aktuell
+        if (self.innerWidth) { //Denna är aktuell
             return self.innerWidth;
         }
-        else if (document.documentElement && document.documentElement.clientHeight) {
+        else if (document.documentElement && document.documentElement.clientWidth) {
             return document.documentElement.clientWidth;
         }
         else if (document.body) {

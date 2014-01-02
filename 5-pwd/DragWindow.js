@@ -57,9 +57,56 @@ function DragWindow(WH) {
         restoreWidth = drag.offsetWidth;
         restoreHeight = drag.offsetHeight;
 
-        drag.style.width = '0px';
-        drag.style.height = '0px'; 
+        that.minimizeHeight(drag);
+        that.minimizeWidth(drag);
+        that.minimizeTop(drag); 
+        //drag.style.width = '0px';
+        //drag.style.height = '0px'; 
     };
-
     this.restore = function () {}; 
-}; 
+};
+
+//Funktion the ultimate
+DragWindow.prototype.minimizeHeight = function (div){
+    var height = div.offsetHeight;
+    var numOfSteps = height / 10;
+
+    function step() {
+        div.style.height = height + 'px';
+        if (height > 0) {
+            height -= numOfSteps;
+            setTimeout(step, 5);
+        }
+    }
+    setTimeout(step, 5);
+};
+
+DragWindow.prototype.minimizeWidth = function (div) {
+    var width = div.offsetWidth;
+    var numOfSteps = width / 10;
+
+    function step() {
+        div.style.width = width + 'px';
+        if (width > 0) {
+            width -= numOfSteps;
+            setTimeout(step, 5);
+        }
+    }
+    setTimeout(step, 5);
+};
+
+DragWindow.prototype.minimizeTop= function (div) {
+    var top = +(div.style.top.replace(/[^0-9\-]/g, ''));
+    var numOfSteps = top/1;
+
+    function step() {
+        div.style.top = top + 'px';
+        if (top < (self.innerHeight)) {
+            top += numOfSteps;
+            setTimeout(step, 1);
+        } else {
+            div.style.display = 'none';
+        }
+    }
+    setTimeout(step, 1);
+};

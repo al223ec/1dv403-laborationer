@@ -1,6 +1,5 @@
 "use strict";
 function MemoryBrick(imgId, memoryGame) {
-
     var brickLink = document.createElement("a");
     var brick = document.createElement("img");
 
@@ -10,7 +9,6 @@ function MemoryBrick(imgId, memoryGame) {
     };
 
     this.init = function () {
-
         brickLink.href = "#";
         brick.src = "apps/memory/pics/0.png";
         brickLink.appendChild(brick);
@@ -33,3 +31,10 @@ function MemoryBrick(imgId, memoryGame) {
         return imgId;
     };
 }
+
+//MemoryBrick.prototype.init = function () {
+//    brickLink.href = "#";
+//    brick.src = "apps/memory/pics/0.png";
+//    brickLink.appendChild(brick);
+//    return brickLink;
+//};

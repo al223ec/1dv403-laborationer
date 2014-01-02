@@ -16,6 +16,7 @@ App.prototype.addMenu = function () {
 };
 
 
+// Inheritance
 /**
  * Transform base class
  */
@@ -72,5 +73,4 @@ translation = new Translation(10, 15);
 console.log(translation instanceof Transform); // true
 console.log(translation instanceof Translation); // true
 console.log(translation instanceof Rotation); // false
-
 console.log(translation.toString()) // Transform2d Translation 10:15

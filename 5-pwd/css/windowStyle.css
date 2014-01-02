@@ -81,3 +81,59 @@ nav {
             width:125px;
             height:150px;
         }
+
+
+.appMenu {
+    margin: 0; 
+    padding: 0;
+    width:400px;
+    border:1px solid; 
+}
+.hidden {
+    display:none;
+}
+
+.visible {
+    display:block;
+}
+.appMenu li{	
+    margin: 0;
+	padding: 0;
+	list-style: none;
+    float:left;
+}
+
+.appMenu li a{
+    display: block;
+	margin: 0;
+    width:60px;
+	text-align: center;
+	text-decoration: none;
+    background-color:white;
+}
+
+.appMenu li a:hover{ 
+    background-color:black;
+}
+.appMenu div {
+    position:absolute;
+	margin: 0;
+	padding: 0;
+	background: #EAEBD8;
+	border: 1px solid #5970B2
+}
+	.appMenu div a{	
+        position: relative;
+		display: block;
+		margin: 0;
+		padding: 5px 10px;
+		width: auto;
+		white-space: nowrap;
+		text-align: left;
+		text-decoration: none;
+	}
+
+	.appMenu div a:hover{
+        background: #49A3FF;
+		color: #FFF
+	}
