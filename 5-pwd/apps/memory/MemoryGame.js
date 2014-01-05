@@ -12,8 +12,7 @@ function MemoryGame() {
 
     this.init = function () {
         initGame(gameContainer);
-        gameContainer.className = "gameContainer";
-
+        gameContainer.className = "container memory";
         return gameContainer;
     };
 

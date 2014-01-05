@@ -9,17 +9,20 @@ var PWD = {//statiska objektet som startar applikationen
         //intiera alla objekt här
         var dragDrop = new DragDrop(this);
         var that = this;
-        WindowHandler.init(that.width, that.height);
+        WindowHandler.init(that.width, that.height, that.main); //ÄR det föredraget att använda PWD? 
 
         //Ska jag hantera dessa från scripten?
-        var imageGallery = document.querySelector(".appImage");
+        var imageGallery = document.querySelector(".appImage");//ID? 
         imageGallery.onclick = function () {
-            WindowHandler.add(that.main, new ImageGallery());
+            var newGallery = new ImageGallery();
+            WindowHandler.add(newGallery);
+            newGallery.displayFooter();
+            setTimeout(newGallery.loadFile, 40); //Måste sätta en timeout, annars hinner inte motorn rendera om sidan, brytpunkten verkar vara kring 20 mili
         };
 
         var memory = document.querySelector(".appMemory");
         memory.onclick = function () {
-            WindowHandler.add(that.main, new MemoryGame());
+            WindowHandler.add(new MemoryGame());
         };
         dragDrop.init();
     }

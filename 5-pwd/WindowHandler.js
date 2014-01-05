@@ -5,9 +5,11 @@ var WindowHandler = {
     bounds: 0,
     width: 0,
     height: 0,
+    main: null,
 
-    init: function (width, height) {
+    init: function (width, height, main) {
         var that = this;
+        that.main = main; 
         that.width = width;
         that.height = height;
 
@@ -16,16 +18,27 @@ var WindowHandler = {
         that.dragWindows.push(["app2"]);
     },
 
-    add: function (main, app) {
+    add: function (app) {
         var that = this;
 
         var newWindow = new DragWindow(that);
         for (var i = 0; i < that.dragWindows.length; i++) {
             if (that.dragWindows[i][0] === app.toString()) {
                 that.dragWindows[i].push(newWindow);
-                main.appendChild(newWindow.add(app.toString() + that.numberOfWindows++, app));
+                that.main.appendChild(newWindow.add(app.toString() + that.numberOfWindows++, app));
                 that.fixBounds(newWindow.getDragDiv());
                 break;
+            }
+        }
+    },
+
+    addImageWindow: function (imgGallery, img) {
+        var that = this;
+        for (var i = 0; i < that.dragWindows[0].length; i++) {
+            if (imgGallery == that.dragWindows[0][i]) {
+                var newWindow = new DragWindow(that);
+                imgGallery.addWindow(newWindow);
+                that.main.appendChild(newWindow.add("Image", img));
             }
         }
     },
@@ -52,7 +65,7 @@ var WindowHandler = {
     },
 };
 
-function Meny() {
+function Meny() { //Vart ska denna vara? 
     this.view = function () {
     }; 
 }; 

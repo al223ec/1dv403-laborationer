@@ -1,14 +1,14 @@
 "use strict";
 function DragWindow(WH) {
     var drag = document.createElement("div");
-    var text;
+
     var restoreWidth;
     var restoreHeight;
     var restoreLeft;
     var restoreTop;
 
     var that = this;
-    
+
     this.add = function (windowName, app) {
         if (!app || !app.init) {
             //fel, skicka med en referens till appen som ska öppnas
@@ -36,8 +36,6 @@ function DragWindow(WH) {
             that.minimize();
         };
 
-        text = document.createTextNode("Information");
-
         drag.className = "drag";
         drag.appendChild(minimizeButton);
         drag.appendChild(closeButton);
@@ -45,12 +43,15 @@ function DragWindow(WH) {
         header.appendChild(document.createTextNode(windowName));
         header.className = "windowName"; 
 
-        footer.appendChild(text);
         drag.appendChild(header);
-
         drag.appendChild(app.init());
-        drag.appendChild(footer);
 
+        drag.appendChild(footer);
+        if (app.setFooter) {
+            app.setFooter(footer);
+        }
+
+        drag.style.zIndex = 1010;
         return drag;
     };
 
@@ -71,7 +72,6 @@ function DragWindow(WH) {
     };
 
     this.getDragDiv = function () { return drag; };
-
 };
 
 //Funktion the ultimate
