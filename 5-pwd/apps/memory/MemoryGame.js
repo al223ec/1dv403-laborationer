@@ -80,3 +80,7 @@ function MemoryGame() {
         click = 0;
     };
 };
+
+MemoryGame.prototype.toString = function () {
+    return "MemoryGame"; 
+};

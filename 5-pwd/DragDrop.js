@@ -13,6 +13,8 @@ function DragDrop(PWD) {
     this.init = function () { //Hämtar alla element som ska vara dragbara
         document.onmousedown = onMouseDown;
         document.onmouseup = onMouseUp;
+        PWD.width = getWidth();
+        PWD.height = getHeight();
     };
 
     //getWidth och height beräknar anändarens höjd resp bredd
