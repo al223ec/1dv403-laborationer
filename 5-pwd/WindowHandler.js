@@ -2,7 +2,7 @@
 var WindowHandler = {
     dragWindows: [],
     numberOfWindows: 0,
-    bounds: 0,
+
     width: 0,
     height: 0,
     main: null,
@@ -15,7 +15,7 @@ var WindowHandler = {
 
         that.dragWindows.push(['ImageGallery']);
         that.dragWindows.push(['MemoryGame']);
-        that.dragWindows.push(["app2"]);
+        that.dragWindows.push(["LabbyMessage"]);
     },
 
     add: function (app) {
@@ -56,16 +56,44 @@ var WindowHandler = {
     },
 
     fixBounds: function (div) {
-        if ((50 + 20 * this.numberOfWindows + div.offsetHeight) < this.height) {
-            div.style.top = 50 + 20 * this.numberOfWindows + 'px';
-            this.bounds = this.numberOfWindows; 
-        } else {
+        var allDragDivElements = document.querySelectorAll(".drag");
+        if ((50 + 20 * this.numberOfWindows +  + div.offsetHeight) < this.height) {
+            div.style.top = 500 + 20 * this.numberOfWindows + 'px';
+        } 
+        if ((50 + 20 * this.numberOfWindows + div.offsetWidth) < this.width) {
+            div.style.left = 500 + 20 * this.numberOfWindows + 'px';
         }
-        div.style.left = 50 + 20 * this.numberOfWindows + 'px';
     },
 };
 
-function Meny() { //Vart ska denna vara? 
-    this.view = function () {
-    }; 
+var DisplayMeny = {
+    main: document.querySelector("main"),
+    init: function (listItems, e) { //Skicka med a taggar
+        e.preventDefault();
+        if (!typeof listItems == 'object') { //HUr lösa detta?
+            throw Error("Skicka object"); 
+        }
+
+        var that = this;
+        var div = document.createElement("div");
+        div.className = "rightClickMenu";
+
+        var ul = document.createElement("ul");
+
+        for (var i = 0; i < listItems.length; i++) {
+            var li = document.createElement("li");
+            li.appendChild(listItems[i]);
+            ul.appendChild(li); 
+        }
+
+        div.appendChild(ul);
+
+        div.style.top = e.pageY + 'px';
+        div.style.left = e.pageX + 'px';
+
+        div.onmouseleave = function () {
+            that.main.removeChild(div);
+        };
+        that.main.appendChild(div);
+    },
 }; 

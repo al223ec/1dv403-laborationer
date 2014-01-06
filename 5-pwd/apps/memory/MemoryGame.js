@@ -70,7 +70,6 @@ function MemoryGame() {
                 currentImage = null;
                 return;
             }
-
             if (numOfSolvedBricks >= (numOfBricks / 2)) {
                 confirm("Grattis du har löst memory spelet, du gjorde det på " + numOfMoves + " försök!!!");
                 initGame(gameContainer);
@@ -79,7 +78,6 @@ function MemoryGame() {
         click = 0;
     };
 };
-
 MemoryGame.prototype.toString = function () {
     return "MemoryGame"; 
 };

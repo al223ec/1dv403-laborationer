@@ -12,11 +12,13 @@ function ImageGallery() {
     };
 
     this.loadFile = function () {
-        var startTime = new Date(); 
+        var startTime = new Date();
+        var timeout = setTimeout(displayFooter, 200); 
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function () {
             try {
-                if (xhr.readyState === 4) { //redy state 4 == Complete  3 == recieveing This kan inte användas i detta fall pga Browser kompatibilitet
+                if (xhr.readyState == 4) { //redy state 4 == Complete  3 == recieveing This kan inte användas i detta fall pga Browser kompatibilitet
+                    clearTimeout(timeout);
                     if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {//lyckat
                         images = JSON.parse(xhr.responseText);
                         loadImages();
@@ -25,7 +27,7 @@ function ImageGallery() {
                         }
                         footer.appendChild(document.createTextNode("Detta tog: " + (new Date().getTime() - startTime.getTime()) + "ms"));
                     } else {//misslyckades
-                        alert(xhr.status);
+                        throw Error(xhr.status);
                     }
                 }
             } catch (ex) {
@@ -33,20 +35,18 @@ function ImageGallery() {
             }
         };
 
-        xhr.open("get", 'http://homepage.lnu.se/staff/tstjo/labbyServer/imgviewer/', false);
+        xhr.open("get", 'http://homepage.lnu.se/staff/tstjo/labbyServer/imgviewer/', true);
         xhr.send(null);
     };
 
     this.setFooter = function (foot) { footer = foot;  };
 
-    this.displayFooter = function () {
-        //Giffen funkar inte i Chrome!!!
+    function displayFooter() {
         if (!footer) { throw Error("Fail, footer finns inte"); }
         var img = document.createElement("img");
         img.src = 'img/loader.gif'; 
         footer.appendChild(img);
         footer.appendChild(document.createTextNode("Laddar..."));
-        
     };
 
     this.addWindow = function (img) {
@@ -73,13 +73,13 @@ function ImageGallery() {
         thumbWidth += 40;
         thumbHeight += 40;
 
-        console.log(document.styleSheets[0]);
+        //console.log(document.styleSheets[0]);
     //    document.styleSheets[0].cssRules[0].cssText = "\
     // #myID {
     //    myRule: myValue;
     //    myOtherRule: myOtherValue;
     //}";
-
+        //Bör finnas en bättre lösning
         var allImgs = document.querySelectorAll(".galleryDiv");
         for (var i = 0; i < allImgs.length; i++) {
             allImgs[i].style.width = thumbWidth + 'px';
@@ -95,11 +95,17 @@ function Image(imageObj, imageGallery) {
     div.className = "galleryDiv";
     var a = document.createElement("a");
     var thumbImage = document.createElement("img");
+    var largeImage = document.createElement("img");
+    largeImage.src = imageObj.URL;
+
     var that = this;
 
     a.onclick = function () {
         WindowHandler.addImageWindow(imageGallery, that);
     };
+
+    a.oncontextmenu = rightClick;
+    //largeImage.oncontextmenu = rightClick;
 
     this.initThumb = function () {
         thumbImage.src = imageObj.thumbURL;
@@ -107,10 +113,29 @@ function Image(imageObj, imageGallery) {
         a.appendChild(thumbImage);
         div.appendChild(a);
         return div; 
-    }; 
-    this.init = function () {
-        var image = document.createElement("img");
-        image.src = imageObj.URL; 
-        return image; 
     };
+
+    this.init = function () {
+        var clone = largeImage.cloneNode();
+        clone.oncontextmenu = rightClick;
+        return clone;
+    };
+
+    function rightClick(e) {
+        DisplayMeny.init(getMenyItems(), e);
+    };
+
+    function getMenyItems() {
+        var list = []; 
+        var setAsBackground = document.createElement("a");
+        setAsBackground.appendChild(document.createTextNode("Sätt som bakgrund"));
+        setAsBackground.href = "#";
+
+        setAsBackground.onclick = function () {
+            document.querySelector("body").style.backgroundImage = "url("+largeImage.src+")";
+        }; 
+
+        list.push(setAsBackground);
+        return list;
+    }; 
 }; 

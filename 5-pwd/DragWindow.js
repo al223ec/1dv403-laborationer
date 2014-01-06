@@ -67,8 +67,6 @@ function DragWindow(WH) {
         that.minimizeTop(drag);
 
         that.restore(drag, restoreWidth, restoreHeight, restoreTop, restoreLeft);
-        console.log(restoreWidth);
-        console.log(that.restore);
     };
 
     this.getDragDiv = function () { return drag; };

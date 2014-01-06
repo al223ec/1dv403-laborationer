@@ -7,24 +7,34 @@ var PWD = {//statiska objektet som startar applikationen
 
     init: function () {
         //intiera alla objekt här
-        var dragDrop = new DragDrop(this);
+        new DragDrop(this).init();
         var that = this;
-        WindowHandler.init(that.width, that.height, that.main); //ÄR det föredraget att använda PWD? 
 
+        WindowHandler.init(that.width, that.height, that.main); //ÄR det föredraget att använda PWD? 
         //Ska jag hantera dessa från scripten?
         var imageGallery = document.querySelector(".appImage");//ID? 
         imageGallery.onclick = function () {
             var newGallery = new ImageGallery();
             WindowHandler.add(newGallery);
-            newGallery.displayFooter();
-            setTimeout(newGallery.loadFile, 40); //Måste sätta en timeout, annars hinner inte motorn rendera om sidan, brytpunkten verkar vara kring 20 mili
+            newGallery.loadFile();
+        };
+
+        imageGallery.oncontextmenu = function (e) {
+            var list = [];
+            for (var i = 0; i < WindowHandler.dragWindows[0].length; i++) {
+                var a = document.createElement("a");
+                a.href = "#";
+                a.appendChild(document.createTextNode(WindowHandler.dragWindows[0][i].toString() + i));
+                list.push(a);
+            }
+            DisplayMeny.init(list, e);
         };
 
         var memory = document.querySelector(".appMemory");
         memory.onclick = function () {
             WindowHandler.add(new MemoryGame());
         };
-        dragDrop.init();
+      
     }
 };
 ////http://stackoverflow.com/questions/332422/how-do-i-get-the-name-of-an-objects-type-in-javascript
@@ -44,4 +54,5 @@ var PWD = {//statiska objektet som startar applikationen
 
 window.onload = function () {
     PWD.init();
+    console.log(window);
 };

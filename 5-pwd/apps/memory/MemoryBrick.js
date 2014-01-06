@@ -31,10 +31,3 @@ function MemoryBrick(imgId, memoryGame) {
         return imgId;
     };
 }
-
-//MemoryBrick.prototype.init = function () {
-//    brickLink.href = "#";
-//    brick.src = "apps/memory/pics/0.png";
-//    brickLink.appendChild(brick);
-//    return brickLink;
-//};
