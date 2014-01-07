@@ -2,7 +2,6 @@
 //Kan vara ett "statiskt objekt"
 function DragDrop(PWD) {
     if (!PWD) { throw Error("Detta objekt måste ha en referens till PWO när det skapas"); } //Detta kan utvecklas
-
     var objectX;
     var objectY;
     var mouseStartX;

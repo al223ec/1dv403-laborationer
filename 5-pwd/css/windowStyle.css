@@ -1,7 +1,6 @@
 img {
     max-width:100%;
 }
-
 .drag {
     border:2px solid #34479b;
     position:absolute; 
@@ -132,11 +131,9 @@ nav {
 .appMenu ul{
     width:100%;
 }
-
 .hidden {
     display:none;
 }
-
 .visible {
     display:block;
 }
@@ -145,6 +142,7 @@ nav {
 	list-style: none;
     float:left;
     width:150px;
+    border:0;
 }
 
 .appMenu li a{
@@ -155,7 +153,8 @@ nav {
 }
 
 .appMenu li a:hover{ 
-    background-color:black;
+    background: #49A3FF;
+	color: #FFF
 }
 .appMenu div {
     position:absolute;

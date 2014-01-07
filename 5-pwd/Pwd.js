@@ -32,6 +32,13 @@ var PWD = {//statiska objektet som startar applikationen
             that.add(mBoard.start());
             that.numOfWindows++;
         };
+
+        var reader = document.querySelector("#rssReader");
+        reader.onclick = function () {
+            var reader = new RssReader();
+            that.add(reader.start());
+            that.numOfWindows++;
+        };
       
     },
 
@@ -49,7 +56,6 @@ var PWD = {//statiska objektet som startar applikationen
         console.log(allDragElements);
         for (var i = 0; i < allDragElements.length; i++) {
             if (allDragElements[i].offsetWidth + +allDragElements[i].style.left.replace(/[^0-9]/g, '') > PWD.width) {
-                console.log(true);
                 allDragElements[i].style.left = PWD.width - allDragElements[i].offsetWidth - 40 + 'px';
             }
             if (allDragElements[i].offsetHeight + +allDragElements[i].style.top.replace(/[^0-9]/g, '') > PWD.height) {

@@ -9,10 +9,10 @@ function ImageGallery() {
     this.start = function () {
         this.init("Image gallery");
         galleryContainer.className = "container";
-        loadFile();
 
+        loadFile();
         //Exempel för inställningar
-        initDropDown(this.addDropDown("inställningar"));
+        initDropDown(this.addDropDown("Meny"));
         return this.getDragDiv();
     };
 
@@ -77,15 +77,7 @@ function ImageGallery() {
         }
     };
 
-    function initDropDown(div) {
-        var quit = document.createElement("a")
-        quit.href = "#";
-        quit.onclick = function () {
-            PWD.removeWindow(that.getDragDiv());
-        };
-        quit.appendChild(document.createTextNode("Avsluta"));
-        div.appendChild(quit);
-    };
+    function initDropDown(div) {};
 };
 ImageGallery.prototype.toString = function () {
     return "ImageGallery";
@@ -110,17 +102,8 @@ function ImageWindow(img) {
             document.querySelector("body").style.backgroundImage = "url(" + img.src + ")";
         };
 
-        a.appendChild(document.createTextNode("Sätt som backgrund"));
+        a.appendChild(document.createTextNode("Sätt som bakgrund"));
         div.appendChild(a);
-
-        var quit = document.createElement("a")
-        quit.href = "#";
-        quit.onclick = function () {
-            PWD.removeWindow(that.getDragDiv());
-        };
-        quit.appendChild(document.createTextNode("Avsluta"));
-        div.appendChild(quit);
-
     };
 
 };
