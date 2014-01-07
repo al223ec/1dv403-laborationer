@@ -1,76 +1,163 @@
-function App() { //Abstract klass, hur får man till det? 
-    //Denna klass ska skapa en meny specifik för varje app
+"use strict";
+function App() {
+    var dragWindow = document.createElement("div");
+    this.container = document.createElement("div");
+    this.footer = document.createElement("footer");
+    this.dropDown = document.createElement("ul");
 
-    this.addApp = function (app) {
-        if (app === 'memory') {
+    var that = this;
+    this.init = function (windowName) {
+        console.log("initfunktionen");
 
-        }
-    };
+        var header = document.createElement("h4");
 
-    this.getDropDownMenu = function () {
+        var closeButton = document.createElement("input");
+        closeButton.type = "button";
+        closeButton.value = "X";
+        closeButton.className = "close";
+        closeButton.onclick = function (e) {
+            PWD.removeWindow(dragWindow);
+        };
+
+        var minimizeButton = document.createElement("input");
+        minimizeButton.type = "button";
+        minimizeButton.value = "^";
+        minimizeButton.className = "minimize";
+        minimizeButton.onclick = function (e) {
+            that.minimize(dragWindow);
+        };
+
+        that.dropDown.className = "appMenu";
+
+        dragWindow.className = "drag";
+        dragWindow.appendChild(minimizeButton);
+        dragWindow.appendChild(closeButton);
+
+        header.appendChild(document.createTextNode(windowName));
+        header.className = "windowName";
+
+        dragWindow.appendChild(header);
+        dragWindow.appendChild(that.dropDown);
+        dragWindow.appendChild(that.container);
+        dragWindow.appendChild(that.footer);
+
+
+        dragWindow.style.top = 10 + 20 * PWD.numOfWindows + 'px';
+        dragWindow.style.left = 10 + 20 * PWD.numOfWindows + 'px';
+
+        dragWindow.style.zIndex = 1010;
     }; 
-}
+    this.getDragDiv = function () { return dragWindow; };
+};
 
-App.prototype.addMenu = function () {
-
+App.prototype.minimize = function (div) {
+    div.style.display = 'none';
+    this.minimizeHeight(div);
+    this.minimizeWidth(div);
+    this.minimizeTop(div);
 };
 
 
-// Inheritance
-/**
- * Transform base class
- */
-function Transform() {
-    this.type = "2d";
-}
+//Funktion the ultimate
+App.prototype.minimizeHeight = function (div) {
+    var height = div.offsetHeight;
+    var numOfSteps = height / 10;
+    function step() {
+        div.style.height = height + 'px';
+        if (height > 0) {
+            height -= numOfSteps;
+            setTimeout(step, 5);
+        }
+    }
+    setTimeout(step, 5);
+};
 
-Transform.prototype.toString = function () {
-    return "Transform";
-}
+App.prototype.minimizeWidth = function (div) {
+    var width = div.offsetWidth;
+    var numOfSteps = width / 10;
+    function step() {
+        div.style.width = width + 'px';
+        if (width > 0) {
+            width -= numOfSteps;
+            setTimeout(step, 5);
+        }
+    }
+    setTimeout(step, 5);
+};
 
-/**
- * Translation class.
- */
-function Translation(x, y) {
-    // Parent constructor
-    Transform.call(this);
+App.prototype.minimizeTop = function (div) {
+    var top = +(div.style.top.replace(/[^0-9\-]/g, ''));
+    var numOfSteps = top / 1;
 
-    // Public properties
-    this.x = x;
-    this.y = y;
-}
+    function step() {
+        div.style.top = top + 'px';
+        if (top < (self.innerHeight)) {
+            top += numOfSteps;
+            setTimeout(step, 1);
+        } else {
+            div.style.display = 'none';
+        }
+    }
+    setTimeout(step, 1);
+};
+App.prototype.restore = function (div) {
+    if (!div) {
+        throw Error("Skicka med diven som argument");
+    }
+};
 
-// Inheritance
-Translation.prototype = Object.create(Transform.prototype);
+App.prototype.DisplayMeny = {
+    main: document.querySelector("main"),
 
-// Override
-Translation.prototype.toString = function () {
-    return Transform.prototype.toString() + this.type + " Translation " + this.x + ":" + this.y;
-}
+    init: function (listItems, e) { //Skicka med a taggar
+        e.preventDefault();
+        if (!typeof listItems == 'object') { //HUr lösa detta?
+            throw Error("Skicka object");
+        }
 
-/**
- * Rotation class.
- */
-function Rotation(angle) {
-    // Parent constructor
-    Transform.call(this);
+        var that = this;
+        var div = document.createElement("div");
+        div.className = "rightClickMenu";
 
-    // Public properties
-    this.angle = angle;
-}
+        var ul = document.createElement("ul");
 
-// Inheritance
-Rotation.prototype = Object.create(Transform.prototype);
+        for (var i = 0; i < listItems.length; i++) {
+            var li = document.createElement("li");
+            li.appendChild(listItems[i]);
+            ul.appendChild(li);
+        }
 
-// Override
-Rotation.prototype.toString = function () {
-    return Transform.prototype.toString() + this.type + " Rotation " + this.angle;
-}
+        div.appendChild(ul);
 
-// Tests
-translation = new Translation(10, 15);
+        div.style.top = e.pageY + 'px';
+        div.style.left = e.pageX + 'px';
 
-console.log(translation instanceof Transform); // true
-console.log(translation instanceof Translation); // true
-console.log(translation instanceof Rotation); // false
-console.log(translation.toString()) // Transform2d Translation 10:15
+        div.onmouseleave = function () {
+            that.main.removeChild(div);
+        };
+        that.main.appendChild(div);
+    },
+};
+App.prototype.addDropDown = function(linkText){
+    var li = document.createElement("li");
+    li.className = "dropDownLink";
+    var primaryLink = document.createElement("a");
+    primaryLink.href = "#"; 
+    primaryLink.appendChild(document.createTextNode(linkText));
+    var that = this;
+
+    primaryLink.onclick = function(){
+        div.className = "visible"; 
+        that.dropDown.onmouseleave = function(){
+            div.className = "hidden"; 
+        };
+    }; 
+    
+    var div = document.createElement("div");
+    div.className = "hidden";
+
+    li.appendChild(primaryLink); 
+    li.appendChild(div);
+    that.dropDown.appendChild(li); 
+    return div; 
+};

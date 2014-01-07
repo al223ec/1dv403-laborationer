@@ -1,7 +1,7 @@
 "use strict";
 function DragWindow(WH) {
-    var drag = document.createElement("div");
 
+    var drag = document.createElement("div");
     var restoreWidth;
     var restoreHeight;
     var restoreLeft;

@@ -1,17 +1,22 @@
 "use strict";
 function ImageGallery() {
-    var galleryContainer = document.createElement("div");
-    var footer = null; 
+    App.call(this);
+    var galleryContainer = this.container;
+    var footer = this.footer; 
     var images = null;
     var that = this;
-    var openImages; 
 
-    this.init = function () {
+    this.start = function () {
+        this.init("Image gallery");
         galleryContainer.className = "container";
-        return galleryContainer;
+        loadFile();
+
+        //Exempel för inställningar
+        initDropDown(this.addDropDown("inställningar"));
+        return this.getDragDiv();
     };
 
-    this.loadFile = function () {
+    function loadFile() {
         var startTime = new Date();
         var timeout = setTimeout(displayFooter, 200); 
         var xhr = new XMLHttpRequest();
@@ -22,6 +27,7 @@ function ImageGallery() {
                     if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {//lyckat
                         images = JSON.parse(xhr.responseText);
                         loadImages();
+                        PWD.fixBounds();
                         while (footer.firstChild) {
                             footer.removeChild(footer.firstChild);
                         }
@@ -38,20 +44,11 @@ function ImageGallery() {
         xhr.open("get", 'http://homepage.lnu.se/staff/tstjo/labbyServer/imgviewer/', true);
         xhr.send(null);
     };
-
-    this.setFooter = function (foot) { footer = foot;  };
-
     function displayFooter() {
-        if (!footer) { throw Error("Fail, footer finns inte"); }
         var img = document.createElement("img");
         img.src = 'img/loader.gif'; 
         footer.appendChild(img);
         footer.appendChild(document.createTextNode("Laddar..."));
-    };
-
-    this.addWindow = function (img) {
-        if (!openImages) { openImages = [] }; 
-        openImages.push(img);
     };
 
     function loadImages() {
@@ -73,23 +70,62 @@ function ImageGallery() {
         thumbWidth += 40;
         thumbHeight += 40;
 
-        //console.log(document.styleSheets[0]);
-    //    document.styleSheets[0].cssRules[0].cssText = "\
-    // #myID {
-    //    myRule: myValue;
-    //    myOtherRule: myOtherValue;
-    //}";
-        //Bör finnas en bättre lösning
         var allImgs = document.querySelectorAll(".galleryDiv");
         for (var i = 0; i < allImgs.length; i++) {
             allImgs[i].style.width = thumbWidth + 'px';
             allImgs[i].style.height = thumbHeight + 'px';
         }
     };
+
+    function initDropDown(div) {
+        var quit = document.createElement("a")
+        quit.href = "#";
+        quit.onclick = function () {
+            PWD.removeWindow(that.getDragDiv());
+        };
+        quit.appendChild(document.createTextNode("Avsluta"));
+        div.appendChild(quit);
+    };
 };
 ImageGallery.prototype.toString = function () {
     return "ImageGallery";
 };
+ImageGallery.prototype = Object.create(App.prototype);
+
+function ImageWindow(img) {
+    App.call(this);
+    var container = this.container;
+    var that = this;
+
+    this.start = function () {
+        this.init("Imageview");
+        container.appendChild(img);
+        initDropDown(this.addDropDown("Alternativ"));
+        return this.getDragDiv();
+    };
+    function initDropDown(div) {
+        var a = document.createElement("a")
+        a.href = "#";
+        a.onclick = function () {
+            document.querySelector("body").style.backgroundImage = "url(" + img.src + ")";
+        };
+
+        a.appendChild(document.createTextNode("Sätt som backgrund"));
+        div.appendChild(a);
+
+        var quit = document.createElement("a")
+        quit.href = "#";
+        quit.onclick = function () {
+            PWD.removeWindow(that.getDragDiv());
+        };
+        quit.appendChild(document.createTextNode("Avsluta"));
+        div.appendChild(quit);
+
+    };
+
+};
+ImageWindow.prototype = Object.create(App.prototype);
+
 function Image(imageObj, imageGallery) {
     var div = document.createElement("div");
     div.className = "galleryDiv";
@@ -101,11 +137,13 @@ function Image(imageObj, imageGallery) {
     var that = this;
 
     a.onclick = function () {
-        WindowHandler.addImageWindow(imageGallery, that);
+        var newLargeImage = largeImage.cloneNode();
+        newLargeImage.oncontextmenu = rightClick;
+        var newImg = new ImageWindow(newLargeImage);
+        PWD.add(newImg.start());
     };
 
     a.oncontextmenu = rightClick;
-    //largeImage.oncontextmenu = rightClick;
 
     this.initThumb = function () {
         thumbImage.src = imageObj.thumbURL;
@@ -115,14 +153,8 @@ function Image(imageObj, imageGallery) {
         return div; 
     };
 
-    this.init = function () {
-        var clone = largeImage.cloneNode();
-        clone.oncontextmenu = rightClick;
-        return clone;
-    };
-
     function rightClick(e) {
-        DisplayMeny.init(getMenyItems(), e);
+        that.displayMenu.init(getMenyItems(), e);
     };
 
     function getMenyItems() {
@@ -138,4 +170,5 @@ function Image(imageObj, imageGallery) {
         list.push(setAsBackground);
         return list;
     }; 
-}; 
+};
+Image.prototype.displayMenu = App.prototype.DisplayMeny;

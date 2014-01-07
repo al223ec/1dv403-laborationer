@@ -4,39 +4,66 @@ var PWD = {//statiska objektet som startar applikationen
     main: document.querySelector("main"),
     width: 1920,
     height: 946,
+    numOfWindows: 0,
 
     init: function () {
         //intiera alla objekt här
         new DragDrop(this).init();
         var that = this;
 
-        WindowHandler.init(that.width, that.height, that.main); //ÄR det föredraget att använda PWD? 
         //Ska jag hantera dessa från scripten?
-        var imageGallery = document.querySelector(".appImage");//ID? 
+        var imageGallery = document.querySelector("#appImage");//ID? 
         imageGallery.onclick = function () {
             var newGallery = new ImageGallery();
-            WindowHandler.add(newGallery);
-            newGallery.loadFile();
+            that.add(newGallery.start());
+            that.numOfWindows++;
         };
 
-        imageGallery.oncontextmenu = function (e) {
-            var list = [];
-            for (var i = 0; i < WindowHandler.dragWindows[0].length; i++) {
-                var a = document.createElement("a");
-                a.href = "#";
-                a.appendChild(document.createTextNode(WindowHandler.dragWindows[0][i].toString() + i));
-                list.push(a);
-            }
-            DisplayMeny.init(list, e);
-        };
-
-        var memory = document.querySelector(".appMemory");
+        var memory = document.querySelector("#appMemory");
         memory.onclick = function () {
-            WindowHandler.add(new MemoryGame());
+            var mGame = new MemoryGame();
+            that.add(mGame.start());
+            that.numOfWindows++;
+        };
+
+        var messBoard = document.querySelector("#appMessage");
+        messBoard.onclick = function () {
+            var mBoard = new MessageBoard();
+            that.add(mBoard.start());
+            that.numOfWindows++;
         };
       
-    }
+    },
+
+    add: function (div) {
+        this.main.appendChild(div);
+        this.fixBounds();
+    },
+
+    removeWindow: function (div) {
+        this.main.removeChild(div);
+    },
+
+    fixBounds: function () {
+        var allDragElements = this.main.querySelectorAll(".drag");
+        console.log(allDragElements);
+        for (var i = 0; i < allDragElements.length; i++) {
+            if (allDragElements[i].offsetWidth + +allDragElements[i].style.left.replace(/[^0-9]/g, '') > PWD.width) {
+                console.log(true);
+                allDragElements[i].style.left = PWD.width - allDragElements[i].offsetWidth - 40 + 'px';
+            }
+            if (allDragElements[i].offsetHeight + +allDragElements[i].style.top.replace(/[^0-9]/g, '') > PWD.height) {
+                allDragElements[i].style.top = PWD.height - allDragElements[i].offsetHeight - 40 + 'px';
+            }
+        }
+    },
 };
+
+window.onload = function () {
+    PWD.init();
+};
+
+
 ////http://stackoverflow.com/questions/332422/how-do-i-get-the-name-of-an-objects-type-in-javascript
 ////Vet inte om jag ska använda denna än
 //Object.prototype.getName = function () {
@@ -51,8 +78,3 @@ var PWD = {//statiska objektet som startar applikationen
 //    console.log(e.target);
 //    return false;     // cancel default menu
 //};
-
-window.onload = function () {
-    PWD.init();
-    console.log(window);
-};

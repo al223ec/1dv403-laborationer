@@ -49,7 +49,7 @@ img {
    max-height:600px;
    overflow:scroll;
    overflow-x: hidden;
-   text-align:center;
+   clear:both;
 }
 .rightClickMenu {
     position:absolute;
@@ -60,11 +60,14 @@ img {
     display:block;    
 }
 /*Image gallery*/
-    .container img {}
+    .container img {
+
+    }
     .container .galleryDiv {
         float:left;
         margin:5px;
         background-color:green;
+        text-align:center;
     }
     .container .galleryDiv img{
        padding:20px;
@@ -123,9 +126,13 @@ nav {
 .appMenu {
     margin: 0; 
     padding: 0;
-    width:400px;
     border:1px solid; 
+    font-size:75%;
 }
+.appMenu ul{
+    width:100%;
+}
+
 .hidden {
     display:none;
 }
@@ -135,16 +142,14 @@ nav {
 }
 .appMenu li{	
     margin: 0;
-	padding: 0;
 	list-style: none;
     float:left;
+    width:150px;
 }
 
 .appMenu li a{
     display: block;
-	margin: 0;
-    width:60px;
-	text-align: center;
+	margin-left: 20px;
 	text-decoration: none;
     background-color:white;
 }
@@ -154,18 +159,16 @@ nav {
 }
 .appMenu div {
     position:absolute;
-	margin: 0;
+	margin-left: 20px;
 	padding: 0;
 	background: #EAEBD8;
-	border: 1px solid #5970B2
+    width:130px;
 }
 	.appMenu div a{	
         position: relative;
 		display: block;
 		margin: 0;
-		padding: 5px 10px;
-		width: auto;
-		white-space: nowrap;
+        white-space: nowrap;
 		text-align: left;
 		text-decoration: none;
 	}

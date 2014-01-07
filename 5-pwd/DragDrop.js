@@ -48,16 +48,19 @@ function DragDrop(PWD) {
     function onMouseDown(e) {
         if (e.target.className === 'drag') {
             targetELement = e.target;
-        } else {
-            targetELement = e.target;
-            while (targetELement.parentNode) {
-                if (targetELement.className === 'drag') {
-                    break;
-                }
-                targetELement = targetELement.parentNode;
-            }
+        } else if (e.target.parentNode && e.target.parentNode.className === 'drag') {
+            targetELement = e.target.parentNode;
         }
-        if (targetELement.className !== 'drag') {
+        //else {
+        //    targetELement = e.target;
+        //    while (targetELement.parentNode) {
+        //        if (targetELement.className === 'drag') {
+        //            break;
+        //        }
+        //        targetELement = targetELement.parentNode;
+        //    }
+        //}
+        if (!targetELement){
             return;
         }
         //Fixa browsersupport

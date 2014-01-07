@@ -1,6 +1,7 @@
 "use strict";
 function MemoryGame() {
-    var gameContainer = document.createElement("div");
+    App.call(this);
+    var gameContainer = this.container;
     var click;
     var previousImage;
     var currentImage;
@@ -10,10 +11,12 @@ function MemoryGame() {
  
     var that = this;
 
-    this.init = function () {
-        initGame(gameContainer);
+    this.start = function () {
+        this.init("Memory spel");
+        initGame(4,4);
         gameContainer.className = "container memory";
-        return gameContainer;
+        this.footer.appendChild(document.createTextNode("Game on MF!!"));
+        return this.getDragDiv();
     };
 
     function initGame(row, col) {
@@ -78,6 +81,7 @@ function MemoryGame() {
         click = 0;
     };
 };
+MemoryGame.prototype = Object.create(App.prototype);
 MemoryGame.prototype.toString = function () {
     return "MemoryGame"; 
 };
