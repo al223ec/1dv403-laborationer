@@ -12,7 +12,7 @@ function ImageGallery() {
 
         loadFile();
         //Exempel för inställningar
-        initDropDown(this.addDropDown("Meny"));
+        initDropDown(this.addDropDown("Meny", true));
         return this.getDragDiv();
     };
 
@@ -92,7 +92,7 @@ function ImageWindow(img) {
     this.start = function () {
         this.init("Imageview");
         container.appendChild(img);
-        initDropDown(this.addDropDown("Alternativ"));
+        initDropDown(this.addDropDown("Alternativ", true));
         return this.getDragDiv();
     };
     function initDropDown(div) {

@@ -53,7 +53,6 @@ var PWD = {//statiska objektet som startar applikationen
 
     fixBounds: function () {
         var allDragElements = this.main.querySelectorAll(".drag");
-        console.log(allDragElements);
         for (var i = 0; i < allDragElements.length; i++) {
             if (allDragElements[i].offsetWidth + +allDragElements[i].style.left.replace(/[^0-9]/g, '') > PWD.width) {
                 allDragElements[i].style.left = PWD.width - allDragElements[i].offsetWidth - 40 + 'px';

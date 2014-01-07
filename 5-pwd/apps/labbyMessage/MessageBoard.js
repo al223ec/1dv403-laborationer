@@ -14,6 +14,9 @@ function MessageBoard() {
     this.start = function () {
         this.init("Message board");
         container.className = "container";
+
+        this.addDropDown("Meny", true);
+
         var messageForm = document.createElement("form"); 
         messageContainerDiv.className = "messageContainer";
         numberDiv.className = "textRight";

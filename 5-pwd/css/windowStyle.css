@@ -125,8 +125,6 @@ nav {
 .appMenu {
     margin: 0; 
     padding: 0;
-    border:1px solid; 
-    font-size:75%;
 }
 .appMenu ul{
     width:100%;
@@ -136,6 +134,11 @@ nav {
 }
 .visible {
     display:block;
+}
+.menuStep {
+    position:absolute;
+    background-color:green;
+    z-index:10;
 }
 .appMenu li{	
     margin: 0;

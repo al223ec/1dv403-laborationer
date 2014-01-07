@@ -138,7 +138,7 @@ App.prototype.DisplayMeny = {
         that.main.appendChild(div);
     },
 };
-App.prototype.addDropDown = function(linkText){
+App.prototype.addDropDown = function (linkText, addQuit) {
     var li = document.createElement("li");
     li.className = "dropDownLink";
     var primaryLink = document.createElement("a");
@@ -148,21 +148,26 @@ App.prototype.addDropDown = function(linkText){
 
     primaryLink.onclick = function(){
         div.className = "visible"; 
-        that.dropDown.onmouseleave = function(){
+        that.dropDown.onmouseleave = function () {
+            var alHidden = document.querySelectorAll(".visible");
+            for (var i = 0; i < alHidden.length; i++) {
+                alHidden[i].className = "hidden";
+            }
             div.className = "hidden"; 
         };
     }; 
     
     var div = document.createElement("div");
     div.className = "hidden";
-
-    var quit = document.createElement("a")
-    quit.href = "#";
-    quit.onclick = function () {
-        PWD.removeWindow(that.getDragDiv());
-    };
-    quit.appendChild(document.createTextNode("Stäng"));
-    div.appendChild(quit);
+    if (addQuit) {
+        var quit = document.createElement("a")
+        quit.href = "#";
+        quit.onclick = function () {
+            PWD.removeWindow(that.getDragDiv());
+        };
+        quit.appendChild(document.createTextNode("Stäng"));
+        div.appendChild(quit);
+    }
     li.appendChild(primaryLink); 
     li.appendChild(div);
     that.dropDown.appendChild(li); 

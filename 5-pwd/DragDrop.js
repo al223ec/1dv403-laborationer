@@ -62,8 +62,6 @@ function DragDrop(PWD) {
         if (!targetELement){
             return;
         }
-        //Fixa browsersupport
-
         //Fokus
         allDragElements = document.querySelectorAll(".drag");
         for (var i = 0; i < allDragElements.length; i++) {

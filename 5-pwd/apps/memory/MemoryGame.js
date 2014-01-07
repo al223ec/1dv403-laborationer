@@ -16,7 +16,7 @@ function MemoryGame() {
         this.init("Memory spel");
         initGame();
         gameContainer.className = "container memory";
-        initDropDown(this.addDropDown("Meny"));
+        initDropDown(this.addDropDown("Meny", true));
         this.footer.appendChild(document.createTextNode("Game on MF!!"));
         return this.getDragDiv();
     };
