@@ -3,55 +3,19 @@ function ImageGallery() {
     App.call(this);
     var galleryContainer = this.container;
     var footer = this.footer; 
-    var images = null;
     var that = this;
 
     this.start = function () {
         this.init("Image gallery");
         galleryContainer.className = "container";
+        that.readFromServer('http://homepage.lnu.se/staff/tstjo/labbyServer/imgviewer/', loadImages, footer);
 
-        loadFile();
-        //Exempel för inställningar
         initDropDown(this.addDropDown("Meny", true));
         return this.getDragDiv();
     };
 
-    function loadFile() {
-        var startTime = new Date();
-        var timeout = setTimeout(displayFooter, 200); 
-        var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function () {
-            try {
-                if (xhr.readyState == 4) { //redy state 4 == Complete  3 == recieveing This kan inte användas i detta fall pga Browser kompatibilitet
-                    clearTimeout(timeout);
-                    if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {//lyckat
-                        images = JSON.parse(xhr.responseText);
-                        loadImages();
-                        PWD.fixBounds();
-                        while (footer.firstChild) {
-                            footer.removeChild(footer.firstChild);
-                        }
-                        footer.appendChild(document.createTextNode("Detta tog: " + (new Date().getTime() - startTime.getTime()) + "ms"));
-                    } else {//misslyckades
-                        throw Error(xhr.status);
-                    }
-                }
-            } catch (ex) {
-                console.log(ex);
-            }
-        };
-
-        xhr.open("get", 'http://homepage.lnu.se/staff/tstjo/labbyServer/imgviewer/', true);
-        xhr.send(null);
-    };
-    function displayFooter() {
-        var img = document.createElement("img");
-        img.src = 'img/loader.gif'; 
-        footer.appendChild(img);
-        footer.appendChild(document.createTextNode("Laddar..."));
-    };
-
-    function loadImages() {
+    function loadImages(xhr) {
+        var images = JSON.parse(xhr.responseText);
         if (!images) {
             throw Error("Fail images är inte definerat");
         }
@@ -76,13 +40,13 @@ function ImageGallery() {
             allImgs[i].style.height = thumbHeight + 'px';
         }
     };
-
     function initDropDown(div) {};
 };
 ImageGallery.prototype.toString = function () {
     return "ImageGallery";
 };
 ImageGallery.prototype = Object.create(App.prototype);
+ImageGallery.prototype.readFromServer = RssReader.prototype.readFromServer;
 
 function ImageWindow(img) {
     App.call(this);

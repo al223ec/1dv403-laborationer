@@ -33,7 +33,7 @@ var PWD = {//statiska objektet som startar applikationen
             that.numOfWindows++;
         };
 
-        var reader = document.querySelector("#rssReader");
+        var reader = document.querySelector("#appRssReader");
         reader.onclick = function () {
             var reader = new RssReader();
             that.add(reader.start());

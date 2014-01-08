@@ -1,13 +1,12 @@
 "use strict";
 //Kan vara ett "statiskt objekt"
-function DragDrop(PWD) {
-    if (!PWD) { throw Error("Detta objekt måste ha en referens till PWO när det skapas"); } //Detta kan utvecklas
-    var objectX;
-    var objectY;
-    var mouseStartX;
-    var mouseStartY; 
-    var targetELement; 
-    var allDragElements;
+function DragDrop() {
+    var objectX = 0;
+    var objectY = 0;
+    var mouseStartX = 0;
+    var mouseStartY = 0; 
+    var targetELement = null; 
+    var allDragElements = null;
 
     this.init = function () { //Hämtar alla element som ska vara dragbara
         document.onmousedown = onMouseDown;
@@ -17,7 +16,7 @@ function DragDrop(PWD) {
         PWD.height = getHeight();
     };
 
-    //getWidth och height beräknar anändarens höjd resp bredd
+    //getWidth och height beräknar anändarens aktuella höjd resp bredd
     function getWidth() {
         if (self.innerWidth) { //Denna är aktuell
             return self.innerWidth;
@@ -45,6 +44,7 @@ function DragDrop(PWD) {
     };
 
     function onMouseDown(e) {
+        //Kontrollerar ifall det man klicker på är drag, gör detta ett steg upp i trädet
         if (e.target.className === 'drag') {
             targetELement = e.target;
         } else if (e.target.parentNode && e.target.parentNode.className === 'drag') {
@@ -92,14 +92,6 @@ function DragDrop(PWD) {
             document.onmousemove = null;
             targetELement = null
         }
-
-        //allDragElements = document.querySelectorAll(".drag");
-        //for (var i = 0; i < allDragElements.length; i++) {
-        //    if (allDragElements[i].offsetWidth + allDragElements[i].style.left.replace(/[^0-9\-]/g, '') > PWD.width) {
-        //        allDragElements[i].style.left = PWD.width - allDragElements[i].offsetWidth + 'px;';
-        //    }
-        //}
-        //Gör en kontroll på alla drag taggar så att ingen är utanför sidan
     };
 
     function moveWindow(e) {

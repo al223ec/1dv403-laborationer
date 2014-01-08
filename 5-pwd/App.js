@@ -51,10 +51,10 @@ function App() {
 };
 
 App.prototype.minimize = function (div) {
-    div.style.display = 'none';
     this.minimizeHeight(div);
     this.minimizeWidth(div);
     this.minimizeTop(div);
+    //div.style.display = 'none';
 };
 
 
@@ -87,7 +87,7 @@ App.prototype.minimizeWidth = function (div) {
 
 App.prototype.minimizeTop = function (div) {
     var top = +(div.style.top.replace(/[^0-9\-]/g, ''));
-    var numOfSteps = top / 1;
+    var numOfSteps = top;
 
     function step() {
         div.style.top = top + 'px';
@@ -173,47 +173,42 @@ App.prototype.addDropDown = function (linkText, addQuit) {
     that.dropDown.appendChild(li); 
     return div; 
 };
-//AppFileReader.call(this, footer);
-//this.loadFileApp('http://homepage.lnu.se/staff/tstjo/labbyServer/imgviewer/', loadImages);
-//console.log(this.output);
-////images = fileReader.loadFile('http://homepage.lnu.se/staff/tstjo/labbyServer/imgviewer/', loadImages);
 
-////loadFile();
-//function AppFileReader(footer) {
-//    this.loadFileApp = function (path, func) {
-//        var that = this; 
-//        var startTime = new Date();
-//        var timeout = setTimeout(displayFooter, 200);
-//        var xhr = new XMLHttpRequest();
-//        that.setImages();
-//        xhr.onreadystatechange = function () {
-//            //try {
-//                if (xhr.readyState == 4) { //redy state 4 == Complete  3 == recieveing This kan inte användas i detta fall pga Browser kompatibilitet
-//                    clearTimeout(timeout);
-//                    if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {//lyckat
-//                        func();
-//                        PWD.fixBounds();
-//                        while (footer.firstChild) {
-//                            footer.removeChild(footer.firstChild);
-//                        }
-//                        footer.appendChild(document.createTextNode("Detta tog: " + (new Date().getTime() - startTime.getTime()) + "ms"));
-//                        that.setImages(JSON.parse(xhr.responseText));
-//                    } else {//misslyckades
-//                        throw Error(xhr.status);
-//                    }
-//                }
-//            //} catch (ex) {
-//            //    console.log(ex);
-//            //}
-//        };
+function ReadFromServer (path, func, footer, currentPath) {
+    var startTime = new Date();
+    var timeout = setTimeout(displayFooter, 200);
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function () {
+        try {
+            if (xhr.readyState == 4) { //redy state 4 == Complete  3 == recieveing This kan inte användas i detta fall pga Browser kompatibilitet
+                clearTimeout(timeout);
+                if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {//lyckat
+                    func(xhr.responseText);
+                    PWD.fixBounds();
+                    while (footer.firstChild) {
+                        footer.removeChild(footer.firstChild);
+                    }
+                    footer.appendChild(document.createTextNode("Detta tog: " + (new Date().getTime() - startTime.getTime()) + "ms " + "Detta uppdaterades: " + new Date().toString()));
+                } else {//misslyckades
+                    throw Error(xhr.status);
+                }
+            }
+        } catch (ex) {
+            console.log(ex);
+        }
+    };
+    if (currentPath) {
+        xhr.open("get", path + escape(currentPath), true);
+    }
+    else {
+        xhr.open("get", path, true);
+    }
+    xhr.send(null);
 
-//        xhr.open("get", path, true);
-//        xhr.send(null);
-//    };
-//    function displayFooter() {
-//        var img = document.createElement("img");
-//        img.src = 'img/loader.gif';
-//        footer.appendChild(img);
-//        footer.appendChild(document.createTextNode("Laddar..."));
-//    };
-//};
+    function displayFooter() {
+        var img = document.createElement("img");
+        img.src = 'img/loader.gif';
+        footer.appendChild(img);
+        footer.appendChild(document.createTextNode("Laddar..."));
+    };
+};
