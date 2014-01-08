@@ -1,5 +1,5 @@
 ﻿"use strict"; 
-function Message(text, messageDate, div) {
+function ChatMessage(text, messageDate, div, id, author) {
     this.Text = text;
     this.MessageDate = messageDate;
 
@@ -19,6 +19,12 @@ function Message(text, messageDate, div) {
         },
         Div: {//privacy leak
             get: function () { return div; }
+        },
+        Id: {//privacy leak
+            set: function (value) {
+                id = value;
+            },
+            get: function () { return id; }
         }
     });
 
@@ -33,27 +39,16 @@ function Message(text, messageDate, div) {
         var footer = document.createElement("footer");
         var dateA = document.createElement("a");
         var del = document.createElement("a");
-        var edit = document.createElement("a");
 
         dateA.appendChild(document.createTextNode(this.MessageDate.toDateString()));
-        del.appendChild(document.createTextNode(" Ta bort"));
-        edit.appendChild(document.createTextNode(" Redigera "));
-
-        edit.className = "textLeft";
+        del.appendChild(document.createTextNode(author));
         del.className = "textRight";
 
         var thisMessage = this; //behövs pga scopet
-        del.onclick = function (e) {
-            that.removeMessage(thisMessage);
-        };
-        edit.onclick = function (e) {
-            that.editMessage(thisMessage);
-        };
         dateA.onclick = function (e) {
             alert("Detta meddelande blev skrivet: " + thisMessage.MessageDate);
         };
 
-        footer.appendChild(edit);
         footer.appendChild(dateA);
         footer.appendChild(del);
 
@@ -63,6 +58,6 @@ function Message(text, messageDate, div) {
         return div;
     }
 }
-Message.prototype.getHTMLText = function () {
+ChatMessage.prototype.getHTMLText = function () {
     return this.Text.replace(/[\n\r]/g, "<br />");
 }

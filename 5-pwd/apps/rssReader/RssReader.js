@@ -41,7 +41,6 @@ function RssReader() {
         feddDiv.style.left = changeFeed.offsetLeft + 80 + 'px';
         feddDiv.style.top = changeFeed.offsetTop + 'px';
 
-
         var frekvensDiv = document.createElement("div");
         frekvensDiv.className = 'hidden menuStep';
 
@@ -143,23 +142,23 @@ RssReader.prototype.readFromServer = function (path, func, footer, currentPath) 
     var xhr = new XMLHttpRequest();
 
     xhr.onreadystatechange = function () {
-        try {
+       // try {
             if (xhr.readyState == 4) { //redy state 4 == Complete  3 == recieveing This kan inte användas i detta fall pga Browser kompatibilitet
                 clearTimeout(timeout);
                 if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {//lyckat
-                    func(xhr);
-                    PWD.fixBounds();
                     while (footer.firstChild) {
                         footer.removeChild(footer.firstChild);
                     }
                     footer.appendChild(document.createTextNode("Detta tog: " + (new Date().getTime() - startTime.getTime()) + "ms " + "Detta uppdaterades: " + new Date().toString()));
+                    func(xhr);
+                    PWD.fixBounds();
                 } else {//misslyckades
                     throw Error(xhr.status);
                 }
             }
-        } catch (ex) {
-            console.log(ex);
-        }
+        //} catch (ex) {
+        //    console.log(ex);
+        //}
     };
     if (currentPath) {
         xhr.open("get", path + escape(currentPath), true);

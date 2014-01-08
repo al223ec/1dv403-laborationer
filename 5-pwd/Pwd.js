@@ -39,6 +39,12 @@ var PWD = {//statiska objektet som startar applikationen
             that.add(reader.start());
             that.numOfWindows++;
         };
+        var chat = document.querySelector("#appChat");
+        chat.onclick = function () {
+            var newChat = new ChatBoard();
+            that.add(newChat.start());
+            that.numOfWindows++;
+        };
       
     },
 

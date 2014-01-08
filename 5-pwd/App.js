@@ -174,41 +174,33 @@ App.prototype.addDropDown = function (linkText, addQuit) {
     return div; 
 };
 
-function ReadFromServer (path, func, footer, currentPath) {
-    var startTime = new Date();
-    var timeout = setTimeout(displayFooter, 200);
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function () {
-        try {
-            if (xhr.readyState == 4) { //redy state 4 == Complete  3 == recieveing This kan inte användas i detta fall pga Browser kompatibilitet
-                clearTimeout(timeout);
-                if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {//lyckat
-                    func(xhr.responseText);
-                    PWD.fixBounds();
-                    while (footer.firstChild) {
-                        footer.removeChild(footer.firstChild);
-                    }
-                    footer.appendChild(document.createTextNode("Detta tog: " + (new Date().getTime() - startTime.getTime()) + "ms " + "Detta uppdaterades: " + new Date().toString()));
-                } else {//misslyckades
-                    throw Error(xhr.status);
-                }
-            }
-        } catch (ex) {
-            console.log(ex);
-        }
-    };
-    if (currentPath) {
-        xhr.open("get", path + escape(currentPath), true);
-    }
-    else {
-        xhr.open("get", path, true);
-    }
-    xhr.send(null);
+App.prototype.getInput = function (prompt) {
+    var main = document.querySelector("main");
+    var div = document.createElement("div");
+    var black = document.createElement("div");
+    var form = document.createElement("form");
+    var input = document.createElement("input");
+    var submit = document.createElement("input");
 
-    function displayFooter() {
-        var img = document.createElement("img");
-        img.src = 'img/loader.gif';
-        footer.appendChild(img);
-        footer.appendChild(document.createTextNode("Laddar..."));
+    black.className = "blackOut";
+    div.className = "getInput";
+    input.type = "text";
+    submit.type = "submit";
+    submit.value = "ok";
+
+    form.appendChild(input);
+    form.appendChild(submit);
+    div.appendChild(document.createTextNode(prompt));
+    div.appendChild(form);
+
+    main.appendChild(black);
+    main.appendChild(div);
+
+    form.onsubmit = function (e) {
+        e.preventDefault();
+        main.removeChild(black);
+        main.removeChild(div);
+        return "en sträng";
     };
-};
+
+}; 

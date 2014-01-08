@@ -7,7 +7,6 @@ function MessageBoard() {
     var messageContainerDiv = document.createElement("div");
     var numberDiv = document.createElement("div");
     var inputButton = document.createElement("input");
-    var path = "http://homepage.lnu.se/staff/tstjo/labbyserver/getMessage.php?history=3"; 
     var that = this; //Denna messageboarden 
     var editMessageIndex;
 
@@ -38,12 +37,9 @@ function MessageBoard() {
         this.getDragDiv().oncontextmenu = viewMenu;
 
         this.footer.appendChild(document.createTextNode('Message board'));
-        that.readFromServer(path, readMessages, this.footer);
         return this.getDragDiv();
     };
-    function readMessages(xhr) {
-        console.log(xhr.response);
-    }; 
+
     function viewMenu(e) {
         e.preventDefault();
         var list = [];
@@ -151,4 +147,3 @@ MessageBoard.prototype = Object.create(App.prototype);
 MessageBoard.prototype.toString = function () {
     return 'MessageBoard';
 };
-MessageBoard.prototype.readFromServer = RssReader.prototype.readFromServer;
