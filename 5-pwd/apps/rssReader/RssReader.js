@@ -11,16 +11,17 @@ function RssReader() {
 
     this.start = function () {
         this.init("RssReader");
-        container.className = "container";
+        container.className = "container rssReader";
         this.addDropDown("Meny", true);
         initDropDown(this.addDropDown("Inställningar", false));
         currentPath = "http://www.dn.se/m/rss/senaste-nytt";
         intervall = setInterval(updateRssFeed, updateIntervall);
         updateRssFeed();
+        //this.getDragDiv().className = this.getDragDiv().className + " rssReader";
         return this.getDragDiv();
     };
     function updateRssFeed() {
-        that.readFromServer("http://homepage.lnu.se/staff/tstjo/labbyServer/rssproxy/?url=", addFeed, footer, currentPath);
+        that.readFromServer("http://homepage.lnu.se/staff/tstjo/labbyServer/rssproxy/?url=", addFeed, footer, "get", currentPath);
     };
     function addFeed(xhr) {
         container.innerHTML = xhr.responseText;
@@ -136,37 +137,47 @@ RssReader.prototype = Object.create(App.prototype);
 RssReader.prototype.toString = function () {
     return "RssReader";
 };
-RssReader.prototype.readFromServer = function (path, func, footer, currentPath) {
+RssReader.prototype.readFromServer = function (path, func, footer, type, currentPath, args) {
     var startTime = new Date();
     var timeout = setTimeout(displayFooter, 200);
     var xhr = new XMLHttpRequest();
 
     xhr.onreadystatechange = function () {
-       // try {
+        try {
             if (xhr.readyState == 4) { //redy state 4 == Complete  3 == recieveing This kan inte användas i detta fall pga Browser kompatibilitet
                 clearTimeout(timeout);
                 if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {//lyckat
                     while (footer.firstChild) {
                         footer.removeChild(footer.firstChild);
                     }
-                    footer.appendChild(document.createTextNode("Detta tog: " + (new Date().getTime() - startTime.getTime()) + "ms " + "Detta uppdaterades: " + new Date().toString()));
+                    var date = new Date();
+                    footer.appendChild(
+                        document.createTextNode("Detta tog: " + (date.getTime() - startTime.getTime()) / 1000 + "s " +
+                        "Uppdaterades: " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds()));
                     func(xhr);
                     PWD.fixBounds();
                 } else {//misslyckades
                     throw Error(xhr.status);
                 }
             }
-        //} catch (ex) {
-        //    console.log(ex);
-        //}
+        } catch (ex) {
+            console.log(ex);
+        }
     };
+
     if (currentPath) {
-        xhr.open("get", path + escape(currentPath), true);
+        xhr.open(type, path + escape(currentPath), true);
+        xhr.send(null);
+    } else if (args) {
+        xhr.open(type, path, true);
+        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        xhr.send(args);
+        console.log("Arguments");
+    } else {
+        xhr.open(type, path, true);
+        xhr.send(null);
     }
-    else {
-        xhr.open("get", path, true);
-    }
-    xhr.send();
+
 
     function displayFooter() {
         var img = document.createElement("img");

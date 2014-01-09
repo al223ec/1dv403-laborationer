@@ -8,7 +8,7 @@ function ImageGallery() {
     this.start = function () {
         this.init("Image gallery");
         galleryContainer.className = "container";
-        that.readFromServer('http://homepage.lnu.se/staff/tstjo/labbyServer/imgviewer/', loadImages, footer);
+        that.readFromServer('http://homepage.lnu.se/staff/tstjo/labbyServer/imgviewer/', loadImages, footer, "get");
 
         initDropDown(this.addDropDown("Meny", true));
         return this.getDragDiv();
@@ -56,6 +56,7 @@ function ImageWindow(img) {
     this.start = function () {
         this.init("Imageview");
         container.appendChild(img);
+        container.className = "container";
         initDropDown(this.addDropDown("Alternativ", true));
         return this.getDragDiv();
     };

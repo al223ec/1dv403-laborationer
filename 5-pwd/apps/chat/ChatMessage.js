@@ -20,11 +20,17 @@ function ChatMessage(text, messageDate, div, id, author) {
         Div: {//privacy leak
             get: function () { return div; }
         },
-        Id: {//privacy leak
+        Id: {
             set: function (value) {
                 id = value;
             },
             get: function () { return id; }
+        },
+        Author: {
+            set: function (value) {
+                author = value;
+            },
+            get: function () { return author; }
         }
     });
 
@@ -56,8 +62,35 @@ function ChatMessage(text, messageDate, div, id, author) {
         div.appendChild(footer);
 
         return div;
-    }
+    };
+    this.getText = function () {
+        return text; 
+    };
+    this.getAuthor = function () {
+        return author;
+    };
 }
 ChatMessage.prototype.getHTMLText = function () {
     return this.Text.replace(/[\n\r]/g, "<br />");
 }
+ChatMessage.prototype.getXML = function () {
+    var message = document.createElement("message");
+
+    var id = document.createElement("id");
+    id.appendChild(document.createTextNode(this.Id));
+    message.appendChild(id);
+
+    var text = document.createElement("text");
+    text.appendChild(document.createTextNode(this.Text));
+    message.appendChild(text);
+
+    var author = document.createElement("author");
+    author.appendChild(document.createTextNode(this.Author));
+    message.appendChild(author);
+
+    var time = document.createElement("time");
+    time.appendChild(document.createTextNode(this.MessageDate.getDate()));
+    message.appendChild(time);
+
+    return message; 
+};

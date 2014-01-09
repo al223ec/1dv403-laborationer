@@ -7,25 +7,23 @@ function App() {
 
     var that = this;
     this.init = function (windowName) {
-        console.log("initfunktionen");
-
         var header = document.createElement("h4");
 
         var closeButton = document.createElement("input");
-        closeButton.type = "button";
-        closeButton.value = "X";
-        closeButton.className = "close";
-        closeButton.onclick = function (e) {
-            PWD.removeWindow(dragWindow);
-        };
+            closeButton.type = "button";
+            closeButton.value = "X";
+            closeButton.className = "close";
+            closeButton.onclick = function (e) {
+                PWD.removeWindow(dragWindow);
+            };
 
         var minimizeButton = document.createElement("input");
-        minimizeButton.type = "button";
-        minimizeButton.value = "^";
-        minimizeButton.className = "minimize";
-        minimizeButton.onclick = function (e) {
-            that.minimize(dragWindow);
-        };
+            minimizeButton.type = "button";
+            minimizeButton.value = "^";
+            minimizeButton.className = "minimize";
+            minimizeButton.onclick = function (e) {
+                that.minimize(dragWindow);
+            };
 
         that.dropDown.className = "appMenu";
 
@@ -56,7 +54,6 @@ App.prototype.minimize = function (div) {
     this.minimizeTop(div);
     //div.style.display = 'none';
 };
-
 
 //Funktion the ultimate
 App.prototype.minimizeHeight = function (div) {
@@ -174,13 +171,14 @@ App.prototype.addDropDown = function (linkText, addQuit) {
     return div; 
 };
 
-App.prototype.getInput = function (prompt) {
-    var main = document.querySelector("main");
+App.prototype.getInput = function (prompt, func) {
     var div = document.createElement("div");
     var black = document.createElement("div");
     var form = document.createElement("form");
     var input = document.createElement("input");
     var submit = document.createElement("input");
+    var h = document.createElement("h4");
+    h.appendChild(document.createTextNode(prompt));
 
     black.className = "blackOut";
     div.className = "getInput";
@@ -190,17 +188,19 @@ App.prototype.getInput = function (prompt) {
 
     form.appendChild(input);
     form.appendChild(submit);
-    div.appendChild(document.createTextNode(prompt));
+    div.appendChild(h);
     div.appendChild(form);
 
-    main.appendChild(black);
-    main.appendChild(div);
+    PWD.add(black);
+    PWD.add(div);
 
     form.onsubmit = function (e) {
         e.preventDefault();
-        main.removeChild(black);
-        main.removeChild(div);
-        return "en sträng";
+        PWD.removeWindow(black);
+        PWD.removeWindow(div);
+        if (func) {
+            func(input.value);
+        }
     };
 
 }; 

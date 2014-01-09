@@ -5,14 +5,16 @@ var PWD = {//statiska objektet som startar applikationen
     width: 1920,
     height: 946,
     numOfWindows: 0,
+    dragDropObj: null,
 
     init: function () {
+        document.onselectstart = function () { return false; }
         //intiera alla objekt här
-        new DragDrop(this).init();
+        this.dragDropObj = new this.dragDrop();
+        this.dragDropObj.init();
         var that = this;
 
-        //Ska jag hantera dessa från scripten?
-        var imageGallery = document.querySelector("#appImage");//ID? 
+        var imageGallery = document.querySelector("#appImage");
         imageGallery.onclick = function () {
             var newGallery = new ImageGallery();
             that.add(newGallery.start());
@@ -45,7 +47,16 @@ var PWD = {//statiska objektet som startar applikationen
             that.add(newChat.start());
             that.numOfWindows++;
         };
-      
+
+        var paint = document.querySelector("#appPaint");
+        paint.onclick = function () {
+            var newPaint = new Paint();
+            that.add(newPaint.start());
+            that.numOfWindows++;
+        };
+        ////this.dragDropObj.disable();
+        //var newPaint = new Paint();
+        //that.add(newPaint.start());
     },
 
     add: function (div) {
@@ -68,10 +79,192 @@ var PWD = {//statiska objektet som startar applikationen
             }
         }
     },
+    //Detta objekt sköter drag drop funktionaliteten
+    //kan också vara statiskt
+    dragDrop: function () {
+        var objectX = 0;
+        var objectY = 0;
+        var mouseStartX = 0;
+        var mouseStartY = 0;
+        var targetELement = null;
+        var allDragElements = null;
+
+        this.init = function () {
+            document.addEventListener("mousedown",onMouseDown, false);
+            document.addEventListener("mouseup", onMouseUp, false);
+            PWD.width = getWidth();
+            PWD.height = getHeight();
+        };
+
+        this.disable = function () {
+            document.removeEventListener("mousedown", onMouseDown, false);
+            document.removeEventListener("mouseup", onMouseUp, false);
+        };
+        this.enable = function () {
+            document.addEventListener("mousedown", onMouseDown, false);
+            document.addEventListener("mouseup", onMouseUp, false);
+        };
+        //getWidth och height beräknar anändarens aktuella höjd resp bredd
+        function getWidth() {
+            if (self.innerWidth) { //Denna är aktuell
+                return self.innerWidth;
+            }
+            else if (document.documentElement && document.documentElement.clientWidth) {
+                return document.documentElement.clientWidth;
+            }
+            else if (document.body) {
+                return document.body.clientWidth;
+            }
+            return 0;
+        };
+
+        function getHeight() {
+            if (self.innerHeight) { //Denna
+                return self.innerHeight;
+            }
+            else if (document.documentElement && document.documentElement.clientHeight) {
+                return document.documentElement.clientHeight;
+            }
+            else if (document.body) {
+                return document.body.clientHeight;
+            }
+            return 0;
+        };
+
+        function onMouseDown(e) {
+            //Kontrollerar ifall det man klicker på är drag, gör detta ett steg upp i trädet
+            if (e.target.className === 'drag') {
+                targetELement = e.target;
+            } else if (e.target.parentNode && e.target.parentNode.className === 'drag') {
+                targetELement = e.target.parentNode;
+            }
+            if (!targetELement) {
+                return;
+            }
+            //Fokus
+            allDragElements = document.querySelectorAll(".drag");
+            for (var i = 0; i < allDragElements.length; i++) {
+                if (allDragElements[i] === targetELement) {
+                    targetELement.style.zIndex = 1000;
+                } else {
+                    if (allDragElements[i].style.zIndex - 10 > 0) {
+                        allDragElements[i].style.zIndex -= 10;
+                    } else {
+                        allDragElements[i].style.zIndex = 0;
+                    }
+                }
+            }
+
+            objectX = +(targetELement.style.left.replace(/[^0-9\-]/g, '')); //Måste ta bort px, annars blir resultatet NaN +omvandling
+            objectY = +(targetELement.style.top.replace(/[^0-9\-]/g, ''));
+
+            mouseStartX = e.pageX;
+            mouseStartY = e.pageY;
+
+            document.onmousemove = moveWindow; //Gör detta om anändare klckar på något dragbart
+
+            //Fixa browsersupport här, så inte text markeras etc
+            return false;
+        };
+        function onMouseUp(e) {
+            if (targetELement) { //Behöver endast göras om användaren faktiskt har tryckt på en "dragable" div
+                document.onmousemove = null;
+                targetELement = null
+            }
+        };
+
+        function moveWindow(e) {
+            //if (3 > (e.pageX - mouseStartX) || 3 >(e.pageY - mouseStartY)) { return;} //Vänta tills änvändaren har rört musen mer än 3 pixlar
+            var nextXPos = objectX + e.pageX - mouseStartX;
+
+            //Xleds kontroll
+            if (targetELement.offsetWidth + nextXPos < PWD.width) {
+                if (nextXPos < 0) {
+                    targetELement.style.left = '0px';
+                } else {
+                    targetELement.style.left = nextXPos + 'px';
+                }
+            } else {
+                targetELement.style.left = PWD.width - targetELement.offsetWidth + 'px';
+            }
+
+            //yleds kontroll
+            var nextYPos = objectY + e.pageY - mouseStartY;
+
+            if ((targetELement.offsetHeight + nextYPos) < PWD.height) {
+                if (nextYPos < 0) {
+                    targetELement.style.top = '0px';
+                } else {
+                    targetELement.style.top = nextYPos + 'px';
+                }
+            } else {
+                targetELement.style.top = PWD.height - targetELement.offsetHeight + 'px';
+            }
+        };
+    },
+};
+var CookieUtil = {
+
+    get: function (name) {
+        var cookieName = encodeURIComponent(name) + "=",
+            cookieStart = document.cookie.indexOf(cookieName),
+            cookieValue = null,
+            cookieEnd;
+
+        if (cookieStart > -1) {
+            cookieEnd = document.cookie.indexOf(";", cookieStart);
+            if (cookieEnd == -1) {
+                cookieEnd = document.cookie.length;
+            }
+            cookieValue = decodeURIComponent(document.cookie.substring(cookieStart + cookieName.length, cookieEnd));
+        }
+
+        return cookieValue;
+    },
+
+    set: function (name, value, expires, path, domain, secure) {
+        var cookieText = encodeURIComponent(name) + "=" + encodeURIComponent(value);
+
+        if (expires instanceof Date) {
+            cookieText += "; expires=" + expires.toGMTString();
+        }
+
+        if (path) {
+            cookieText += "; path=" + path;
+        }
+
+        if (domain) {
+            cookieText += "; domain=" + domain;
+        }
+
+        if (secure) {
+            cookieText += "; secure";
+        }
+
+        document.cookie = cookieText;
+    },
+
+    unset: function (name, path, domain, secure) {
+        this.set(name, "", new Date(0), path, domain, secure);
+    }
+
 };
 
 window.onload = function () {
     PWD.init();
+    //document.cookie = "name=PWD";
+    //console.log(document.cookie);
+
+
+    CookieUtil.set("namn", "value");
+    console.log(CookieUtil.get("namn"));
+
+    //set cookies
+    CookieUtil.set("name", "Nicholas");
+    CookieUtil.set("book", "Professional JavaScript");
+    //read the values
+    alert(CookieUtil.get("name")); //”Nicholas”
+    alert(CookieUtil.get("book")); //”Professional JavaScript”
 };
 
 
