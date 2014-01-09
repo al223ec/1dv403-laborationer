@@ -112,14 +112,6 @@ function ChatBoard() {
         numberDiv.appendChild(document.createTextNode("Antal mess: " + messages.length));
     };
 
-    //function addMessage(text) {
-    //    text = text.trim();
-    //    if ((!text) || (0 === text.length)) {
-    //        return;
-    //    }
-    //    messages.push(new ChatMessage(text, new Date(), document.createElement("div")));
-    //    addMessToSite(messages[messages.length - 1]);
-    //};
     function addMessage(text) {
         text = text.trim();
         if ((!text) || (0 === text.length)) {
@@ -127,6 +119,9 @@ function ChatBoard() {
         }
         messages.push(new ChatMessage(text, new Date(), document.createElement("div")));
         addMessToSite(messages[messages.length - 1]);
+
+
+
     };
 
     function addMessToSite (mess) {
