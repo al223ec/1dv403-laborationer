@@ -85,12 +85,13 @@ var PWD = {//statiska objektet som startar applikationen
         var mouseStartY = 0;
         var targetELement = null;
         var allDragElements = null;
+        var isResizing = false; 
 
         this.init = function () {
             document.addEventListener("mousedown",onMouseDown, false);
             document.addEventListener("mouseup", onMouseUp, false);
-            //PWD.width = getWidth();
-            //PWD.height = getHeight();
+            PWD.width = getWidth();
+            PWD.height = getHeight();
         };
 
         this.disable = function () {
@@ -130,6 +131,22 @@ var PWD = {//statiska objektet som startar applikationen
         };
 
         function onMouseDown(e) {
+            if (e.target.className == "resize") {
+
+                targetELement = e.target.parentNode;
+                setFocus();
+
+                objectX = targetELement.offsetWidth;
+                objectY = targetELement.querySelector(".container").offsetHeight; //Måste påverka container i y led annars kukar det ur
+
+                mouseStartX = e.pageX;
+                mouseStartY = e.pageY;
+
+                document.addEventListener("mousemove", resizeWindow, false);
+                isResizing = true;
+                window.ondragstart = function () { return false; }
+                return false;
+            }
             //Kontrollerar ifall det man klicker på är drag, gör detta ett steg upp i trädet
             if (e.target.className === 'drag') {
                 targetELement = e.target;
@@ -140,6 +157,20 @@ var PWD = {//statiska objektet som startar applikationen
                 return;
             }
             //Fokus
+            setFocus();
+
+            objectX = +(targetELement.style.left.replace(/[^0-9\-]/g, '')); //Måste ta bort px, annars blir resultatet NaN +omvandling
+            objectY = +(targetELement.style.top.replace(/[^0-9\-]/g, ''));
+
+            mouseStartX = e.pageX;
+            mouseStartY = e.pageY;
+
+            document.addEventListener("mousemove", moveWindow, false); //Gör detta om anändare klckar på något dragbart
+
+            //Fixa browsersupport här, så inte text markeras etc
+            return false;
+        };
+        function setFocus() {
             allDragElements = document.querySelectorAll(".drag");
             for (var i = 0; i < allDragElements.length; i++) {
                 if (allDragElements[i] === targetELement) {
@@ -152,23 +183,17 @@ var PWD = {//statiska objektet som startar applikationen
                     }
                 }
             }
-
-            objectX = +(targetELement.style.left.replace(/[^0-9\-]/g, '')); //Måste ta bort px, annars blir resultatet NaN +omvandling
-            objectY = +(targetELement.style.top.replace(/[^0-9\-]/g, ''));
-
-            mouseStartX = e.pageX;
-            mouseStartY = e.pageY;
-
-            document.onmousemove = moveWindow; //Gör detta om anändare klckar på något dragbart
-
-            //Fixa browsersupport här, så inte text markeras etc
-            return false;
         };
         function onMouseUp(e) {
-            if (targetELement) { //Behöver endast göras om användaren faktiskt har tryckt på en "dragable" div
-                document.onmousemove = null;
+           if (targetELement) { //Behöver endast göras om användaren faktiskt har tryckt på en "dragable" div
+                document.removeEventListener("mousemove", resizeWindow, false);
+                document.removeEventListener("mousemove", moveWindow, false);
                 targetELement = null
-            }
+                isResizing = false;
+
+                objectX = 0;
+                objectY = 0;
+           }
         };
 
         function moveWindow(e) {
@@ -199,36 +224,31 @@ var PWD = {//statiska objektet som startar applikationen
                 targetELement.style.top = PWD.height - targetELement.offsetHeight + 'px';
             }
         };
-    },
-//    GetSettings: JSON.parse(sessionStorage.getItem("Settings")) || Settings,
-    Settings: {
-            Memory: {
-                cards: 2,
-            },
-            RssReader: {
-                startPath: "http://www.dn.se/m/rss/senaste-nytt",
-                updateIntervall: 0,
-            },
-            ChatBoard: {
-                author: "Doe",
-                updateIntervallTime: 10000,
-                message: 4,
-            },
-    },
-    //SaveSettings: function () { sessionStorage.setItem("Settings", JSON.stringify(PWD.Settings)) },
-};
 
+        function resizeWindow(e) {
+            if (isResizing) {
+                var nextXSize = objectX + e.pageX - mouseStartX;
+                console.log(PWD.width);
+                if (e.pageX < PWD.width) {
+                    targetELement.style.width = nextXSize + 'px';
+                } else {
+                    targetELement.style.width = objectX + PWD.width - mouseStartX + 'px'; 
+                }
+                var nextYSize = objectY + e.pageY - mouseStartY;
+                var conatiner = targetELement.querySelector(".container");
+                if (e.pageY < PWD.height) {
+                    conatiner.style.maxHeight = nextYSize + 'px';
+                } else {
+                    conatiner.style.maxHeight = PWD.height - + (targetELement.style.top.replace(/[^0-9\-]/g, '')) + 'px';
+                }
+                
+                
+            }
+        }; 
+    },
+};
 window.onload = function () {
     PWD.init();
-    //document.cookie = "name=PWD";
-    //console.log(document.cookie);
-
-    //var obj = JSON.stringify(PWD.Settings);
-
-    ////sessionStorage.setItem("Settings", obj);
-    //var backToJ = JSON.parse(sessionStorage.getItem("Settings"));
-
-    //console.log(PWD.GetSettings);
 };
 
 ////http://stackoverflow.com/questions/332422/how-do-i-get-the-name-of-an-objects-type-in-javascript

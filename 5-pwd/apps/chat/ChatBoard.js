@@ -7,12 +7,14 @@ PWD.App.ChatBoard = function() {
     var messageContainerDiv = document.createElement("div");
     var numberDiv = document.createElement("div");
     var inputButton = document.createElement("input");
-    //history = 0
-    var that = this; //Denna messageboarden 
-    var author = PWD.Settings.ChatBoard.author;
 
-    var messagesToDisplay = 4;
-    var updateIntervallTime = 10000;
+    var that = this; //Denna messageboarden 
+
+    //Läs inställningar
+    var author = PWD.Settings.ChatBoard.author;
+    var messagesToDisplay = PWD.Settings.ChatBoard.messagesToDisplay;
+    var updateIntervallTime = PWD.Settings.ChatBoard.updateIntervallTime;
+
     var updateIntervall;
 
     this.start = function () {
@@ -40,7 +42,7 @@ PWD.App.ChatBoard = function() {
 
         container.oncontextmenu = viewMenu;
         this.getDragDiv().oncontextmenu = viewMenu;
-        read(4);
+        read();
         return this.getDragDiv();
     };
     function read(number) {
@@ -56,6 +58,7 @@ PWD.App.ChatBoard = function() {
 
         //Spara inställningar
         PWD.Settings.ChatBoard.updateIntervallTime = updateIntervallTime;
+        PWD.Settings.ChatBoard.messagesToDisplay = messagesToDisplay;
         PWD.Settings.ChatBoard.author = author;
     };
 

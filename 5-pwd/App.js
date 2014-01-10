@@ -4,6 +4,7 @@ PWD.App = function () {
     this.container = document.createElement("div");
     this.footer = document.createElement("footer");
     this.dropDown = document.createElement("ul");
+    this.canResize = false;
 
     var that = this;
     this.init = function (windowName) {
@@ -44,6 +45,13 @@ PWD.App = function () {
         dragWindow.style.left = 10 + 20 * PWD.numOfWindows + 'px';
 
         dragWindow.style.zIndex = 1010;
+
+        if (this.canResize) {
+            var resizeImage = document.createElement("img");
+            resizeImage.src = 'img/drag.png';
+            resizeImage.className = "resize";
+            dragWindow.appendChild(resizeImage);
+        }
     }; 
     this.getDragDiv = function () { return dragWindow; };
 };
@@ -204,5 +212,5 @@ PWD.App.prototype.getInput = function (prompt, func) {
             func(input.value);
         }
     };
-
+    input.focus();
 }; 

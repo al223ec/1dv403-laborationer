@@ -4,24 +4,32 @@ PWD.App.RssReader = function(){
     var container = this.container;
     var footer = this.footer; 
     var result = null;
-    var updateIntervall = 1000 * 60 * 4; //Var fjärde minut 
-    var intervall; 
-    var currentPath = PWD.Settings.RssReader.startPath;
+
+    var intervall;
+    
+    //Läs inställningar
+    var updateIntervall = PWD.Settings.RssReader.updateIntervall; //1000 * 60 * 4; //Var fjärde minut 
+    var currentPath = PWD.Settings.RssReader.currentPath;
+
     var that = this;
 
     this.start = function () {
+        this.canResize = true;
         this.init("RssReader");
         container.className = "container rssReader";
         this.addDropDown("Meny", true);
         initDropDown(this.addDropDown("Inställningar", false));
-        currentPath = "http://www.dn.se/m/rss/senaste-nytt";
         intervall = setInterval(updateRssFeed, updateIntervall);
         updateRssFeed();
-        //this.getDragDiv().className = this.getDragDiv().className + " rssReader";
         return this.getDragDiv();
     };
     function updateRssFeed() {
         that.readFromServer("http://homepage.lnu.se/staff/tstjo/labbyServer/rssproxy/?url=", addFeedToSite, footer, "get", currentPath);
+
+        //Spara inställningar
+        PWD.Settings.RssReader.updateIntervall = updateIntervall; 
+        PWD.Settings.RssReader.currentPath = currentPath;
+
     };
     function addFeedToSite(xhr) {
         container.innerHTML = xhr.responseText;
