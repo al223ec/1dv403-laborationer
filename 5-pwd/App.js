@@ -1,5 +1,5 @@
 "use strict";
-function App() {
+PWD.App = function () {
     var dragWindow = document.createElement("div");
     this.container = document.createElement("div");
     this.footer = document.createElement("footer");
@@ -48,7 +48,7 @@ function App() {
     this.getDragDiv = function () { return dragWindow; };
 };
 
-App.prototype.minimize = function (div) {
+PWD.App.prototype.minimize = function (div) {
     this.minimizeHeight(div);
     this.minimizeWidth(div);
     this.minimizeTop(div);
@@ -56,7 +56,7 @@ App.prototype.minimize = function (div) {
 };
 
 //Funktion the ultimate
-App.prototype.minimizeHeight = function (div) {
+PWD.App.prototype.minimizeHeight = function (div) {
     var height = div.offsetHeight;
     var numOfSteps = height / 10;
     function step() {
@@ -69,7 +69,7 @@ App.prototype.minimizeHeight = function (div) {
     setTimeout(step, 5);
 };
 
-App.prototype.minimizeWidth = function (div) {
+PWD.App.prototype.minimizeWidth = function (div) {
     var width = div.offsetWidth;
     var numOfSteps = width / 10;
     function step() {
@@ -82,7 +82,7 @@ App.prototype.minimizeWidth = function (div) {
     setTimeout(step, 5);
 };
 
-App.prototype.minimizeTop = function (div) {
+PWD.App.prototype.minimizeTop = function (div) {
     var top = +(div.style.top.replace(/[^0-9\-]/g, ''));
     var numOfSteps = top;
 
@@ -97,15 +97,15 @@ App.prototype.minimizeTop = function (div) {
     }
     setTimeout(step, 1);
 };
-App.prototype.restore = function (div) {
+PWD.App.prototype.restore = function (div) {
     if (!div) {
         throw Error("Skicka med diven som argument");
     }
 };
 
-App.prototype.DisplayMeny = {
-    main: document.querySelector("main"),
-
+//Högerclicksmeny
+PWD.App.prototype.DisplayRightClickMeny = {
+    main: PWD.main,
     init: function (listItems, e) { //Skicka med a taggar
         e.preventDefault();
         if (!typeof listItems == 'object') { //HUr lösa detta?
@@ -132,10 +132,12 @@ App.prototype.DisplayMeny = {
         div.onmouseleave = function () {
             that.main.removeChild(div);
         };
-        that.main.appendChild(div);
+        PWD.add(div);
     },
 };
-App.prototype.addDropDown = function (linkText, addQuit) {
+//Lägger till en länk i listen
+PWD.App.prototype.addDropDown = function (linkText, addQuit) {
+
     var li = document.createElement("li");
     li.className = "dropDownLink";
     var primaryLink = document.createElement("a");
@@ -171,7 +173,7 @@ App.prototype.addDropDown = function (linkText, addQuit) {
     return div; 
 };
 
-App.prototype.getInput = function (prompt, func) {
+PWD.App.prototype.getInput = function (prompt, func) {
     var div = document.createElement("div");
     var black = document.createElement("div");
     var form = document.createElement("form");

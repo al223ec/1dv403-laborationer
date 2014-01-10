@@ -16,47 +16,44 @@ var PWD = {//statiska objektet som startar applikationen
 
         var imageGallery = document.querySelector("#appImage");
         imageGallery.onclick = function () {
-            var newGallery = new ImageGallery();
+            var newGallery = new PWD.App.ImageGallery();
             that.add(newGallery.start());
             that.numOfWindows++;
         };
 
         var memory = document.querySelector("#appMemory");
         memory.onclick = function () {
-            var mGame = new MemoryGame();
+            var mGame = new PWD.App.MemoryGame();
             that.add(mGame.start());
             that.numOfWindows++;
         };
 
         var messBoard = document.querySelector("#appMessage");
         messBoard.onclick = function () {
-            var mBoard = new MessageBoard();
+            var mBoard = new PWD.App.MessageBoard();
             that.add(mBoard.start());
             that.numOfWindows++;
         };
 
         var reader = document.querySelector("#appRssReader");
         reader.onclick = function () {
-            var reader = new RssReader();
+            var reader = new PWD.App.RssReader();
             that.add(reader.start());
             that.numOfWindows++;
         };
         var chat = document.querySelector("#appChat");
         chat.onclick = function () {
-            var newChat = new ChatBoard();
+            var newChat = new PWD.App.ChatBoard();
             that.add(newChat.start());
             that.numOfWindows++;
         };
 
         var paint = document.querySelector("#appPaint");
         paint.onclick = function () {
-            var newPaint = new Paint();
+            var newPaint = new PWD.App.Paint();
             that.add(newPaint.start());
             that.numOfWindows++;
         };
-        ////this.dragDropObj.disable();
-        //var newPaint = new Paint();
-        //that.add(newPaint.start());
     },
 
     add: function (div) {
@@ -92,11 +89,12 @@ var PWD = {//statiska objektet som startar applikationen
         this.init = function () {
             document.addEventListener("mousedown",onMouseDown, false);
             document.addEventListener("mouseup", onMouseUp, false);
-            PWD.width = getWidth();
-            PWD.height = getHeight();
+            //PWD.width = getWidth();
+            //PWD.height = getHeight();
         };
 
         this.disable = function () {
+            console.log("dragdrop is disabled");
             document.removeEventListener("mousedown", onMouseDown, false);
             document.removeEventListener("mouseup", onMouseUp, false);
         };
@@ -202,7 +200,52 @@ var PWD = {//statiska objektet som startar applikationen
             }
         };
     },
+//    GetSettings: JSON.parse(sessionStorage.getItem("Settings")) || Settings,
+    Settings: {
+            Memory: {
+                cards: 2,
+            },
+            RssReader: {
+                startPath: "http://www.dn.se/m/rss/senaste-nytt",
+                updateIntervall: 0,
+            },
+            ChatBoard: {
+                author: "Doe",
+                updateIntervallTime: 10000,
+                message: 4,
+            },
+    },
+    //SaveSettings: function () { sessionStorage.setItem("Settings", JSON.stringify(PWD.Settings)) },
 };
+
+window.onload = function () {
+    PWD.init();
+    //document.cookie = "name=PWD";
+    //console.log(document.cookie);
+
+    //var obj = JSON.stringify(PWD.Settings);
+
+    ////sessionStorage.setItem("Settings", obj);
+    //var backToJ = JSON.parse(sessionStorage.getItem("Settings"));
+
+    //console.log(PWD.GetSettings);
+};
+
+////http://stackoverflow.com/questions/332422/how-do-i-get-the-name-of-an-objects-type-in-javascript
+////Vet inte om jag ska använda denna än
+//Object.prototype.getName = function () {
+//    var funcNameRegex = /function (.{1,})\(/;
+//    var results = (funcNameRegex).exec((this).constructor.toString());
+//    return (results && results.length > 1) ? results[1] : "";
+//};
+
+//Kan ju använda toString
+//window.oncontextmenu = function (e) { //Högerklick 
+//    console.log(e);
+//    console.log(e.target);
+//    return false;     // cancel default menu
+//};
+
 var CookieUtil = {
 
     get: function (name) {
@@ -247,38 +290,4 @@ var CookieUtil = {
     unset: function (name, path, domain, secure) {
         this.set(name, "", new Date(0), path, domain, secure);
     }
-
 };
-
-window.onload = function () {
-    PWD.init();
-    //document.cookie = "name=PWD";
-    //console.log(document.cookie);
-
-
-    CookieUtil.set("namn", "value");
-    console.log(CookieUtil.get("namn"));
-
-    //set cookies
-    CookieUtil.set("name", "Nicholas");
-    CookieUtil.set("book", "Professional JavaScript");
-    //read the values
-    alert(CookieUtil.get("name")); //”Nicholas”
-    alert(CookieUtil.get("book")); //”Professional JavaScript”
-};
-
-
-////http://stackoverflow.com/questions/332422/how-do-i-get-the-name-of-an-objects-type-in-javascript
-////Vet inte om jag ska använda denna än
-//Object.prototype.getName = function () {
-//    var funcNameRegex = /function (.{1,})\(/;
-//    var results = (funcNameRegex).exec((this).constructor.toString());
-//    return (results && results.length > 1) ? results[1] : "";
-//};
-
-//Kan ju använda toString
-//window.oncontextmenu = function (e) { //Högerklick 
-//    console.log(e);
-//    console.log(e.target);
-//    return false;     // cancel default menu
-//};

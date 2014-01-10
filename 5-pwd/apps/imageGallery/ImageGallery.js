@@ -1,6 +1,6 @@
 "use strict";
-function ImageGallery() {
-    App.call(this);
+PWD.App.ImageGallery = function() {
+    PWD.App.call(this);
     var galleryContainer = this.container;
     var footer = this.footer; 
     var that = this;
@@ -23,7 +23,7 @@ function ImageGallery() {
         var thumbHeight = 0;
         
         for (var i = 0; i < images.length; i++) {
-            galleryContainer.appendChild(new Image(images[i], that).initThumb());
+            galleryContainer.appendChild(new PWD.App.ImageGallery.Image(images[i], that).initThumb());
             if (images[i].thumbWidth > thumbWidth) {
                 thumbWidth = images[i].thumbWidth;
             }
@@ -42,14 +42,14 @@ function ImageGallery() {
     };
     function initDropDown(div) {};
 };
-ImageGallery.prototype.toString = function () {
+PWD.App.ImageGallery.prototype.toString = function () {
     return "ImageGallery";
 };
-ImageGallery.prototype = Object.create(App.prototype);
-ImageGallery.prototype.readFromServer = RssReader.prototype.readFromServer;
+PWD.App.ImageGallery.prototype = Object.create(PWD.App.prototype);
+PWD.App.ImageGallery.prototype.readFromServer = PWD.App.RssReader.prototype.readFromServer;
 
-function ImageWindow(img) {
-    App.call(this);
+PWD.App.ImageGallery.ImageWindow = function(img) {
+    PWD.App.call(this);
     var container = this.container;
     var that = this;
 
@@ -61,7 +61,7 @@ function ImageWindow(img) {
         return this.getDragDiv();
     };
     function initDropDown(div) {
-        var a = document.createElement("a")
+        var a = document.createElement("a");
         a.href = "#";
         a.onclick = function () {
             document.querySelector("body").style.backgroundImage = "url(" + img.src + ")";
@@ -72,9 +72,9 @@ function ImageWindow(img) {
     };
 
 };
-ImageWindow.prototype = Object.create(App.prototype);
+PWD.App.ImageGallery.ImageWindow.prototype = Object.create(PWD.App.prototype);
 
-function Image(imageObj, imageGallery) {
+PWD.App.ImageGallery.Image = function (imageObj, imageGallery) {
     var div = document.createElement("div");
     div.className = "galleryDiv";
     var a = document.createElement("a");
@@ -87,7 +87,7 @@ function Image(imageObj, imageGallery) {
     a.onclick = function () {
         var newLargeImage = largeImage.cloneNode();
         newLargeImage.oncontextmenu = rightClick;
-        var newImg = new ImageWindow(newLargeImage);
+        var newImg = new PWD.App.ImageGallery.ImageWindow(newLargeImage);
         PWD.add(newImg.start());
     };
 
@@ -119,4 +119,4 @@ function Image(imageObj, imageGallery) {
         return list;
     }; 
 };
-Image.prototype.displayMenu = App.prototype.DisplayMeny;
+PWD.App.ImageGallery.Image.prototype.displayMenu = PWD.App.prototype.DisplayRightClickMeny; //ÄRver denna funktion från APP

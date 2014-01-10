@@ -1,12 +1,12 @@
 "use strict";
-function RssReader() {
-    App.call(this);
+PWD.App.RssReader = function(){
+    PWD.App.call(this);
     var container = this.container;
     var footer = this.footer; 
     var result = null;
     var updateIntervall = 1000 * 60 * 4; //Var fjärde minut 
     var intervall; 
-    var currentPath = ''; 
+    var currentPath = PWD.Settings.RssReader.startPath;
     var that = this;
 
     this.start = function () {
@@ -21,123 +21,120 @@ function RssReader() {
         return this.getDragDiv();
     };
     function updateRssFeed() {
-        that.readFromServer("http://homepage.lnu.se/staff/tstjo/labbyServer/rssproxy/?url=", addFeed, footer, "get", currentPath);
+        that.readFromServer("http://homepage.lnu.se/staff/tstjo/labbyServer/rssproxy/?url=", addFeedToSite, footer, "get", currentPath);
     };
-    function addFeed(xhr) {
+    function addFeedToSite(xhr) {
         container.innerHTML = xhr.responseText;
     };
-    function initDropDown(div) {
-        var feddDiv = document.createElement("div");
-        feddDiv.className = 'hidden menuStep';
 
-        feedAlternativs(feddDiv);
-
-        var changeFeed = document.createElement("a")
-        changeFeed.href = "#";
-
-        changeFeed.appendChild(document.createTextNode("Ändra feed"));
-        div.appendChild(changeFeed);
-        changeFeed.appendChild(feddDiv);
-
-        feddDiv.style.left = changeFeed.offsetLeft + 80 + 'px';
-        feddDiv.style.top = changeFeed.offsetTop + 'px';
-
-        var frekvensDiv = document.createElement("div");
-        frekvensDiv.className = 'hidden menuStep';
-
-        updateFrekvens(frekvensDiv);
-
-        var changeFrek = document.createElement("a")
-        changeFrek.href = "#";
-
-        changeFrek.appendChild(document.createTextNode("Uppdateringsintervall"));
-        div.appendChild(changeFrek);
-        changeFrek.appendChild(frekvensDiv);
-
-        frekvensDiv.style.left = changeFrek.offsetLeft + 80 + 'px';
-        frekvensDiv.style.top = changeFrek.offsetTop + 'px';
-
-        changeFeed.onclick = function () {
-            feddDiv.className = 'visible menuStep';
-            frekvensDiv.className = 'hidden';
+    function clickDropDown(that, allDivs, func) {
+        return function () {
+            //Börja med att gömma eventuella öppna fönster
+            for (var i = 0; i < allDivs.length; i++) {
+                if (that.div !== allDivs[i]) {
+                    allDivs[i].className = 'hidden menuStep';
+                }
+            }
+            that.div.style.left = this.offsetLeft + 80 + 'px';
+            that.div.style.top = this.offsetTop + 'px';
+            that.div.className = 'visible menuStep';
+            that.funcToCall();
+            this.appendChild(that.div);
         };
+    };
 
-        changeFrek.onclick = function () {
-            frekvensDiv.className = 'visible menuStep';
-            feddDiv.className = 'hidden';
+    function initDropDown(div) {
+        var links = [{
+            text: "Ändra feed",
+            func: function (allDivs) {
+                var that = this; 
+                return clickDropDown(that, allDivs, this);
+            },
+            div: document.createElement("div"),
+            funcToCall: function () {
+                return feedAlternativs(this.div);
+            }
+        }, {
+            text: "Uppdateringsintervall",
+            func: function (allDivs) {
+                var that = this;
+                return clickDropDown(that, allDivs, this);
+            },
+            div: document.createElement("div"),
+            funcToCall: function () {
+                return updateFrekvens(this.div);
+            },
+        }];
+
+        var allDivs = [];
+        for (var j = 0; j < links.length; j++) {
+            allDivs.push(links[j].div);
+        }
+        for (var i = 0; i < links.length; i++) {
+            var a = document.createElement("a");
+            a.href = "#";
+            a.onclick = links[i].func(allDivs);
+            a.appendChild(document.createTextNode(links[i].text));
+            div.appendChild(a);
+        }
+    };
+
+    function updateFrekFunc(obj) {
+        return function () {
+            clearInterval(intervall);
+            updateIntervall = obj.time;
+            intervall = setInterval(updateRssFeed, updateIntervall);
+            updateRssFeed();
         };
     };
 
     function updateFrekvens(div) {
-        var time4 = document.createElement("a")
-        time4.href = "#";
-        time4.onclick = function () {
-            clearInterval(intervall);
-            updateIntervall = 1000 * 60 * 4;
-            intervall = setInterval(updateRssFeed, updateIntervall);
-            updateRssFeed();
-        };
-        time4.appendChild(document.createTextNode("4 minuter"));
-        div.appendChild(time4);
+        div.innerHTML = '';
+        var links = [
+            { text: "4 minuter", time: 1000 * 60 * 4, },
+            { text: "2 minuter", time: 1000 * 60 * 2, },
+            { text: "3 minuter", time: 1000 * 60 * 3, }
+        ];
 
-        var time2 = document.createElement("a")
-        time2.href = "#";
-        time2.onclick = function () {
-            clearInterval(intervall);
-            updateIntervall = 1000 * 60 * 2;
-            intervall = setInterval(updateRssFeed, updateIntervall);
-            updateRssFeed();
-        };
-        time2.appendChild(document.createTextNode("2 minuter"));
-        div.appendChild(time2);
-
-        var time3 = document.createElement("a")
-        time3.href = "#";
-        time3.onclick = function () {
-            clearInterval(intervall);
-            updateIntervall = 1000 * 60 * 3;
-            intervall = setInterval(updateRssFeed, updateIntervall);
-            updateRssFeed();
-        };
-        time3.appendChild(document.createTextNode("3 minuter"));
-        div.appendChild(time3);
+        for (var i = 0; i < links.length; i++) {
+            var a = document.createElement("a");
+            a.onclick = updateFrekFunc(links[i]);
+            a.href = "#";
+            a.appendChild(document.createTextNode(links[i].text));
+            div.appendChild(a);
+        }
     };
+
+    function feedAlternativsFunc(obj) {
+        return function () {
+            currentPath = obj.path;
+            updateRssFeed();
+        };
+    }; 
 
     function feedAlternativs(div) {
-        var svd = document.createElement("a")
-        svd.href = "#";
-        svd.onclick = function () {
-            currentPath = "http://www.svd.se/?service=rss";
-            updateRssFeed();
-        };
-        svd.appendChild(document.createTextNode("SVD - RSSfeed"));
-        div.appendChild(svd);
+        div.innerHTML = '';
+        var links = [
+            { text: "SVD -rssFeed", path: "http://www.svd.se/?service=rss", },
+            { text: "Aftonbladet", path: "http://www.aftonbladet.se/rss.xml", },
+            { text: "DN", path: "http://www.dn.se/m/rss/senaste-nytt", }
+        ];
 
-        var aft = document.createElement("a")
-        aft.href = "#";
-        aft.onclick = function () {
-            currentPath = "http://www.aftonbladet.se/rss.xml";
-            updateRssFeed();
-        };
-        aft.appendChild(document.createTextNode("Aftonbladet"));
-        div.appendChild(aft);
-
-        var dn = document.createElement("a")
-        dn.href = "#";
-        dn.onclick = function () {
-            currentPath = "http://www.dn.se/m/rss/senaste-nytt";
-            updateRssFeed();
-        };
-        dn.appendChild(document.createTextNode("DN"));
-        div.appendChild(dn);
+        for (var i = 0; i < links.length; i++) {
+            var a = document.createElement("a");
+            a.onclick = feedAlternativsFunc(links[i]);
+            a.href = "#";
+            a.appendChild(document.createTextNode(links[i].text));
+            div.appendChild(a);
+        }
     };
 };
 
-RssReader.prototype = Object.create(App.prototype);
-RssReader.prototype.toString = function () {
+PWD.App.RssReader.prototype = Object.create(PWD.App.prototype);
+PWD.App.RssReader.prototype.toString = function () {
     return "RssReader";
 };
-RssReader.prototype.readFromServer = function (path, func, footer, type, currentPath, args) {
+PWD.App.RssReader.prototype.readFromServer = function (path, func, footer, type, currentPath, args) {
     var startTime = new Date();
     var timeout = setTimeout(displayFooter, 200);
     var xhr = new XMLHttpRequest();
@@ -178,8 +175,8 @@ RssReader.prototype.readFromServer = function (path, func, footer, type, current
         xhr.send(null);
     }
 
-
     function displayFooter() {
+        footer.innerHTML = '';
         var img = document.createElement("img");
         img.src = 'img/loader.gif';
         footer.appendChild(img);

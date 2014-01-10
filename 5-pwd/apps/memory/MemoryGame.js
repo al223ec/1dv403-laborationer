@@ -1,6 +1,6 @@
 "use strict";
-function MemoryGame() {
-    App.call(this);
+PWD.App.MemoryGame = function() {
+    PWD.App.call(this);
     var gameContainer = this.container;
     var click;
     var previousImage;
@@ -10,7 +10,7 @@ function MemoryGame() {
     var numOfBricks = 0; 
  
     var that = this;
-    var row, col;
+    var col, row = PWD.Settings.Memory.cards;
 
     this.start = function () {
         this.init("Memory spel");
@@ -21,14 +21,17 @@ function MemoryGame() {
         return this.getDragDiv();
     };
 
-    function initGame() {
+    function initGame(input) {
+        if (+input) {
+            row = input;
+        }
         if (!isNaN(row) && row <= 4 && row > 0 && (row%2) == 0) {
             row = col = row;
         } else {
             row = 4;
             col = 4;
         }
-
+        PWD.Settings.Memory.cards = row;
         gameContainer.innerHTML = '';
         click = 0;
         previousImage = null;
@@ -37,11 +40,12 @@ function MemoryGame() {
         numOfSolvedBricks = 0;
         numOfBricks = col * row;
 
-        var pictureArray = RandomGenerator.getPictureArray(row, col);
+        var pictureArray = PWD.App.MemoryGame.RandomGenerator.getPictureArray(row, col);
         for (var i = 0; i < numOfBricks; i += 1) {
-            var brick = new MemoryBrick(pictureArray[i], that);
+            var brick = new PWD.App.MemoryGame.MemoryBrick(pictureArray[i], that);
             gameContainer.appendChild(brick.init());
         }
+        //PWD.SaveSettings();
     };
 
     this.brickIsClicked = function (memoryBrick) {
@@ -85,25 +89,33 @@ function MemoryGame() {
     };
 
     function initDropDown(div) {
-        var restart = document.createElement("a")
-        restart.href = "#";
-        restart.onclick = function () {
-            initGame();
-        };
-        restart.appendChild(document.createTextNode("Starta om"));
-        div.appendChild(restart);
+        var links = [{
+            text: "Starta om",
+            func: function () {
+                return function () {
+                    return initGame();
+                };
+            },
+        }, {
+            text: "Ändra spelplan",
+            func: function () {
+                return function () {
+                    that.getInput("Vg, skriv hur många par spelet ska bestå av, max 4", initGame);
+                };
+            },
+        }];
+        
+        for (var i = 0; i < links.length; i++) {
+            var a = document.createElement("a");
+            a.href = "#";
+            a.onclick = links[i].func();
+            a.appendChild(document.createTextNode(links[i].text));
+            div.appendChild(a);
+        }
 
-        var setNumOfBricks = document.createElement("a")
-        setNumOfBricks.href = "#";
-        setNumOfBricks.onclick = function () {
-            row = +prompt("Vg, skriv hur många par spelet ska bestå av", "max 4");
-            initGame();
-        };
-        setNumOfBricks.appendChild(document.createTextNode("Ändra spelplan"));
-        div.appendChild(setNumOfBricks);
     };
 };
-MemoryGame.prototype = Object.create(App.prototype);
-MemoryGame.prototype.toString = function () {
+PWD.App.MemoryGame.prototype = Object.create(PWD.App.prototype);
+PWD.App.MemoryGame.prototype.toString = function () {
     return "MemoryGame"; 
 };

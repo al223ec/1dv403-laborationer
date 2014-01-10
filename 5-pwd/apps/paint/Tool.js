@@ -1,5 +1,5 @@
 "use strict";
-function Tool(canvas, context, container, paint) {
+PWD.App.Paint.Tool = function(canvas, context, container, paint) {
     var tempCanvas = document.createElement("canvas"); //Kommer hålla den temporära canvasen för att ordna live feedback och undvicka att rita ut massor av rektanglar
     var tempContext;
 
@@ -153,7 +153,7 @@ function Tool(canvas, context, container, paint) {
     };
 }
 
-Tool.prototype.Colorpicker = function () {
+PWD.App.Paint.Tool.prototype.Colorpicker = function () {
     var currentColor = '#000000'; 
     var colors = ['#000000','#0000FF', '#00FF00', '#FF0000', '#ce6cbb', '#86d684', '#5dc859'];
     var that = this; 
@@ -189,7 +189,7 @@ Tool.prototype.Colorpicker = function () {
     };
 };
 
-Tool.prototype.SelectTool = function(){
+PWD.App.Paint.Tool.prototype.SelectTool = function(){
     var p = document.createElement("p");
     this.tool = null;
     this.size = null;

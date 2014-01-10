@@ -1,6 +1,6 @@
 ﻿"use strict";
-function ChatBoard() {
-    App.call(this);
+PWD.App.ChatBoard = function() {
+    PWD.App.call(this);
     var container = this.container;
     var messages = [];
     var textarea = document.createElement("textarea");
@@ -9,9 +9,11 @@ function ChatBoard() {
     var inputButton = document.createElement("input");
     //history = 0
     var that = this; //Denna messageboarden 
-    var author = "Anton";
+    var author = PWD.Settings.ChatBoard.author;
 
-    var messagesToDisplay = 4; 
+    var messagesToDisplay = 4;
+    var updateIntervallTime = 10000;
+    var updateIntervall;
 
     this.start = function () {
         this.init("Chat board");
@@ -38,15 +40,23 @@ function ChatBoard() {
 
         container.oncontextmenu = viewMenu;
         this.getDragDiv().oncontextmenu = viewMenu;
-        read(4); 
+        read(4);
         return this.getDragDiv();
     };
     function read(number) {
-        if (+number) {
+        if (+number || number == 0) {
             messagesToDisplay = number;
         }
+
         var path = "http://homepage.lnu.se/staff/tstjo/labbyserver/getMessage.php?history=" + messagesToDisplay;
         that.readFromServer(path, readMessages, that.footer, "get");
+        
+        clearInterval(updateIntervall);
+        updateIntervall = setInterval(read, updateIntervallTime);
+
+        //Spara inställningar
+        PWD.Settings.ChatBoard.updateIntervallTime = updateIntervallTime;
+        PWD.Settings.ChatBoard.author = author;
     };
 
     function readMessages(xhr) {
@@ -75,7 +85,7 @@ function ChatBoard() {
                 author = allmessages[i].querySelector("author").childNodes[0].nodeValue;
             }
 
-            messages.push(new ChatMessage(text, date, document.createElement("div"), id, author));
+            messages.push(new PWD.App.ChatBoard.ChatMessage(text, date, document.createElement("div"), id, author));
             addMessToSite(messages[messages.length - 1]);
         }
     }; 
@@ -84,7 +94,7 @@ function ChatBoard() {
         e.preventDefault();
         var list = [];
         list.push(document.createElement("a").appendChild(document.createTextNode("click")));
-        that.DisplayMeny.init(list, e);
+        that.DisplayRightClickMeny.init(list, e);
     };
 
     function initInput(e) {
@@ -126,7 +136,7 @@ function ChatBoard() {
         if ((!text) || (0 === text.length)) {
             return;
         }
-        var mess = new ChatMessage(text, new Date(), document.createElement("div"), messages[messages.length - 1].Id+1, author);
+        var mess = new PWD.App.ChatBoard.ChatMessage(text, new Date(), document.createElement("div"), messages[messages.length - 1].Id + 1, author);
         messages.push(mess);
         addMessToSite(messages[messages.length - 1]);
         addMessToServer(mess); 
@@ -146,58 +156,81 @@ function ChatBoard() {
     function updateUsername(newName) {
         author = newName;
         console.log(author);
-    }; 
+    };
+
     function initDropDown(div) {
-        var updateIntervalDiv = document.createElement("div");
-        updateIntervalDiv.className = 'hidden menuStep';
+        var links = [{
+                text: "Uppdateringsintervall",
+                func: function () {
+                    return function () {
+                        var div = document.createElement("div");
+                        updateInterval(div);
+                        div.style.left = this.offsetLeft + 80 + 'px';
+                        div.style.top = this.offsetTop -20 + 'px';
+                        div.className = 'visible menuStep';
+                        this.appendChild(div);
+                    };
+                },
+            },{
+                text: "Ändra användare",
+                func: function () {
+                    return function () {
+                        that.getInput("Ange användarnamn", updateUsername)
+                    };
+                },
+            },{
+                text: "Antal  meddelande",
+                func: function () {
+                    return function () {
+                        that.getInput("Ange antal medelanden", read);
+                    }
+                },
+            }];
 
-        updateInterval(updateIntervalDiv);
-
-        var changeIntervall = document.createElement("a")
-            changeIntervall.href = "#";
-
-            changeIntervall.appendChild(document.createTextNode("Uppdateringsintervall"));
-            div.appendChild(changeIntervall);
-            changeIntervall.appendChild(updateIntervalDiv);
-
-            changeIntervall.onclick = function () {
-                updateIntervalDiv.className = 'visible menuStep';
-            };
-
-        updateIntervalDiv.style.left = changeIntervall.offsetLeft + 80 + 'px';
-        updateIntervalDiv.style.top = changeIntervall.offsetTop + 'px';
-
-        var changeUser = document.createElement("a")
-            changeUser.href = "#";
-            changeUser.appendChild(document.createTextNode("Ändra användare"));
-
-            changeUser.onclick = function () {
-                that.getInput("Ange användarnamn", updateUsername);
-            };
-        div.appendChild(changeUser);
-
-        var changeMessages = document.createElement("a")
-            changeMessages.href = "#";
-            changeMessages.appendChild(document.createTextNode("Antal meddelande"));
-
-            changeMessages.onclick = function () {
-                that.getInput("Ange antal medelanden", read);
-            };
-        div.appendChild(changeMessages);
-
+        for (var i = 0; i < links.length; i++) {
+            var a = document.createElement("a");
+            a.onclick = links[i].func(div);
+            a.appendChild(document.createTextNode(links[i].text));
+            div.appendChild(a);
+        }
     };
     function updateInterval(div) {
-        var time3 = document.createElement("a")
-            time3.href = "#";
-            time3.onclick = function () {
+        var links = [
+            { name:"10", text: "10 sekunder", value: 10000, },
+            { name: "30", text: "30 sekunder", value: 30000, },
+            { name: "1", text: "1 minut", value: 60000, }
+        ];
+        var form = document.createElement("form");
+        form.appendChild(document.createTextNode("Uppdateringsintervall"));
 
+        for (var i = 0; i < links.length; i++) {
+            var p = document.createElement("p");
+            var input = document.createElement("input");
+            input.type = "radio";
+            input.value = links[i].value;
+            input.name = "name";
+            input.disabled = false;
+
+            input.onclick = function () {
+                updateIntervallTime = this.value;
+                var alHidden = document.querySelectorAll(".visible");
+                for (var i = 0; i < alHidden.length; i++) {
+                    alHidden[i].className = "hidden";
+                }
+                read();
             };
-            time3.appendChild(document.createTextNode("3 minuter"));
-        div.appendChild(time3);
+            var label = document.createElement("label");
+            label.appendChild(document.createTextNode(links[i].text));
+            p.appendChild(input);
+            p.appendChild(label);
+            form.appendChild(p);
+        }
+        div.appendChild(form);
     };
 }
-ChatBoard.prototype = Object.create(App.prototype);
-ChatBoard.prototype.toString = function () {
+
+PWD.App.ChatBoard.prototype = Object.create(PWD.App.prototype);
+PWD.App.ChatBoard.prototype.toString = function () {
     return 'ChatBoard';
 };
-ChatBoard.prototype.readFromServer = RssReader.prototype.readFromServer;
+PWD.App.ChatBoard.prototype.readFromServer = PWD.App.RssReader.prototype.readFromServer;

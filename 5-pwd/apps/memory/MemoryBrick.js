@@ -1,5 +1,5 @@
 "use strict";
-function MemoryBrick(imgId, memoryGame) {
+PWD.App.MemoryGame.MemoryBrick = function(imgId, memoryGame) {
     var brickLink = document.createElement("a");
     var brick = document.createElement("img");
 

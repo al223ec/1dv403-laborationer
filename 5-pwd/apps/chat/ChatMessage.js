@@ -1,5 +1,5 @@
 ﻿"use strict"; 
-function ChatMessage(text, messageDate, div, id, author) {
+PWD.App.ChatBoard.ChatMessage = function(text, messageDate, div, id, author) {
     this.Text = text;
     this.MessageDate = messageDate;
 
@@ -70,10 +70,10 @@ function ChatMessage(text, messageDate, div, id, author) {
         return author;
     };
 }
-ChatMessage.prototype.getHTMLText = function () {
+PWD.App.ChatBoard.ChatMessage.prototype.getHTMLText = function () {
     return this.Text.replace(/[\n\r]/g, "<br />");
 }
-ChatMessage.prototype.getXML = function () {
+PWD.App.ChatBoard.ChatMessage.prototype.getXML = function () {
     var message = document.createElement("message");
 
     var id = document.createElement("id");

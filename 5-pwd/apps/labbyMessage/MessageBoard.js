@@ -1,6 +1,6 @@
 ﻿"use strict";
-function MessageBoard() {
-    App.call(this);
+PWD.App.MessageBoard = function() {
+    PWD.App.call(this);
     var container = this.container;
     var messages = [];
     var textarea = document.createElement("textarea");
@@ -87,7 +87,7 @@ function MessageBoard() {
         if ((!text) || (0 === text.length)) {
             return;
         }
-        messages.push(new Message(text, new Date(), document.createElement("div")));
+        messages.push(new PWD.App.MessageBoard.Message(text, new Date(), document.createElement("div")));
         addMessToSite(messages[messages.length - 1]);
     };
 
@@ -132,7 +132,7 @@ function MessageBoard() {
 
     function upDateMessages(messIndex) {
         if (confirm("Detta skriver över meddelandet")) {
-            var newMess = new Message(textarea.value, new Date(), document.createElement("div"));
+            var newMess = new PWD.App.MessageBoard.Message(textarea.value, new Date(), document.createElement("div"));
             messageContainerDiv.replaceChild(newMess.addDiv(that), messages[messIndex].Div);
             messages[messIndex] = newMess;
             textarea.value = "";
@@ -143,7 +143,7 @@ function MessageBoard() {
         textarea.value = "";
     };
 }
-MessageBoard.prototype = Object.create(App.prototype);
-MessageBoard.prototype.toString = function () {
+PWD.App.MessageBoard.prototype = Object.create(PWD.App.prototype);
+PWD.App.MessageBoard.prototype.toString = function () {
     return 'MessageBoard';
 };

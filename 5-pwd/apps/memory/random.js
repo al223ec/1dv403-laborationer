@@ -1,4 +1,4 @@
-var RandomGenerator = {
+PWD.App.MemoryGame.RandomGenerator = {
 	
 	/*
 		Denna metod tar antalet rader och columner som inparameter.

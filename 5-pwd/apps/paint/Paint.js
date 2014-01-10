@@ -1,6 +1,6 @@
 "use strict";
-function Paint() {
-    App.call(this);
+PWD.App.Paint = function() {
+    PWD.App.call(this);
 
     var paintContainer = document.createElement("div"); 
     this.tool = null;
@@ -25,7 +25,7 @@ function Paint() {
         }
 
         var context = canvas.getContext('2d');
-        that.tool = new Tool(canvas, context, this.container, paintContainer);
+        that.tool = new PWD.App.Paint.Tool(canvas, context, this.container, paintContainer);
         tempCanvas = that.tool.init();
 
         canvas.width = tempCanvas.width = '400';
@@ -87,4 +87,4 @@ function Paint() {
         div.appendChild(restart);
     };
 }
-Paint.prototype = Object.create(App.prototype);
+PWD.App.Paint.prototype = Object.create(PWD.App.prototype);

@@ -1,5 +1,5 @@
 ﻿"use strict"; 
-function Message(text, messageDate, div) {
+PWD.App.MessageBoard.Message = function(text, messageDate, div) {
     this.Text = text;
     this.MessageDate = messageDate;
 
@@ -63,6 +63,6 @@ function Message(text, messageDate, div) {
         return div;
     }
 }
-Message.prototype.getHTMLText = function () {
+PWD.App.MessageBoard.Message.prototype.getHTMLText = function () {
     return this.Text.replace(/[\n\r]/g, "<br />");
 }
