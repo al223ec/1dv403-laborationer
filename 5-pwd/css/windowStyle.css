@@ -43,7 +43,7 @@ ul {
 }
 /*Fönster start*/
 .drag {
-    border:2px solid #3a3a3a;
+    border:2px solid #242424;
     position:absolute; 
     cursor:move;
     
@@ -110,7 +110,6 @@ ul {
 /*Fönster slut*/
 .getInput {
    margin-left:40%;
-   margin-top:10%;
    width:300px; 
    height:200px;
    position:absolute;
@@ -127,6 +126,8 @@ ul {
     z-index:1030; 
     background-color:black;
     opacity:0.4;
+    top:0;
+    left:0;
 
 }
 /*Högerclick*/
