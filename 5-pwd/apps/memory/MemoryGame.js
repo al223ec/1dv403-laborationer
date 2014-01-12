@@ -17,6 +17,7 @@ PWD.App.MemoryGame = function() {
         initGame();
         gameContainer.className = "container memory";
         initDropDown(this.addDropDown("Meny", true));
+        this.GameTimer();
         this.footer.appendChild(document.createTextNode("Game on MF!!"));
         return this.getDragDiv();
     };
@@ -121,4 +122,32 @@ PWD.App.MemoryGame = function() {
 PWD.App.MemoryGame.prototype = Object.create(PWD.App.prototype);
 PWD.App.MemoryGame.prototype.toString = function () {
     return "MemoryGame"; 
+};
+PWD.App.MemoryGame.prototype.GameTimer = function () {
+    var startTime = new Date(); 
+    var clockDiv = document.createElement("div");
+    clockDiv.className = "timer";
+
+    var p = document.createElement("p");
+    clockDiv.appendChild(p);
+    this.container.appendChild(clockDiv);
+
+    var format = function (num) {
+        if (num < 10) {
+            return '0' + num;
+        } else {
+            return num;
+        }
+    }
+
+    function update() {
+        var currentTime = new Date();
+        var hours = currentTime.getHours() - startTime.getHours();
+        var minutes = currentTime.getMinutes() - startTime.getMinutes();
+        var seconds = currentTime.getSeconds() - startTime.getSeconds();
+        p.innerHTML = '';
+        p.appendChild(document.createTextNode(format(hours) + ":" + format(minutes) + ":" + format(seconds)));
+    };
+    update();
+    setInterval(update, 1000); //Uppdatera varje sekund
 };

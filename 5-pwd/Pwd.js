@@ -54,6 +54,7 @@ var PWD = {//statiska objektet som startar applikationen
             that.add(newPaint.start());
             that.numOfWindows++;
         };
+        PWD.App.Clock.start();
     },
 
     add: function (div) {
@@ -234,19 +235,21 @@ var PWD = {//statiska objektet som startar applikationen
         function resizeWindow(e) {
             if (isResizing) {
                 var nextXSize = objectX + e.pageX - mouseStartX;
-                if (nextXSize < maxWidth) {
+                if (nextXSize < maxWidth - 3) {//3 scrollbaren
                     targetELement.style.width = nextXSize + 'px';
                 } else {
-                    targetELement.style.width = maxWidth -1 + 'px'; 
+                    targetELement.style.width = maxWidth -3 + 'px'; 
                 }
 
                 var nextYSize = objectY + e.pageY - mouseStartY;
                 var container = targetELement.querySelector(".container");
+                var footer = targetELement.querySelector("footer");
+                console.log(footer);
                 
-                if (nextYSize < maxHeight-container.offsetTop - 40) {
+                if (nextYSize < maxHeight - container.offsetTop - footer.offsetHeight - 2) {
                     container.style.height = nextYSize + 'px';
                 } else {
-                    container.style.height = maxHeight - container.offsetTop -40 + 'px';// 40 höjden på footern
+                    container.style.height = maxHeight - container.offsetTop - footer.offsetHeight - 2 + 'px';
                 }
             }
         }; 
@@ -255,8 +258,8 @@ var PWD = {//statiska objektet som startar applikationen
 window.onload = function () {
     PWD.init();
 
-    PWD.Settings.CookieUtil.set("namn", "Anto sn"); //Detta funkar inte i chrome!!
-    console.log(PWD.Settings.CookieUtil.get("namn"));
+    //PWD.Settings.CookieUtil.set("namn", "Anto sn"); //Detta funkar inte i chrome!!
+    //console.log(PWD.Settings.CookieUtil.get("namn"));
 };
 
 ////http://stackoverflow.com/questions/332422/how-do-i-get-the-name-of-an-objects-type-in-javascript

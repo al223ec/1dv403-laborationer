@@ -157,9 +157,16 @@ PWD.App.RssReader.prototype.readFromServer = function (path, func, footer, type,
                         footer.removeChild(footer.firstChild);
                     }
                     var date = new Date();
+                    var format = function (num) {
+                        if (num < 10) {
+                            return '0' + num;
+                        } else {
+                            return num;
+                        }
+                    }
                     footer.appendChild(
                         document.createTextNode("Detta tog: " + (date.getTime() - startTime.getTime()) / 1000 + "s " +
-                        "Uppdaterades: " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds()));
+                        "Uppdaterades: " + format(date.getHours()) + ":" + format(date.getMinutes()) + ":" + format(date.getSeconds())));
                     func(xhr);
                     PWD.fixBounds();
                 } else {//misslyckades

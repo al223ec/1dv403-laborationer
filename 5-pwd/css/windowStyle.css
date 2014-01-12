@@ -1,7 +1,10 @@
 body {
+    background-color: #505050;
 }
 /*Font style*/
 @import url(http://fonts.googleapis.com/css?family=Open+Sans:400,600,800,300);
+@import url(http://fonts.googleapis.com/css?family=Just+Another+Hand);
+
 h1 {
     font-family: 'Open Sans', sans-serif;
 }
@@ -40,12 +43,12 @@ ul {
 }
 /*Fönster start*/
 .drag {
-    border:1px solid #0d0f27;
+    border:2px solid #3a3a3a;
     position:absolute; 
     cursor:move;
     
-    box-shadow: 2px 6px 5px #EAEBD8;
-    background-image:url('../img/bgWindow.jpg');
+    /*box-shadow: 2px 6px 5px #3a3a3a;*/
+    /*background-image:url('../img/bgWindow.jpg');*/
     background-repeat:no-repeat;
     background-position:right; 
     background-color:white;
@@ -58,12 +61,13 @@ ul {
 }
     .drag footer {
         clear:both;
-        background-color:#d5e2f1;
+        background-color:#3a3a3a;
         padding-left:20px;
         padding-top:10px;
         padding-bottom:10px;
         font-size:12px;
         font-weight:300;
+        color:white;
     }
 
 .windowName {
@@ -71,7 +75,8 @@ ul {
     padding-top:4px;
     margin:0px; 
     padding-bottom:0px;
-    background-color:#d5e2f1;
+    background-color:#3a3a3a;
+    color:white;
 }
 
 .close {
@@ -79,8 +84,10 @@ ul {
     float:right;
     top:0px;
     right:0px;
+    background-color:red;
 }
 .minimize {
+    display:none;
     position:absolute; 
     float:right;
     top:0px;
@@ -125,7 +132,7 @@ ul {
 /*Högerclick*/
 .rightClickMenu {
     position:absolute;
-    background-color:#d5e2f1;
+    background-color:#3a3a3a;
     border:1px solid #0d0f27;
     z-index:1020; 
 }
@@ -138,12 +145,29 @@ ul {
         margin:5px;
     }
 /*Slut högerclick*/
+/*Klockor/timer*/
+.clock {
+    height: 100px;
+    width: 800px;
+    margin: auto;
+    position: absolute;
+    top: 0;
+    right: 0;
+    left:0;
+    text-align: center;
+}
+    .clock p {
+    color: white;
+    text-shadow: -1px 0 #3a3a3a, 0 1px #3a3a3a, 1px 0 #3a3a3a, 0 -1px #3a3a3a;
+    font-size: 200px;
+        font-weight:800;
+    }
 /*Image gallery*/
     .container img {}
     .container .galleryDiv {
         float:left;
         margin:5px;
-        background-color:#d5e2f1;
+        background-color:#505050;
         text-align:center;
     }
     .container .galleryDiv img{
@@ -159,6 +183,7 @@ ul {
 }
     .memory a{
         margin:5px;
+        background-color:blue;
     }
 /*end Memory */
 /*messageboard / chat*/
@@ -245,35 +270,45 @@ paintContainer {}
 nav {
     position:absolute;
     bottom:0;
-    width:100%;
-    float: left;
+    left:0; 
+    right:0;
+    text-align:center;
 }
     nav ul{
-        max-width:1080px;
-        margin:auto;
+        color: white;
+        text-shadow: -1px 0 #3a3a3a, 0 1px #3a3a3a, 1px 0 #3a3a3a, 0 -1px #3a3a3a;
+        width: 1020px;
+        margin: auto;
+        text-align: center;
     }
     nav ul li{
         float: left;
-        margin:5px;
+        font-weight:800;
     }
     nav ul li a{
-        padding-top:70px;
         display: block;
-        font-weight:800;
-        text-align: center;
-        width:100px;
-        height:125px;
+        margin-top:80px;
+        width:120px;
+        height:100px;
+        line-height:100px;
         transition: width 0.2s, height 0.2s;
         -webkit-transition: width 0.2s, height 0.2s; 
+        background-color:#505050;
+        border:2px solid white;
+        top:0;
+        bottom:0;
+        color:white;
+        margin:10px;
         /* Safari */
         /*background: #00ccff url('pics/sprite.png') no-repeat;*/ 
-        bottom:0; 
+        
     }
         nav ul li a:hover {
+            border:2px solid red;
             height:100px;
-            width:150px;
+            width:160px;
         }
-#appImage {
+/*#appImage {
     background-image:url('../img/icon.png');
     background-repeat:no-repeat;
     background-position:center; 
@@ -307,7 +342,7 @@ nav {
     background-image:url('../img/icon.png');
     background-repeat:no-repeat;
     background-position:center; 
-}
+}*/
 /*Slut navigation*/
 /*Drop down menu*/
 .appMenu {
@@ -316,11 +351,11 @@ nav {
     width:100%;
     overflow:auto;
     float:left;
-    background-color:#d5e2f1;
+    background-color:#3a3a3a;
 }
     .appMenu ul {
         width: 100%;
-        background-color:#d5e2f1;
+        background-color:#3a3a3a;
     }
 .hidden {
     display:none;
@@ -341,23 +376,23 @@ nav {
     float:left;
     width:170px;
     border:0;
-    background-color:#d5e2f1;
+    background-color:#3a3a3a;
 }
 .appMenu li a{
     display: block;
 	margin-left: 20px;
-    background-color:#d5e2f1;
+    background-color:#3a3a3a;
 
 }
 
 .appMenu li a:hover{ 
-    background: #49A3FF;
+    background: #505050;
 }
 .appMenu div {
     position:absolute;
 	margin-left: 20px;
 	padding: 0;
-	background: #d5e2f1;
+	background: #3a3a3a;
     width:150px;
 }
 	.appMenu div a{	
@@ -367,5 +402,5 @@ nav {
 		text-align: left;
 	}
 	.appMenu div a:hover{
-        background: #49A3FF;
+        background: #505050;
 	}
