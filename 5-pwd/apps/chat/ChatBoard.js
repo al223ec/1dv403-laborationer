@@ -60,6 +60,7 @@ PWD.App.ChatBoard = function() {
         PWD.Settings.ChatBoard.updateIntervallTime = updateIntervallTime;
         PWD.Settings.ChatBoard.messagesToDisplay = messagesToDisplay;
         PWD.Settings.ChatBoard.author = author;
+        PWD.Settings.Save();
     };
 
     function readMessages(xhr) {

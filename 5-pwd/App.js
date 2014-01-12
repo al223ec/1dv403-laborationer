@@ -1,5 +1,6 @@
 "use strict";
 PWD.App = function () {
+    PWD.Settings.Load(); //Vart ska jag göra detta?
     var dragWindow = document.createElement("div");
     this.container = document.createElement("div");
     this.footer = document.createElement("footer");

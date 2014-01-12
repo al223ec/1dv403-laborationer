@@ -1,5 +1,4 @@
 body {
-    background-image:url('../img/bg.jpg');
 }
 /*Font style*/
 @import url(http://fonts.googleapis.com/css?family=Open+Sans:400,600,800,300);
@@ -53,8 +52,9 @@ ul {
 
     min-height:200px;
     min-width:200px;
-    max-height:800px;
-    max-width:600px;
+    width:400px;
+    /*max-height:800px;
+    max-width:600px;*/
 }
     .drag footer {
         clear:both;
@@ -88,7 +88,7 @@ ul {
 }
 .container {
    min-height:200px;
-   max-height:200px;
+   height:400px;
    overflow:scroll;
    overflow-x: hidden;
    clear:both;
@@ -164,7 +164,7 @@ ul {
 /*messageboard / chat*/
 .messageBoard {
     max-height:700px; 
-    min-width:400px;
+    min-width:350px;
     width:98%;
 }
 .textRight {
@@ -212,9 +212,9 @@ textarea {
     top: 1px; 
     left: 1px; 
 }
+paintContainer {}
 .container .paint { 
     position: relative; 
-    width:100%;
 }
     .paint ul{
         margin:auto;

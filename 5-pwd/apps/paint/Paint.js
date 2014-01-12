@@ -8,11 +8,12 @@ PWD.App.Paint = function() {
     var that = this;
 
     this.start = function () {
+        this.canResize = true;
         this.init("Paint");
 
         initDropDown(this.addDropDown("Meny", true));
 
-        this.container.className = "container";
+        this.container.className = "container paintContainer";
         paintContainer.className = "paint";
         var canvas = document.createElement("canvas");
         canvas.className = 'contentCanvas';

@@ -85,7 +85,10 @@ var PWD = {//statiska objektet som startar applikationen
         var mouseStartY = 0;
         var targetELement = null;
         var allDragElements = null;
-        var isResizing = false; 
+        var isResizing = false;
+
+        var maxWidth = 0; //Distansen mellan fönstretshörn x och PWD.width; 
+        var maxHeight = 0; 
 
         this.init = function () {
             document.addEventListener("mousedown",onMouseDown, false);
@@ -139,6 +142,9 @@ var PWD = {//statiska objektet som startar applikationen
                 objectX = targetELement.offsetWidth;
                 objectY = targetELement.querySelector(".container").offsetHeight; //Måste påverka container i y led annars kukar det ur
 
+                maxWidth = PWD.width - targetELement.offsetLeft;
+                maxHeight = PWD.height - targetELement.offsetTop;
+
                 mouseStartX = e.pageX;
                 mouseStartY = e.pageY;
 
@@ -159,8 +165,8 @@ var PWD = {//statiska objektet som startar applikationen
             //Fokus
             setFocus();
 
-            objectX = +(targetELement.style.left.replace(/[^0-9\-]/g, '')); //Måste ta bort px, annars blir resultatet NaN +omvandling
-            objectY = +(targetELement.style.top.replace(/[^0-9\-]/g, ''));
+            objectX = targetELement.offsetLeft;//+(targetELement.style.left.replace(/[^0-9\-]/g, '')); //Måste ta bort px, annars blir resultatet NaN +omvandling
+            objectY = targetELement.offsetTop;//+(targetELement.style.top.replace(/[^0-9\-]/g, ''));
 
             mouseStartX = e.pageX;
             mouseStartY = e.pageY;
@@ -228,27 +234,29 @@ var PWD = {//statiska objektet som startar applikationen
         function resizeWindow(e) {
             if (isResizing) {
                 var nextXSize = objectX + e.pageX - mouseStartX;
-                console.log(PWD.width);
-                if (e.pageX < PWD.width) {
+                if (nextXSize < maxWidth) {
                     targetELement.style.width = nextXSize + 'px';
                 } else {
-                    targetELement.style.width = objectX + PWD.width - mouseStartX + 'px'; 
+                    targetELement.style.width = maxWidth -1 + 'px'; 
                 }
+
                 var nextYSize = objectY + e.pageY - mouseStartY;
-                var conatiner = targetELement.querySelector(".container");
-                if (e.pageY < PWD.height) {
-                    conatiner.style.maxHeight = nextYSize + 'px';
+                var container = targetELement.querySelector(".container");
+                
+                if (nextYSize < maxHeight-container.offsetTop - 40) {
+                    container.style.height = nextYSize + 'px';
                 } else {
-                    conatiner.style.maxHeight = PWD.height - + (targetELement.style.top.replace(/[^0-9\-]/g, '')) + 'px';
+                    container.style.height = maxHeight - container.offsetTop -40 + 'px';// 40 höjden på footern
                 }
-                
-                
             }
         }; 
     },
 };
 window.onload = function () {
     PWD.init();
+
+    PWD.Settings.CookieUtil.set("namn", "Anto sn"); //Detta funkar inte i chrome!!
+    console.log(PWD.Settings.CookieUtil.get("namn"));
 };
 
 ////http://stackoverflow.com/questions/332422/how-do-i-get-the-name-of-an-objects-type-in-javascript
@@ -265,49 +273,3 @@ window.onload = function () {
 //    console.log(e.target);
 //    return false;     // cancel default menu
 //};
-
-var CookieUtil = {
-
-    get: function (name) {
-        var cookieName = encodeURIComponent(name) + "=",
-            cookieStart = document.cookie.indexOf(cookieName),
-            cookieValue = null,
-            cookieEnd;
-
-        if (cookieStart > -1) {
-            cookieEnd = document.cookie.indexOf(";", cookieStart);
-            if (cookieEnd == -1) {
-                cookieEnd = document.cookie.length;
-            }
-            cookieValue = decodeURIComponent(document.cookie.substring(cookieStart + cookieName.length, cookieEnd));
-        }
-
-        return cookieValue;
-    },
-
-    set: function (name, value, expires, path, domain, secure) {
-        var cookieText = encodeURIComponent(name) + "=" + encodeURIComponent(value);
-
-        if (expires instanceof Date) {
-            cookieText += "; expires=" + expires.toGMTString();
-        }
-
-        if (path) {
-            cookieText += "; path=" + path;
-        }
-
-        if (domain) {
-            cookieText += "; domain=" + domain;
-        }
-
-        if (secure) {
-            cookieText += "; secure";
-        }
-
-        document.cookie = cookieText;
-    },
-
-    unset: function (name, path, domain, secure) {
-        this.set(name, "", new Date(0), path, domain, secure);
-    }
-};

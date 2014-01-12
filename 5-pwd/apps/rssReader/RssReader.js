@@ -29,6 +29,7 @@ PWD.App.RssReader = function(){
         //Spara inställningar
         PWD.Settings.RssReader.updateIntervall = updateIntervall; 
         PWD.Settings.RssReader.currentPath = currentPath;
+        PWD.Settings.Save();
 
     };
     function addFeedToSite(xhr) {

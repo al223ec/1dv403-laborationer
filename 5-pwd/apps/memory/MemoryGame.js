@@ -31,7 +31,10 @@ PWD.App.MemoryGame = function() {
             row = 4;
             col = 4;
         }
+        //Spara inställningar
         PWD.Settings.Memory.cards = row;
+        PWD.Settings.Save();
+
         gameContainer.innerHTML = '';
         click = 0;
         previousImage = null;

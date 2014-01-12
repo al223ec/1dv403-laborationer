@@ -6,6 +6,7 @@ PWD.App.ImageGallery = function() {
     var that = this;
 
     this.start = function () {
+        this.canResize = true;
         this.init("Image gallery");
         galleryContainer.className = "container";
         that.readFromServer('http://homepage.lnu.se/staff/tstjo/labbyServer/imgviewer/', loadImages, footer, "get");
@@ -54,6 +55,7 @@ PWD.App.ImageGallery.ImageWindow = function(img) {
     var that = this;
 
     this.start = function () {
+        this.canResize = true;
         this.init("Imageview");
         container.appendChild(img);
         container.className = "container";
