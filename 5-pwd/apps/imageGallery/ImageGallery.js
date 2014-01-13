@@ -43,11 +43,11 @@ PWD.App.ImageGallery = function() {
     };
     function initDropDown(div) {};
 };
+PWD.App.ImageGallery.prototype = Object.create(PWD.App.prototype);
+PWD.App.ImageGallery.prototype.readFromServer = PWD.App.RssReader.prototype.readFromServer;
 PWD.App.ImageGallery.prototype.toString = function () {
     return "ImageGallery";
 };
-PWD.App.ImageGallery.prototype = Object.create(PWD.App.prototype);
-PWD.App.ImageGallery.prototype.readFromServer = PWD.App.RssReader.prototype.readFromServer;
 
 PWD.App.ImageGallery.ImageWindow = function(img) {
     PWD.App.call(this);
@@ -75,6 +75,7 @@ PWD.App.ImageGallery.ImageWindow = function(img) {
 
 };
 PWD.App.ImageGallery.ImageWindow.prototype = Object.create(PWD.App.prototype);
+PWD.App.ImageGallery.ImageWindow.prototype.toString = PWD.App.ImageGallery.toString();
 
 PWD.App.ImageGallery.Image = function (imageObj, imageGallery) {
     var div = document.createElement("div");

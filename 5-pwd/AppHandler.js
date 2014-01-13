@@ -1,7 +1,6 @@
 "use strict";
 PWD.AppHandler = {
     allApps: [],
-    main: null,
 
     init: function () {
         var that = this;
@@ -21,7 +20,6 @@ PWD.AppHandler = {
                 break;
             }
         }
-        console.log(this.allApps);
     },
 
     removeApp: function (appToRemove) {
@@ -35,61 +33,42 @@ PWD.AppHandler = {
         }
     },
 
+    focusFunction: function (div) {
+        return function () {
+            PWD.dragDropObj.setFocus(div);
+        }; 
+    },
     displayMenu: function (e, str) {
         e.preventDefault();
-        console.log(str);
-        var listItems= [];
         var that = this;
+
+        var exists = false; 
         var div = document.createElement("div");
         div.className = "rightClickMenu";
-
+        
         var ul = document.createElement("ul");
-
-        for (var i = 0; i < listItems.length; i++) {
-            var li = document.createElement("li");
-            li.appendChild(listItems[i]);
-            ul.appendChild(li);
+        for (var i = 0; i < that.allApps.length; i++) {
+            if (that.allApps[i][0] === str) {
+                for (var j = 1; j < that.allApps[i].length; j++) {
+                    var li = document.createElement("li");
+                    var a = document.createElement("a");
+                    a.href = "#";
+                    a.onclick = that.focusFunction(that.allApps[i][j].getDragDiv());
+                    a.appendChild(document.createTextNode(str + " " + j));
+                    li.appendChild(a);
+                    ul.appendChild(li);
+                    exists = true;
+                } 
+            }
         }
-
-        div.appendChild(ul);
-
-        div.style.top = e.pageY + 'px';
-        div.style.left = e.pageX + 'px';
-
-        div.onmouseleave = function () {
-            PWD.removeWindow(div);
-        };
-        PWD.add(div);
+        if (exists) {
+            div.appendChild(ul);
+            div.onmouseleave = function () {
+                PWD.removeWindow(div);
+            };
+            PWD.add(div);
+            div.style.top = e.pageY - div.offsetHeight + 'px';
+            div.style.left = e.pageX + 'px';
+        }
     },
 };
-
-PWD.AppHandler.DisplayMeny = {
-    init: function (listItems, e) { //Skicka med a taggar
-        e.preventDefault();
-        if (!typeof listItems == 'object') { //HUr lösa detta?
-            throw Error("Skicka object"); 
-        }
-
-        var that = this;
-        var div = document.createElement("div");
-        div.className = "rightClickMenu";
-
-        var ul = document.createElement("ul");
-
-        for (var i = 0; i < listItems.length; i++) {
-            var li = document.createElement("li");
-            li.appendChild(listItems[i]);
-            ul.appendChild(li); 
-        }
-
-        div.appendChild(ul);
-
-        div.style.top = e.pageY + 'px';
-        div.style.left = e.pageX + 'px';
-
-        div.onmouseleave = function () {
-            PWD.removeWindow(div);
-        };
-        PWD.add(div);
-    },
-}; 

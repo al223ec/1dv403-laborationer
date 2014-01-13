@@ -10,41 +10,45 @@ PWD.App = function () {
     var that = this;
     this.init = function (windowName) {
         var header = document.createElement("h4");
-
-        var closeButton = document.createElement("input");
-            closeButton.type = "button";
-            closeButton.value = "X";
-            closeButton.className = "close";
-            closeButton.onclick = function (e) {
-                PWD.removeWindow(dragWindow, that);
-            };
-
-        var minimizeButton = document.createElement("input");
-            minimizeButton.type = "button";
-            minimizeButton.value = "^";
-            minimizeButton.className = "minimize";
-            minimizeButton.onclick = function (e) {
-                that.minimize(dragWindow);
-            };
-
-        that.dropDown.className = "appMenu";
-
-        dragWindow.className = "drag";
-        dragWindow.appendChild(minimizeButton);
-        dragWindow.appendChild(closeButton);
-
         header.appendChild(document.createTextNode(windowName));
         header.className = "windowName";
+
+        var buttons = [{
+            value: "X",
+            className: "close",
+            func: function (dragWindow) {
+                return function () {
+                    PWD.removeWindow(dragWindow, that);
+                }
+            },
+        }, {
+            value: "^",
+            className: "minimize",
+            func: function (dragWindow) {
+                return function () {
+                    that.minimize(dragWindow);
+                };
+            },
+        }];
+        for (var i = 0; i < buttons.length; i++) {
+            var button = document.createElement("input"); 
+            button.type = "button";
+            button.value = buttons[i].value;
+            button.className = buttons[i].className;
+            button.onclick = buttons[i].func(dragWindow);
+            dragWindow.appendChild(button);
+        }
+ 
+        that.dropDown.className = "appMenu";
+        dragWindow.className = "drag";
 
         dragWindow.appendChild(header);
         dragWindow.appendChild(that.dropDown);
         dragWindow.appendChild(that.container);
         dragWindow.appendChild(that.footer);
 
-
         dragWindow.style.top = 10 + 20 * PWD.numOfWindows + 'px';
         dragWindow.style.left = 10 + 20 * PWD.numOfWindows + 'px';
-
         dragWindow.style.zIndex = 1010;
 
         if (this.canResize) {
@@ -215,4 +219,7 @@ PWD.App.prototype.getInput = function (prompt, func) {
         }
     };
     input.focus();
+};
+PWD.App.prototype.toString = function () {
+    return "App"; 
 }; 

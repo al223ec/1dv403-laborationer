@@ -16,63 +16,61 @@ var PWD = {//statiska objektet som startar applikationen
         var that = this;
         PWD.AppHandler.init();
 
-        var App = {
-            text: "",
-            app: null,
-
-        };
-
-
         var imageGallery = document.querySelector("#appImage");
         imageGallery.onclick = function () {
-            var newGallery = new PWD.App.ImageGallery();
-            that.add(newGallery.start());
-            that.numOfWindows++;
-            PWD.AppHandler.add(newGallery);
+            that.start(new PWD.App.ImageGallery());
         };
         imageGallery.addEventListener('contextmenu', function (e) {
-            PWD.AppHandler.displayMenu(e, "image gallery");
+            PWD.AppHandler.displayMenu(e, PWD.App.ImageGallery.prototype.toString());
         });
 
         var memory = document.querySelector("#appMemory");
         memory.onclick = function () {
-            var mGame = new PWD.App.MemoryGame();
-            that.add(mGame.start());
-            that.numOfWindows++;
-            PWD.AppHandler.add(mGame);
+            that.start(new PWD.App.MemoryGame());
         };
+        memory.addEventListener('contextmenu', function (e) {
+            PWD.AppHandler.displayMenu(e, PWD.App.MemoryGame.prototype.toString());
+        });
 
         var messBoard = document.querySelector("#appMessage");
         messBoard.onclick = function () {
-            var mBoard = new PWD.App.MessageBoard();
-            that.add(mBoard.start());
-            that.numOfWindows++;
-            PWD.AppHandler.add(mBoard);
+            that.start(new PWD.App.MessageBoard());
         };
+        messBoard.addEventListener('contextmenu', function (e) {
+            PWD.AppHandler.displayMenu(e, PWD.App.MessageBoard.prototype.toString());
+        });
 
         var reader = document.querySelector("#appRssReader");
         reader.onclick = function () {
-            var reader = new PWD.App.RssReader();
-            that.add(reader.start());
-            that.numOfWindows++;
-            PWD.AppHandler.add(reader);
+            that.start(new PWD.App.RssReader());
         };
+        reader.addEventListener('contextmenu', function (e) {
+            PWD.AppHandler.displayMenu(e, PWD.App.RssReader.prototype.toString());
+        });
+
         var chat = document.querySelector("#appChat");
         chat.onclick = function () {
-            var newChat = new PWD.App.ChatBoard();
-            that.add(newChat.start());
-            that.numOfWindows++;
-            PWD.AppHandler.add(newChat);
+            that.start(new PWD.App.ChatBoard());
         };
+        chat.addEventListener('contextmenu', function (e) {
+            PWD.AppHandler.displayMenu(e, PWD.App.ChatBoard.prototype.toString());
+        }); 
 
         var paint = document.querySelector("#appPaint");
         paint.onclick = function () {
-            var newPaint = new PWD.App.Paint();
-            that.add(newPaint.start());
-            that.numOfWindows++;
-            PWD.AppHandler.add(newPaint);
+            that.start(new PWD.App.Paint());
         };
+        paint.addEventListener('contextmenu', function (e) {
+            PWD.AppHandler.displayMenu(e, PWD.App.Paint.prototype.toString());
+        });
         PWD.App.Clock.start();
+    },
+
+    start: function (app) {
+        var that = this;
+        that.add(app.start());
+        that.numOfWindows++;
+        PWD.AppHandler.add(app);
     },
 
     add: function (div) {
@@ -106,11 +104,11 @@ var PWD = {//statiska objektet som startar applikationen
         var mouseStartX = 0;
         var mouseStartY = 0;
         var targetELement = null;
-        var allDragElements = null;
         var isResizing = false;
 
         var maxWidth = 0; //Distansen mellan fönstretshörn x och PWD.width; 
-        var maxHeight = 0; 
+        var maxHeight = 0;
+        var that = this; 
 
         this.init = function () {
             document.addEventListener("mousedown",onMouseDown, false);
@@ -128,6 +126,7 @@ var PWD = {//statiska objektet som startar applikationen
             document.addEventListener("mousedown", onMouseDown, false);
             document.addEventListener("mouseup", onMouseUp, false);
         };
+
         //getWidth och height beräknar anändarens aktuella höjd resp bredd
         function getWidth() {
             if (self.innerWidth) { //Denna är aktuell
@@ -159,7 +158,7 @@ var PWD = {//statiska objektet som startar applikationen
             if (e.target.className == "resize") {
 
                 targetELement = e.target.parentNode;
-                setFocus();
+                that.setFocus();
 
                 objectX = targetELement.offsetWidth;
                 objectY = targetELement.querySelector(".container").offsetHeight; //Måste påverka container i y led annars kukar det ur
@@ -185,7 +184,7 @@ var PWD = {//statiska objektet som startar applikationen
                 return;
             }
             //Fokus
-            setFocus();
+            that.setFocus();
 
             objectX = targetELement.offsetLeft;//+(targetELement.style.left.replace(/[^0-9\-]/g, '')); //Måste ta bort px, annars blir resultatet NaN +omvandling
             objectY = targetELement.offsetTop;//+(targetELement.style.top.replace(/[^0-9\-]/g, ''));
@@ -199,11 +198,16 @@ var PWD = {//statiska objektet som startar applikationen
             return false;
         };
 
-        function setFocus() {
-            allDragElements = document.querySelectorAll(".drag");
+        this.setFocus = function (element) {
+            var target = targetELement; 
+            if (element) {
+                target = element; 
+            }
+
+            var allDragElements = document.querySelectorAll(".drag");
             for (var i = 0; i < allDragElements.length; i++) {
-                if (allDragElements[i] === targetELement) {
-                    targetELement.style.zIndex = 1000;
+                if (allDragElements[i] === target) {
+                    target.style.zIndex = 1000;
                 } else {
                     if (allDragElements[i].style.zIndex - 10 > 0) {
                         allDragElements[i].style.zIndex -= 10;
