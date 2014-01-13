@@ -23,6 +23,7 @@ PWD.App.RssReader = function(){
         updateRssFeed();
         return this.getDragDiv();
     };
+
     function updateRssFeed() {
         that.readFromServer("http://homepage.lnu.se/staff/tstjo/labbyServer/rssproxy/?url=", addFeedToSite, footer, "get", currentPath);
 

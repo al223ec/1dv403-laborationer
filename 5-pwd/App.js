@@ -16,7 +16,7 @@ PWD.App = function () {
             closeButton.value = "X";
             closeButton.className = "close";
             closeButton.onclick = function (e) {
-                PWD.removeWindow(dragWindow);
+                PWD.removeWindow(dragWindow, that);
             };
 
         var minimizeButton = document.createElement("input");
@@ -55,6 +55,7 @@ PWD.App = function () {
         }
     }; 
     this.getDragDiv = function () { return dragWindow; };
+    var pwdWindow = {}; 
 };
 
 PWD.App.prototype.minimize = function (div) {

@@ -89,3 +89,6 @@ PWD.App.Paint = function() {
     };
 }
 PWD.App.Paint.prototype = Object.create(PWD.App.prototype);
+PWD.App.Paint.prototype.toString = function () {
+    return "Paint"
+}; 

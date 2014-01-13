@@ -155,7 +155,7 @@ PWD.App.Paint.Tool = function(canvas, context, container, paint) {
 
 PWD.App.Paint.Tool.prototype.Colorpicker = function () {
     var currentColor = '#000000'; 
-    var colors = ['#000000','#0000FF', '#00FF00', '#FF0000', '#ce6cbb', '#86d684', '#5dc859'];
+    var colors = ['#000000','#0000FF', '#00FF00', '#FF0000', '#ce6cbb', '#86d684', '#5dc859', '#ffffff'];
     var that = this; 
 
     this.init = function () {

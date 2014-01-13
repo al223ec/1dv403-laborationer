@@ -1,4 +1,5 @@
 PWD.Settings = {
+    Name: "PWDSettings",
     Memory: {
         cards: 2,
     },
@@ -12,6 +13,13 @@ PWD.Settings = {
         messagesToDisplay: 4,
     },
     Save: function () {
+        if (!localStorage) {
+            PWD.useCookie = true; 
+        }
+        if (PWD.useCookie) {
+            PWD.Settings.CookieUtil.set(this.Name, JSON.parse());
+            return;
+        }
         var settings = [];
         settings.push(this.Memory);
         settings.push(this.RssReader);
@@ -20,6 +28,16 @@ PWD.Settings = {
         localStorage.setItem("PWDSettings", JSON.stringify(settings))
     },
     Load: function () {
+        //var loadedSettings; 
+        //if (!localStorage) {
+        //    PWD.useCookie = true; 
+        //}else{
+        //    var loadedSettings = JSON.parse(localStorage.getItem("PWDSettings"));
+        //}
+
+        //if (PWD.useCookie) {
+        //    loadedSettings = JSON.parse(PWD.Settings.CookieUtil.get(PWDSettings));
+        //}
         if (!JSON.parse(localStorage.getItem("PWDSettings"))) {
             this.Save();
         }
@@ -28,8 +46,6 @@ PWD.Settings = {
         this.Memory = loadedSettings[0];
         this.RssReader = loadedSettings[1];
         this.ChatBoard = loadedSettings[2];
-
-        console.log(this);
     },
 };
 

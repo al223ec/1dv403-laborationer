@@ -6,6 +6,7 @@ var PWD = {//statiska objektet som startar applikationen
     height: 946,
     numOfWindows: 0,
     dragDropObj: null,
+    useCookie: false,
 
     init: function () {
         document.onselectstart = function () { return false; }
@@ -13,19 +14,32 @@ var PWD = {//statiska objektet som startar applikationen
         this.dragDropObj = new this.dragDrop();
         this.dragDropObj.init();
         var that = this;
+        PWD.AppHandler.init();
+
+        var App = {
+            text: "",
+            app: null,
+
+        };
+
 
         var imageGallery = document.querySelector("#appImage");
         imageGallery.onclick = function () {
             var newGallery = new PWD.App.ImageGallery();
             that.add(newGallery.start());
             that.numOfWindows++;
+            PWD.AppHandler.add(newGallery);
         };
+        imageGallery.addEventListener('contextmenu', function (e) {
+            PWD.AppHandler.displayMenu(e, "image gallery");
+        });
 
         var memory = document.querySelector("#appMemory");
         memory.onclick = function () {
             var mGame = new PWD.App.MemoryGame();
             that.add(mGame.start());
             that.numOfWindows++;
+            PWD.AppHandler.add(mGame);
         };
 
         var messBoard = document.querySelector("#appMessage");
@@ -33,6 +47,7 @@ var PWD = {//statiska objektet som startar applikationen
             var mBoard = new PWD.App.MessageBoard();
             that.add(mBoard.start());
             that.numOfWindows++;
+            PWD.AppHandler.add(mBoard);
         };
 
         var reader = document.querySelector("#appRssReader");
@@ -40,12 +55,14 @@ var PWD = {//statiska objektet som startar applikationen
             var reader = new PWD.App.RssReader();
             that.add(reader.start());
             that.numOfWindows++;
+            PWD.AppHandler.add(reader);
         };
         var chat = document.querySelector("#appChat");
         chat.onclick = function () {
             var newChat = new PWD.App.ChatBoard();
             that.add(newChat.start());
             that.numOfWindows++;
+            PWD.AppHandler.add(newChat);
         };
 
         var paint = document.querySelector("#appPaint");
@@ -53,6 +70,7 @@ var PWD = {//statiska objektet som startar applikationen
             var newPaint = new PWD.App.Paint();
             that.add(newPaint.start());
             that.numOfWindows++;
+            PWD.AppHandler.add(newPaint);
         };
         PWD.App.Clock.start();
     },
@@ -62,8 +80,11 @@ var PWD = {//statiska objektet som startar applikationen
         this.fixBounds();
     },
 
-    removeWindow: function (div) {
+    removeWindow: function (div, app) {
         this.main.removeChild(div);
+        if (app) {
+            PWD.AppHandler.removeApp(app);
+        }
     },
 
     fixBounds: function () {
@@ -177,6 +198,7 @@ var PWD = {//statiska objektet som startar applikationen
             //Fixa browsersupport här, så inte text markeras etc
             return false;
         };
+
         function setFocus() {
             allDragElements = document.querySelectorAll(".drag");
             for (var i = 0; i < allDragElements.length; i++) {
@@ -191,6 +213,7 @@ var PWD = {//statiska objektet som startar applikationen
                 }
             }
         };
+
         function onMouseUp(e) {
            if (targetELement) { //Behöver endast göras om användaren faktiskt har tryckt på en "dragable" div
                 document.removeEventListener("mousemove", resizeWindow, false);
@@ -234,6 +257,12 @@ var PWD = {//statiska objektet som startar applikationen
 
         function resizeWindow(e) {
             if (isResizing) {
+                var container = targetELement.querySelector(".container");
+                var footer = targetELement.querySelector("footer");
+                if (!container || !footer) {
+                    return;
+                }
+
                 var nextXSize = objectX + e.pageX - mouseStartX;
                 if (nextXSize < maxWidth - 3) {//3 scrollbaren
                     targetELement.style.width = nextXSize + 'px';
@@ -242,10 +271,6 @@ var PWD = {//statiska objektet som startar applikationen
                 }
 
                 var nextYSize = objectY + e.pageY - mouseStartY;
-                var container = targetELement.querySelector(".container");
-                var footer = targetELement.querySelector("footer");
-                console.log(footer);
-                
                 if (nextYSize < maxHeight - container.offsetTop - footer.offsetHeight - 2) {
                     container.style.height = nextYSize + 'px';
                 } else {
@@ -257,10 +282,11 @@ var PWD = {//statiska objektet som startar applikationen
 };
 window.onload = function () {
     PWD.init();
+};
 
     //PWD.Settings.CookieUtil.set("namn", "Anto sn"); //Detta funkar inte i chrome!!
     //console.log(PWD.Settings.CookieUtil.get("namn"));
-};
+
 
 ////http://stackoverflow.com/questions/332422/how-do-i-get-the-name-of-an-objects-type-in-javascript
 ////Vet inte om jag ska använda denna än
