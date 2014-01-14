@@ -7,6 +7,11 @@ PWD.App = function () {
     this.dropDown = document.createElement("ul");
     this.canResize = false;
 
+    this.restoreHeight = 0;
+    this.restoreWidth = 0;
+    this.restoreTop = 0; 
+    this.isMinimized = false;
+
     var that = this;
     this.init = function (windowName) {
         var header = document.createElement("h4");
@@ -47,7 +52,7 @@ PWD.App = function () {
         dragWindow.appendChild(that.container);
         dragWindow.appendChild(that.footer);
 
-        dragWindow.style.top = 10 + 20 * PWD.numOfWindows + 'px';
+        dragWindow.style.top = 10 + 20 * 0 + 'px';
         dragWindow.style.left = 10 + 20 * PWD.numOfWindows + 'px';
         dragWindow.style.zIndex = 1010;
 
@@ -59,29 +64,32 @@ PWD.App = function () {
         }
     }; 
     this.getDragDiv = function () { return dragWindow; };
-    var pwdWindow = {}; 
 };
 
 PWD.App.prototype.minimize = function (div) {
-    this.minimizeHeight(div);
-    this.minimizeWidth(div);
+    //this.restoreHeight = div.offsetHeight;
+    this.restoreWidth = div.offsetWidth;
+    this.restoreTop = div.offsetTop;
+
+    //this.minimizeHeight(div);
+    //this.minimizeWidth(div);
     this.minimizeTop(div);
-    //div.style.display = 'none';
+    this.isMinimized = true; 
 };
 
 //Funktion the ultimate
-PWD.App.prototype.minimizeHeight = function (div) {
-    var height = div.offsetHeight;
-    var numOfSteps = height / 10;
-    function step() {
-        div.style.height = height + 'px';
-        if (height > 0) {
-            height -= numOfSteps;
-            setTimeout(step, 5);
-        }
-    }
-    setTimeout(step, 5);
-};
+//PWD.App.prototype.minimizeHeight = function (div) {
+//    var height = div.offsetHeight;
+//    var numOfSteps = height / 10;
+//    function step() {
+//        div.style.height = height + 'px';
+//        if (height > 0) {
+//            height -= numOfSteps;
+//            setTimeout(step, 5);
+//        }
+//    }
+//    setTimeout(step, 5);
+//};
 
 PWD.App.prototype.minimizeWidth = function (div) {
     var width = div.offsetWidth;
@@ -97,29 +105,34 @@ PWD.App.prototype.minimizeWidth = function (div) {
 };
 
 PWD.App.prototype.minimizeTop = function (div) {
-    var top = +(div.style.top.replace(/[^0-9\-]/g, ''));
-    var numOfSteps = top;
+    var toBottom = PWD.height - div.offsetTop;
+    var currentTop = div.offsetTop;
+    var numOfSteps = toBottom / 10;
 
     function step() {
-        div.style.top = top + 'px';
-        if (top < (self.innerHeight)) {
-            top += numOfSteps;
-            setTimeout(step, 1);
+        div.style.top = currentTop + 'px';
+        if (currentTop < toBottom) {
+            currentTop += numOfSteps;
+            setTimeout(step, 2);
         } else {
             div.style.display = 'none';
         }
     }
-    setTimeout(step, 1);
+    setTimeout(step, 2);
 };
-PWD.App.prototype.restore = function (div) {
-    if (!div) {
-        throw Error("Skicka med diven som argument");
-    }
+
+PWD.App.prototype.restore = function () {
+    var div = this.getDragDiv();
+
+    div.style.width = this.restoreWidth + 'px';
+    div.style.top = this.restoreTop + 'px';
+    div.style.display = "block";
+    this.isMinimized = false;
 };
 
 //Högerclicksmeny
 PWD.App.prototype.DisplayRightClickMeny = {
-    main: PWD.main,
+
     init: function (listItems, e) { //Skicka med a taggar
         e.preventDefault();
         if (!typeof listItems == 'object') { //HUr lösa detta?
@@ -140,18 +153,17 @@ PWD.App.prototype.DisplayRightClickMeny = {
 
         div.appendChild(ul);
 
-        div.style.top = e.pageY + 'px';
-        div.style.left = e.pageX + 'px';
+        div.style.top = e.pageY -5 + 'px';
+        div.style.left = e.pageX -5 + 'px';
 
-        div.onmouseleave = function () {
-            that.main.removeChild(div);
-        };
+        div.addEventListener("mouseleave", function () {
+            PWD.removeWindow(div);
+        }, false);
         PWD.add(div);
     },
 };
 //Lägger till en länk i listen
 PWD.App.prototype.addDropDown = function (linkText, addQuit) {
-
     var li = document.createElement("li");
     li.className = "dropDownLink";
     var primaryLink = document.createElement("a");
@@ -161,13 +173,13 @@ PWD.App.prototype.addDropDown = function (linkText, addQuit) {
 
     primaryLink.onclick = function(){
         div.className = "visible"; 
-        that.dropDown.onmouseleave = function () {
+        div.addEventListener("mouseleave", function () {
             var alHidden = document.querySelectorAll(".visible");
             for (var i = 0; i < alHidden.length; i++) {
                 alHidden[i].className = "hidden";
             }
             div.className = "hidden"; 
-        };
+        },false);
     }; 
     
     var div = document.createElement("div");

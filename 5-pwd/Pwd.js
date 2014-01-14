@@ -198,7 +198,7 @@ var PWD = {//statiska objektet som startar applikationen
             return false;
         };
 
-        this.setFocus = function (element) {
+        this.setFocus = function (element, obj) {
             var target = targetELement; 
             if (element) {
                 target = element; 
@@ -207,7 +207,7 @@ var PWD = {//statiska objektet som startar applikationen
             var allDragElements = document.querySelectorAll(".drag");
             for (var i = 0; i < allDragElements.length; i++) {
                 if (allDragElements[i] === target) {
-                    target.style.zIndex = 1000;
+                    target.style.zIndex = 1010;
                 } else {
                     if (allDragElements[i].style.zIndex - 10 > 0) {
                         allDragElements[i].style.zIndex -= 10;
@@ -216,6 +216,11 @@ var PWD = {//statiska objektet som startar applikationen
                     }
                 }
             }
+
+            if (obj && obj.restore && obj.isMinimized) {
+                obj.restore();
+            }
+
         };
 
         function onMouseUp(e) {

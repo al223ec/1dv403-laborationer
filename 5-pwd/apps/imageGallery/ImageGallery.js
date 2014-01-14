@@ -60,6 +60,7 @@ PWD.App.ImageGallery.ImageWindow = function(img) {
         container.appendChild(img);
         container.className = "container";
         initDropDown(this.addDropDown("Alternativ", true));
+        PWD.AppHandler.add(that);
         return this.getDragDiv();
     };
     function initDropDown(div) {
@@ -75,7 +76,8 @@ PWD.App.ImageGallery.ImageWindow = function(img) {
 
 };
 PWD.App.ImageGallery.ImageWindow.prototype = Object.create(PWD.App.prototype);
-PWD.App.ImageGallery.ImageWindow.prototype.toString = PWD.App.ImageGallery.toString();
+PWD.App.ImageGallery.ImageWindow.prototype.toString = PWD.App.ImageGallery.prototype.toString;
+
 
 PWD.App.ImageGallery.Image = function (imageObj, imageGallery) {
     var div = document.createElement("div");

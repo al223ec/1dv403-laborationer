@@ -159,7 +159,6 @@ PWD.App.ChatBoard = function() {
 
     function updateUsername(newName) {
         author = newName;
-        console.log(author);
     };
 
     function initDropDown(div) {
