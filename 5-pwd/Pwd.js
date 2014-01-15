@@ -84,7 +84,6 @@ var PWD = {//statiska objektet som startar applikationen
             PWD.AppHandler.removeApp(app);
         }
     },
-
     fixBounds: function () {
         var allDragElements = this.main.querySelectorAll(".drag");
         for (var i = 0; i < allDragElements.length; i++) {
@@ -291,6 +290,7 @@ var PWD = {//statiska objektet som startar applikationen
 };
 window.onload = function () {
     PWD.init();
+    console.log(window);
 };
 
     //PWD.Settings.CookieUtil.set("namn", "Anto sn"); //Detta funkar inte i chrome!!
