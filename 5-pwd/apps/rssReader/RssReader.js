@@ -103,7 +103,9 @@ PWD.App.RssReader = function(){
         var links = [
             { text: "4 minuter", time: 1000 * 60 * 4, },
             { text: "2 minuter", time: 1000 * 60 * 2, },
-            { text: "3 minuter", time: 1000 * 60 * 3, }
+            { text: "3 minuter", time: 1000 * 60 * 3, },
+            { text: "5 minuter", time: 1000 * 60 * 5, },
+            { text: "6 minuter", time: 1000 * 60 * 6, }
         ];
 
         for (var i = 0; i < links.length; i++) {

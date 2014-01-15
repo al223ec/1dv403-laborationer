@@ -1,6 +1,7 @@
 "use strict";
 PWD.App.ImageGallery = function() {
     PWD.App.call(this);
+
     var galleryContainer = this.container;
     var footer = this.footer; 
     var that = this;
